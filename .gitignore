@@ -1,0 +1,7 @@
+/vendor
+/docker/.env
+.env
+.env.backup
+.idea
+.idea/*
+.phpstorm.meta.php
