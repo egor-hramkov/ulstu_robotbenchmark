@@ -47,7 +47,7 @@ function connect() {
   //view.open('ws://localhost:1999/session?url=webots://github.com/dimon2240/webots-worlds/branch/main/project/worlds/lidar.wbt');
   
   // локалка
-  view.open('ws://localhost:1999/wall_following/worlds/wall_following.wbt');
+  view.open('ws://localhost:1999/robot_programming/worlds/robot_programming.wbt');
   connectButton.value = 'Disconnect';
   connectButton.onclick = disconnect;
   ipInput.disabled = true;
