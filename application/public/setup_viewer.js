@@ -47,7 +47,7 @@ function connect() {
   //view.open('ws://localhost:1999/session?url=webots://github.com/dimon2240/webots-worlds/branch/main/project/worlds/lidar.wbt');
   
   // локалка
-  view.open('ws://localhost:1999/humanoid_marathon/worlds/humanoid_marathon.wbt');
+  view.open('ws://localhost:1999/wall_following/worlds/wall_following.wbt');
   connectButton.value = 'Disconnect';
   connectButton.onclick = disconnect;
   ipInput.disabled = true;
