@@ -6,7 +6,7 @@ TIME_STEP = 64
 robot = Robot()
 
 #Вам необходимо изменить эту переменную
-position = 10.0
+position = 20.0
 
 # get the motor devices
 leftMotor = robot.getMotor('left wheel motor')
