@@ -11,6 +11,7 @@ services:
     volumes:
       - '../application/public/ajax/projects:/usr/local/webots/projects/samples/robotbenchmark'
       - './webots/simulation_server.py:/usr/local/webots/resources/web/server/simulation_server.py'
+      - './webots/session_server.py:/usr/local/webots/resources/web/server/session_server.py'
       - './webots/server.sh:/usr/local/server.sh'
     ports:
       - '1999-2100:1999-2100'
