@@ -1,0 +1,27 @@
+{% extends 'robotbenchmark/index.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header"> Все задачи</div>
+
+                    <div class="card-body">
+                        {% for problem in problems %}
+                            <article>
+                                <h4>
+                                    <a href="{{ problem.id }}">{{ problem.title }}</a>
+                                </h4>
+                                <div class="body">{{ problem.description }}</div>
+                            </article>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
