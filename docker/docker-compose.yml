@@ -23,7 +23,7 @@ services:
       context: ../
       dockerfile: ./docker/django/Dockerfile
     container_name: app
-    command: gunicorn application.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn application.wsgi:application --bind 0.0.0.0:8000 --reload
     env_file:
       - ../application/.env
     volumes:
