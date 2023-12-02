@@ -1,6 +1,6 @@
-FROM cyberbotics/webots:latest
+FROM cyberbotics/webots:R2020b-rev1-ubuntu20.04
 
-RUN apt update
+RUN apt update --allow-insecure-repositories
 RUN apt install -y firejail python3-pip subversion nano
 RUN pip3 install tornado pynvml psutil requests distro
 ENV DISPLAY=:99
