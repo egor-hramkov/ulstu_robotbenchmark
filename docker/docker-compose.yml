@@ -1,6 +1,14 @@
 version: '3.4'
 
 services:
+  ros2:
+    build:
+      context: ../
+      dockerfile: ./docker/ros2/Dockerfile
+    container_name: ros2
+    working_dir: /usr/local
+    restart: no
+    command: /bin/sh -c /usr/local/ros2.sh
   webots:
     build:
       context: ../
