@@ -15,7 +15,6 @@ services:
       - './webots/server.sh:/usr/local/server.sh'
     ports:
       - '1999-2100:1999-2100'
-    network_mode: 'host'
     command: /bin/sh -c /usr/local/server.sh
     #tty: true
   app:

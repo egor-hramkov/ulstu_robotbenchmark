@@ -222,6 +222,7 @@ class Client:
         print('user1 id')
         print(self.user1Id)
         print('host')
+        self.host = "http://172.17.0.1:8047"
         print(self.host)
         """Setup a local Webots project to be run by the client."""
         shutil.copytree(os.path.join(config['projectsDir'], self.app) + '/', self.project_instance_path)
