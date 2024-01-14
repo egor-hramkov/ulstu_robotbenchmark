@@ -18,54 +18,55 @@ services:
     restart: unless-stopped
     volumes:
       - '../application/public/ajax/projects:/usr/local/webots/projects/samples/robotbenchmark'
-      - './webots/simulation_server.py:/usr/local/webots/resources/web/server/simulation_server.py'
-      - './webots/session_server.py:/usr/local/webots/resources/web/server/session_server.py'
-      - './webots/server.sh:/usr/local/server.sh'
+      - './webots/new_webots/async_process.py:/usr/local/webots/resources/web/server/async_process.py'
+      - './webots/new_webots/simulation_server.py:/usr/local/webots/resources/web/server/simulation_server.py'
+      - './webots/new_webots/session_server.py:/usr/local/webots/resources/web/server/session_server.py'
+      - './webots/new_webots/server.sh:/usr/local/server.sh'
     ports:
       - '1999-2100:1999-2100'
     command: /bin/sh -c /usr/local/server.sh
-    #tty: true
-#  app:
-#    build:
-#      context: ../
-#      dockerfile: ./docker/django/Dockerfile
-#    container_name: app
-#    command: gunicorn application.wsgi:application --bind 0.0.0.0:8000 --reload
-#    env_file:
-#      - ../application/.env
-#    volumes:
-#      - ${APP_DIR}:/usr/src/app/
-#    expose:
-#      - 8000
-#  db:
-#    image: postgres:12.0-alpine
-#    volumes:
-#      - postgres_data:/var/lib/postgresql/data/
-#    environment:
-#      - POSTGRES_USER=${POSTGRES_USER}
-#      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-#      - POSTGRES_DB=${POSTGRES_DATABASE}
-#    ports:
-#      - 6432:5432
-#  webserver:
-#    build:
-#      context: ../
-#      dockerfile: ./docker/nginx/Dockerfile
-#    working_dir: /application
-#    ulimits:
-#      nproc: 65535
-#      nofile:
-#        soft: 40000
-#        hard: 80000
-#    volumes:
-#      - '${APP_DIR}:/application'
-#      - './nginx/nginx-app.conf:/etc/nginx/conf.d/default.conf'
-#      - './nginx/nginx.conf/:/etc/nginx/nginx.conf'
-#    ports:
-#      - '${WEBSERVER_PORT}:80'
-#    restart: unless-stopped
-#    depends_on:
-#      - php-fpm
+    tty: true
+  app:
+    build:
+      context: ../
+      dockerfile: ./docker/django/Dockerfile
+    container_name: app
+    command: gunicorn application.wsgi:application --bind 0.0.0.0:8000 --reload
+    env_file:
+      - ../application/.env
+    volumes:
+      - ${APP_DIR}:/usr/src/app/
+    expose:
+      - 8000
+  db:
+    image: postgres:12.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+    ports:
+      - 6432:5432
+  webserver:
+    build:
+      context: ../
+      dockerfile: ./docker/nginx/Dockerfile
+    working_dir: /application
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 40000
+        hard: 80000
+    volumes:
+      - '${APP_DIR}:/application'
+      - './nginx/nginx-app.conf:/etc/nginx/conf.d/default.conf'
+      - './nginx/nginx.conf/:/etc/nginx/nginx.conf'
+    ports:
+      - '${WEBSERVER_PORT}:80'
+    restart: unless-stopped
+    depends_on:
+      - php-fpm
   php-fpm:
     build:
       context: ../
@@ -76,7 +77,7 @@ services:
       - './php-fpm/php-ini-overrides.ini:/usr/local/etc/php/conf.d/local.ini'
     restart: unless-stopped
 
-#volumes:
-#  postgres_data:
+volumes:
+  postgres_data:
 
 
