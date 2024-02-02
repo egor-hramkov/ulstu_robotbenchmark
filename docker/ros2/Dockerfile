@@ -7,7 +7,7 @@ FROM $ROS_IMAGE AS image2
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt update --allow-insecure-repositories
-RUN apt install -y firejail python3-pip subversion nano
+RUN apt install -y python3-pip subversion nano
 RUN pip3 install tornado pynvml psutil requests distro asyncprocess
 ENV DISPLAY=:99
 COPY ./docker/webots/new_webots/config /usr/local/webots/resources/web/server/config
