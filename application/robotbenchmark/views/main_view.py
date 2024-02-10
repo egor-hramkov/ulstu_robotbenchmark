@@ -1,8 +1,9 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+
+from ..models import Problem
+
 
 # Create your views here.
-from robotbenchmark.models import Problem
 
 
 def home(request):
