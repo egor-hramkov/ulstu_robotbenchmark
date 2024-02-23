@@ -6,6 +6,7 @@ from django.db import models
 
 
 class Problem(models.Model):
+    """Модель соревнования"""
     title = models.CharField(max_length=300)
     description = models.CharField(max_length=1000, null=True)
     world_path = models.CharField(max_length=300)
