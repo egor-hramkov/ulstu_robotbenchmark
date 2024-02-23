@@ -1,17 +1,16 @@
-from django.shortcuts import render
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
+from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 
 from ..models import Problem
 from ..serializers.problem_serializer import ProblemSerializer
 
 
-# Create your views here.
-
-
 class ProblemViewSet(viewsets.ModelViewSet):
     queryset = Problem.objects.all()
     serializer_class = ProblemSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
