@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets
+from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework import viewsets, status
 from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 
@@ -8,6 +9,45 @@ from robotbenchmark.models import ProblemUser
 from robotbenchmark.serializers.problem_user_serializer import ProblemUserSerializer
 
 
+@extend_schema(tags=["users-problem"])
+@extend_schema_view(
+    retrieve=extend_schema(
+        summary="Детальная информация о соревнованиях пользователя",
+        responses={
+            status.HTTP_200_OK: ProblemUserSerializer
+        }
+    ),
+    list=extend_schema(
+        summary="Детальная информация о всех соревнованиях пользователей",
+        responses={
+            status.HTTP_200_OK: ProblemUserSerializer
+        }
+    ),
+    update=extend_schema(
+        summary="Обновление данных о соревновании пользователя",
+        responses={
+            status.HTTP_200_OK: ProblemUserSerializer
+        }
+    ),
+    create=extend_schema(
+        summary="Создание соревнования пользователю",
+        responses={
+            status.HTTP_200_OK: ProblemUserSerializer
+        }
+    ),
+    destroy=extend_schema(
+        summary="Удаление соревнования пользователю",
+        responses={
+            status.HTTP_200_OK: ProblemUserSerializer
+        }
+    ),
+    partial_update=extend_schema(
+        summary="Обновление с необ. полями соревнования пользователю",
+        responses={
+            status.HTTP_200_OK: ProblemUserSerializer
+        }
+    )
+)
 class ProblemUserViewSet(viewsets.ModelViewSet):
     queryset = ProblemUser.objects.all()
     serializer_class = ProblemUserSerializer

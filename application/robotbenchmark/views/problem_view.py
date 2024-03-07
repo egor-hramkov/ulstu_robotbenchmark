@@ -1,5 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets
+from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework import viewsets, status
 from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 
@@ -7,6 +8,45 @@ from ..models import Problem
 from ..serializers.problem_serializer import ProblemSerializer
 
 
+@extend_schema(tags=["problems"])
+@extend_schema_view(
+    retrieve=extend_schema(
+        summary="Детальная информация о соревновании",
+        responses={
+            status.HTTP_200_OK: ProblemSerializer
+        }
+    ),
+    list=extend_schema(
+        summary="Получение списка соревнований",
+        responses={
+            status.HTTP_200_OK: ProblemSerializer
+        }
+    ),
+    update=extend_schema(
+        summary="Обновление данных о соревновании",
+        responses={
+            status.HTTP_200_OK: ProblemSerializer
+        }
+    ),
+    create=extend_schema(
+        summary="Создание соревнования",
+        responses={
+            status.HTTP_200_OK: ProblemSerializer
+        }
+    ),
+    destroy=extend_schema(
+        summary="Удаление соревнования",
+        responses={
+            status.HTTP_200_OK: ProblemSerializer
+        }
+    ),
+    partial_update=extend_schema(
+        summary="Обновление с необязательными полями соревнования",
+        responses={
+            status.HTTP_200_OK: ProblemSerializer
+        }
+    )
+)
 class ProblemViewSet(viewsets.ModelViewSet):
     queryset = Problem.objects.all()
     serializer_class = ProblemSerializer
