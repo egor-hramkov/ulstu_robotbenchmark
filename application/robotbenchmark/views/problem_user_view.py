@@ -3,6 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import viewsets, status
 from rest_framework.filters import OrderingFilter
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from robotbenchmark.models import ProblemUser
@@ -52,6 +53,7 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
     queryset = ProblemUser.objects.all()
     serializer_class = ProblemUserSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
+    permission_classes = [IsAuthenticated]
 
     # def get_object(self, user_id: int, problem_id: int) -> ProblemUser:
     #     instance = ProblemUser.objects.get(user_id=user_id, problem_id=problem_id)
