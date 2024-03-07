@@ -6,7 +6,8 @@ from rest_framework import routers
 
 from .views.problem_user_view import ProblemUserViewSet
 from .views.problem_view import ProblemViewSet
-from .views.user_view import UserViewSet, LoginView
+from .views.user_view import UserViewSet
+from .views.login_view import LoginView
 
 router = routers.DefaultRouter()
 router.register("users", UserViewSet)
