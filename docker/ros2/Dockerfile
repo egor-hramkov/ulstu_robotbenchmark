@@ -1,8 +1,10 @@
-ARG BASE_IMAGE_WEBOTS=cyberbotics/webots:R2023b-ubuntu22.04
-ARG ROS_IMAGE=osrf/ros:humble-desktop
+FROM niurover/webots_ros2_foxy
 
-FROM $BASE_IMAGE_WEBOTS AS base
-FROM $ROS_IMAGE AS image2
+#ARG BASE_IMAGE_WEBOTS=cyberbotics/webots:R2023b-ubuntu22.04
+#ARG ROS_IMAGE=osrf/ros:humble-desktop
+#
+#FROM $BASE_IMAGE_WEBOTS AS base
+#FROM $ROS_IMAGE AS image2
 
 ENV DEBIAN_FRONTEND=noninteractive
 
