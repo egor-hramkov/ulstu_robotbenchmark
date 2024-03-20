@@ -378,6 +378,7 @@ else:
     sys.exit('Too many arguments.')
 if not os.path.isabs(config_json):
     config_json = os.path.join(os.path.dirname(os.path.abspath(__file__)), config_json)
+config_json = '/usr/local/webots/resources/web/server/config/session/local.json'
 with open(config_json) as config_file:
     config = json.load(config_file)
 start_time = time.strftime('%A, %B %d, %Y at %H:%M:%S')
