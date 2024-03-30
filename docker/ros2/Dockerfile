@@ -27,8 +27,7 @@ ENV DISPLAY=:99
 COPY ./docker/webots/new_webots/config /usr/local/webots/resources/web/server/config
 # COPY server/key /usr/local/webots/resources/web/server/key
 COPY ./docker/webots/new_webots/simulation_server.py /usr/local/webots/resources/web/server/simulation_server.py
-COPY ./docker/webots/new_webots/server.sh /usr/local/server.sh
-# ToDO ПОПЫТАТЬСЯ ИСХОДНИК ТЕСЛЫ ЗАКИНУТЬ И ЗАПУСТИТЬ
+# COPY ./docker/webots/new_webots/server.sh /usr/local/server.sh
 # RUN chmod 654 /usr/local/server.sh
 USER root
 # RUN . /opt/ros/foxy/setup.sh

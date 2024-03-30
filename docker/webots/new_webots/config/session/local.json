@@ -2,6 +2,7 @@
   "server": "localhost",
   "ssl": false,
   "port": 1999,
+  "simulation_server_port": 2000,
   "portRewrite": false,
   "debug": true,
   "simulationServers": [

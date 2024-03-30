@@ -998,7 +998,9 @@ def main():
         logging.info(x.text)
 
     # startup the server
-    logging.info(f"Running simulation server on port {config['port']}")
+    print("\n\nCONFIG FOR LOGGING: ", config, "\n\n")
+    sim_serv_port = config.get('simulation_server_port', '2000')
+    logging.info(f"Running simulation server on port {sim_serv_port}!!!")
 
     handlers = []
     handlers.append((r'/monitor', MonitorHandler))
@@ -1006,7 +1008,7 @@ def main():
     handlers.append((r'/load', LoadHandler))
     application = tornado.web.Application(handlers)
     http_server = tornado.httpserver.HTTPServer(application)
-    http_server.listen(config['port'])
+    http_server.listen(sim_serv_port)
     try:
         nvmlInit()
         nvidia = True
