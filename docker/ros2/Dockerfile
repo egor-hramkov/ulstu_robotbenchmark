@@ -38,8 +38,11 @@ USER root
 # git clone --recurse-submodules https://github.com/cyberbotics/webots_ros2.git
 # git clone --recurse-submodules https://github.com/cyberbotics/webots_ros2.git src/webots_ros2
 # git clone --recurse-submodules -b develop https://github.com/cyberbotics/webots_ros2.git src/webots_ros2
-# Check dependencies
 # из ros2_ws!
+# sudo apt install python3-pip python3-rosdep python3-colcon-common-extensions
+# sudo rosdep init && rosdep update
+# Check dependencies
+
 # rosdep update
 # rosdep install --from-paths src --ignore-src --rosdistro foxy
 
