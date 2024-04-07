@@ -1,9 +1,0 @@
-{
-  "port": 1999,
-  "server": "localhost",
-  "portRewrite": false,
-  "simulationServers": [
-    "localhost:2000"
-  ],
-  "debug": true
-}
