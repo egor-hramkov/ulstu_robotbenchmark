@@ -1,5 +1,7 @@
 # ulstu_robotbenchmark
 
+Развернуть webots_ros2 согласно docker/webots/Readme
+
 Развернуть и запустить проект
 ~~~
 cd application

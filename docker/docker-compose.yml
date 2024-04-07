@@ -9,23 +9,23 @@ services:
 #    working_dir: /usr/local
 #    restart: no
 #    command: /bin/sh -c /usr/local/ros2.sh
-  webots:
-    build:
-      context: ../
-      dockerfile: ./docker/ros2/Dockerfile
-    container_name: webots
-    working_dir: /usr/local
-    restart: unless-stopped
-    volumes:
-      - '../application/public/ajax/projects:/usr/local/webots/projects/samples/robotbenchmark'
-      - './webots/new_webots/async_process.py:/usr/local/webots/resources/web/server/async_process.py'
-      - './webots/new_webots/simulation_server.py:/usr/local/webots/resources/web/server/simulation_server.py'
-      - './webots/new_webots/session_server.py:/usr/local/webots/resources/web/server/session_server.py'
-      - './webots/new_webots/server.sh:/usr/local/server.sh'
-    ports:
-      - '1999-2100:1999-2100'
-    command: /bin/sh -c /usr/local/server.sh
-    tty: true
+#  webots:
+#    build:
+#      context: ../
+#      dockerfile: ./docker/ros2/Dockerfile
+#    container_name: webots
+#    working_dir: /usr/local
+#    restart: unless-stopped
+#    volumes:
+#      - '../application/public/ajax/projects:/usr/local/webots/projects/samples/robotbenchmark'
+#      - './webots/new_webots/async_process.py:/usr/local/webots/resources/web/server/async_process.py'
+#      - './webots/new_webots/simulation_server.py:/usr/local/webots/resources/web/server/simulation_server.py'
+#      - './webots/new_webots/session_server.py:/usr/local/webots/resources/web/server/session_server.py'
+#      - './webots/new_webots/server.sh:/usr/local/server.sh'
+#    ports:
+#      - '1999-2100:1999-2100'
+#    command: /bin/sh -c /usr/local/server.sh
+#    tty: true
   app:
     build:
       context: ../
