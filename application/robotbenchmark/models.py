@@ -20,14 +20,14 @@ class ProblemUser(models.Model):
     """Многие ко многим Пользователь-Задача"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
-    is_completed = models.BooleanField(default=False)
+    is_completed = models.BooleanField(nullable=False, default=False)
     points = models.IntegerField(default=0)
 
 
 class Tournament(models.Model):
     """Модель Соревнования"""
     problems = models.ManyToManyField(Problem, related_name='tournaments')
-    users = models.ManyToManyField(User, related_name='user_tournaments')
+    users = models.ManyToManyField(User, related_name='user_tournaments', through="TournamentUser")
     date_start = models.DateTimeField(auto_now_add=True)
     date_end = models.DateTimeField()
 
@@ -36,5 +36,5 @@ class TournamentUser(models.Model):
     """Многие ко многим Пользователь-Соревнование"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
-    is_completed = models.BooleanField(default=False)
+    is_completed = models.BooleanField(nullable=False, default=False)
     points = models.IntegerField(default=0)
