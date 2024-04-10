@@ -12,37 +12,37 @@ from ..serializers.problem_serializer import ProblemSerializer
 @extend_schema(tags=["problems"])
 @extend_schema_view(
     retrieve=extend_schema(
-        summary="Детальная информация о соревновании",
+        summary="Детальная информация о задаче",
         responses={
             status.HTTP_200_OK: ProblemSerializer
         }
     ),
     list=extend_schema(
-        summary="Получение списка соревнований",
+        summary="Получение списка задач",
         responses={
             status.HTTP_200_OK: ProblemSerializer
         }
     ),
     update=extend_schema(
-        summary="Обновление данных о соревновании",
+        summary="Обновление данных о задачи",
         responses={
             status.HTTP_200_OK: ProblemSerializer
         }
     ),
     create=extend_schema(
-        summary="Создание соревнования",
+        summary="Создание задачи",
         responses={
             status.HTTP_200_OK: ProblemSerializer
         }
     ),
     destroy=extend_schema(
-        summary="Удаление соревнования",
+        summary="Удаление задачи",
         responses={
             status.HTTP_200_OK: ProblemSerializer
         }
     ),
     partial_update=extend_schema(
-        summary="Обновление с необязательными полями соревнования",
+        summary="Обновление с необязательными полями задачи",
         responses={
             status.HTTP_200_OK: ProblemSerializer
         }
