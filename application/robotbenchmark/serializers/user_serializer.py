@@ -7,7 +7,8 @@ UserModel = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
-        fields = ["url", "username", "password"]
+        #fields = ["url", "username", "password"]
+        exclude = ['last_login', 'is_superuser', 'is_staff', 'groups', 'user_permissions', 'date_joined', 'is_active']
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
