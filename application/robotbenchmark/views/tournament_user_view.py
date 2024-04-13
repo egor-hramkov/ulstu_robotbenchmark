@@ -1,16 +1,14 @@
-from django.contrib.auth.models import User
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import viewsets, status
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
 from robotbenchmark.serializers.tournament_user_serializer import TournamentUserSerializer
 from robotbenchmark.models import TournamentUser
 
 
-@extend_schema(tags=["users-problem"])
+@extend_schema(tags=["users-tournament"])
 @extend_schema_view(
     retrieve=extend_schema(
         summary="Детальная информация о соревнованиях пользователя",

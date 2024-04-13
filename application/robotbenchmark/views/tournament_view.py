@@ -3,13 +3,12 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import viewsets, status
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
 from ..models import Tournament
 from ..serializers.tournament_serializer import TournamentSerializer
 
 
-@extend_schema(tags=["problems"])
+@extend_schema(tags=["tournament"])
 @extend_schema_view(
     retrieve=extend_schema(
         summary="Детальная информация о соревновании",

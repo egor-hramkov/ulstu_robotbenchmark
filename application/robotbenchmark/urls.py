@@ -4,6 +4,8 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, Sp
 
 from rest_framework import routers
 
+from .views.tournament_view import TournamentViewSet
+from .views.tournament_user_view import TournamentUserViewSet
 from .views.problem_user_view import ProblemUserViewSet
 from .views.problem_view import ProblemViewSet
 from .views.user_view import UserViewSet
@@ -13,6 +15,8 @@ router = routers.DefaultRouter()
 router.register("users", UserViewSet)
 router.register("problem", ProblemViewSet)
 router.register("users-problem", ProblemUserViewSet)
+router.register("users-tournament", TournamentUserViewSet)
+router.register("tournament", TournamentViewSet)
 
 urlpatterns = [
     path('login/', LoginView.as_view()),
