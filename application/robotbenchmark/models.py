@@ -20,7 +20,7 @@ class ProblemUser(models.Model):
     """Многие ко многим Пользователь-Задача"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
-    is_completed = models.BooleanField(nullable=False, default=False)
+    is_completed = models.BooleanField(null=False, default=False)
     points = models.IntegerField(default=0)
 
 
@@ -35,6 +35,6 @@ class Tournament(models.Model):
 class TournamentUser(models.Model):
     """Многие ко многим Пользователь-Соревнование"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
-    is_completed = models.BooleanField(nullable=False, default=False)
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
+    is_completed = models.BooleanField(null=False, default=False)
     points = models.IntegerField(default=0)
