@@ -23,13 +23,21 @@ class ProblemUser(models.Model):
     is_completed = models.BooleanField(null=False, default=False)
     points = models.IntegerField(default=0)
 
+    def __str__(self):
+        return self.user.username + " - " + self.problem.title
+
 
 class Tournament(models.Model):
     """Модель Соревнования"""
     problems = models.ManyToManyField(Problem, related_name='tournaments')
     users = models.ManyToManyField(User, related_name='user_tournaments', through="TournamentUser")
+    name = models.CharField(max_length=255, null=False, blank=False)
+    description = models.CharField(max_length=5000)
     date_start = models.DateTimeField(auto_now_add=True)
     date_end = models.DateTimeField()
+
+    def __str__(self):
+        return self.name
 
 
 class TournamentUser(models.Model):
@@ -38,3 +46,6 @@ class TournamentUser(models.Model):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     is_completed = models.BooleanField(null=False, default=False)
     points = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.user.username + " - " + self.tournament.name

@@ -4,6 +4,9 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, Sp
 
 from rest_framework import routers
 
+from .views.leaderboard_by_problem_view import LeaderboardByProblemView
+from .views.leaderboard_by_tournament_view import LeaderboardByTournamentView
+from .views.leaderboard_view import LeaderboardView
 from .views.tournament_view import TournamentViewSet
 from .views.tournament_user_view import TournamentUserViewSet
 from .views.problem_user_view import ProblemUserViewSet
@@ -20,7 +23,12 @@ router.register("tournament", TournamentViewSet)
 
 urlpatterns = [
     path('login/', LoginView.as_view()),
+
     path("api/", include(router.urls)),
+    path('api/leaderboard/', LeaderboardView.as_view()),
+    path('api/leaderboard/tournament/<int:tournament_id>/', LeaderboardByTournamentView.as_view()),
+    path('api/leaderboard/problem/<int:problem_id>/', LeaderboardByProblemView.as_view()),
+
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 
