@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 
@@ -22,6 +23,14 @@ class ProblemUser(models.Model):
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
     is_completed = models.BooleanField(null=False, default=False)
     points = models.IntegerField(default=0)
+    robot_panel_port = models.IntegerField(validators=[MinValueValidator(10000), MaxValueValidator(12000)])
+    vs_port = models.IntegerField(validators=[MinValueValidator(10000), MaxValueValidator(12000)])
+    webots_stream_port = models.IntegerField(validators=[MinValueValidator(10000), MaxValueValidator(12000)])
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['robot_panel_port', 'vs_port', 'webots_stream_port'], name='unique_ports')
+        ]
 
     def __str__(self):
         return self.user.username + " - " + self.problem.title
