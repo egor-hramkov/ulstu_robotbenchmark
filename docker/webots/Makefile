@@ -58,6 +58,7 @@ test-nvidia: colors
 
 copy-working-files:
 	docker exec -it ulstu-${FLAVOR} ln -s /ulstu/repositories/webots_ros2_suv /ulstu/ros2_ws/src/webots_ros2_suv && \
+	#docker exec -it ulstu-${FLAVOR} ln -s /ulstu/repositories/webots_ros2_tesla /ulstu/ros2_ws/src/webots_ros2_tesla && \
 	docker exec -it ulstu-${FLAVOR} ln -s /ulstu/repositories/robot_interfaces /ulstu/ros2_ws/src/robot_interfaces ; \
 
 copy-working-folders:
@@ -66,6 +67,7 @@ copy-working-folders:
 	else \
 		mkdir ${PROJECT_DIR}/projects/${FLAVOR} && \
 		cp -r ${PROJECT_DIR}/simulation/webots_ros2_suv ${PROJECT_DIR}/projects/${FLAVOR}/webots_ros2_suv  && \
+		cp -r ${PROJECT_DIR}/simulation/webots_ros2_tesla ${PROJECT_DIR}/projects/${FLAVOR}/webots_ros2_tesla && \
 		cp -r ${PROJECT_DIR}/simulation/robot_interfaces ${PROJECT_DIR}/projects/${FLAVOR}/robot_interfaces ; \
 #cp -r ${PROJECT_DIR}/docker ${PROJECT_DIR}/docker/projects/${FLAVOR}/docker ; \
 	fi
