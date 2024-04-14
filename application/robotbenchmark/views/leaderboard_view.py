@@ -3,7 +3,7 @@ from django.db.models import Sum
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from serializers.leaderboard_serializer import LeaderboardSerializer
+from ..serializers.leaderboard_serializer import LeaderboardSerializer
 
 
 class LeaderboardView(APIView):

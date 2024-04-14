@@ -3,9 +3,9 @@ from django.db.models import Sum, F
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from serializers.problem_serializer import ProblemSerializer
+from ..serializers.problem_serializer import ProblemSerializer
 from ..models import Problem
-from serializers.leaderboard_serializer import LeaderboardProblemSerializer, LeaderboardSerializer
+from ..serializers.leaderboard_serializer import LeaderboardProblemSerializer, LeaderboardSerializer
 
 
 class LeaderboardByProblemView(APIView):

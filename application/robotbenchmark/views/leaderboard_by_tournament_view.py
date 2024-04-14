@@ -3,9 +3,9 @@ from django.db.models import Sum
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from serializers.tournament_serializer import TournamentSerializer
+from ..serializers.tournament_serializer import TournamentSerializer
 from ..models import Tournament
-from serializers.leaderboard_serializer import LeaderboardSerializer, LeaderboardTournamentSerializer
+from ..serializers.leaderboard_serializer import LeaderboardSerializer, LeaderboardTournamentSerializer
 
 
 class LeaderboardByTournamentView(APIView):

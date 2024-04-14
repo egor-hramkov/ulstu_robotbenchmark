@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from serializers.problem_serializer import ProblemSerializer
-from serializers.tournament_serializer import TournamentSerializer
+from ..serializers.problem_serializer import ProblemSerializer
+from ..serializers.tournament_serializer import TournamentSerializer
 
 
 class LeaderboardSerializer(serializers.Serializer):
