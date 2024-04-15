@@ -12,13 +12,7 @@ docker compose build
 docker compose up -d
 ~~~
 
-Затем зайти в контейнер с django приложением и оттуда последовательно накатить миграции, создать юзера и выполнить сиды, чтобы в БД создались задачи
-~~~
-docker compose exec app sh
-python3 manage.py migrate
-python3 manage.py createsuperuser
-python3 manage.py seed
-~~~
+В контейнере app автоматически накатываются миграции и создаётся админ с логином: admin и паролем: admin
 
 После запуска перейти на 127.0.0.1:8047
 
