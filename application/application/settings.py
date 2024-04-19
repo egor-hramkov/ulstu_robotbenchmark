@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'robotbenchmark',
     'drf_spectacular',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -51,7 +52,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8047']
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'http://127.0.0.1:8047']
 ROOT_URLCONF = 'application.urls'
