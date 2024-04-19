@@ -7,8 +7,7 @@ class Problem(models.Model):
     """Модель задачи"""
     title = models.CharField(max_length=300)
     description = models.CharField(max_length=1000, null=True)
-    world_path = models.CharField(max_length=300)
-    image_path = models.CharField(max_length=300)
+    world_path = models.CharField()
     difficulty = models.FloatField()
     author = models.ForeignKey(User, related_name='problems', on_delete=models.DO_NOTHING)
     users = models.ManyToManyField(User, related_name='user_problems', through="ProblemUser")
@@ -58,3 +57,11 @@ class TournamentUser(models.Model):
 
     def __str__(self):
         return self.user.username + " - " + self.tournament.name
+
+
+class CommandQueue(models.Model):
+    """
+    Модель для очереди задач, которые необходимо выполнить на хостовой машине.
+    ! Лучше в будущем заменить на брокер сообщений !
+    """
+    command = models.CharField()
