@@ -1,3 +1,5 @@
+import random
+
 from django.contrib.auth.models import User
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -54,3 +56,18 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
     serializer_class = ProblemUserSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        random_numbers = [random.randint(10000, 12000) for _ in range(3)]
+        ProblemUser.objects.create(
+            user=self.request.user,
+            problem=serializer.validated_data['problem'],
+            points=serializer.validated_data['points'],
+            is_complited=serializer.validated_data['is_complited'],
+            robot_panel_port=random_numbers[0],
+            vs_port=random_numbers[1],
+            webots_stream_port=random_numbers[2]
+        )
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
