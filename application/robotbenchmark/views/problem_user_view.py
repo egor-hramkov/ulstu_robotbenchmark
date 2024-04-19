@@ -8,7 +8,7 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from robotbenchmark.models import ProblemUser
+from robotbenchmark.models import ProblemUser, CommandQueue
 from robotbenchmark.serializers.problem_user_serializer import ProblemUserSerializer
 
 
@@ -70,4 +70,6 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
             vs_port=random_numbers[1],
             webots_stream_port=random_numbers[2]
         )
+        # ToDo Прокинуть команду на хост машину о выполнении и создания контейнера с портами
+        # CommandQueue.objects.create()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
