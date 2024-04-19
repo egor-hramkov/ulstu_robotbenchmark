@@ -37,3 +37,8 @@ class ProblemUserTestCase(TestCase):
 
         check_command = CommandQueue.objects.all()
         assert len(check_command) > 0
+
+        response = self.c.get(self.GET_COMMAND_URL)
+        assert response.status_code == 200
+        check_command = CommandQueue.objects.all()
+        assert len(check_command) == 0
