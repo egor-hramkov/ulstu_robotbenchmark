@@ -12,12 +12,13 @@ class FinishProblemView(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    def get(self, problemuser_id: int):
+    def get(self, request, problemuser_id: int):
         """Удаляет докер контейнер и файлы в ОС пользователя по айди записи в таблице ProblemUser"""
-        problemuser_id = self.request.query_params['problemuser_id']
         p = ProblemUser.objects.get(pk=problemuser_id)
-        if p.user.id == self.request.user.id:
-            return Response({"detail": "Недостаточно прав!"}, status=status.HTTP_403_FORBIDEN)
+        print(p.user.id)
+        print(request.user.id)
+        if p.user.id != request.user.id:
+            return Response({"detail": "Недостаточно прав!"}, status=status.HTTP_403_FORBIDDEN)
 
         docker_container_name = 'ulstu-' + p.user.username + str(p.id)
         command_remove_container = f"docker rm -f {docker_container_name}"
@@ -26,7 +27,8 @@ class FinishProblemView(APIView):
         )
 
         dir_prefix = '../projects/'  # для удаления исходников пользователя
-        command_remove_folder = f"rm -rf {dir_prefix}{docker_container_name}"
+        dir_name = p.user.username + str(p.id)
+        command_remove_folder = f"rm -rf {dir_prefix}{dir_name}"
         CommandQueue.objects.create(
             command=command_remove_folder
         )

