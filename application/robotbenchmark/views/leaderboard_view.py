@@ -12,7 +12,7 @@ class LeaderboardView(APIView):
     def get(self, request, format=None):
         """Return Общий Leaderboard"""
         user_model = get_user_model()
-        users = user_model.objects.all().annotate(total_points=Sum('tournamentuser__points'))
+        users = user_model.objects.all().annotate(total_points=Sum('tournamentuser__points')).order_by('-total_points')
         serializer = LeaderboardSerializer(users, many=True)
         return Response(serializer.data)
 
