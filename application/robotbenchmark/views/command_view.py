@@ -6,10 +6,10 @@ from robotbenchmark.serializers.command_serializer import CommandQueueSerializer
 
 
 class CommandQueueView(APIView):
-    """Вью для лидерборда определённой задачи"""
+    """Вью для команд хостовой машины"""
 
     def get(self, request, format=None):
-        """Return Leaderboard определённой задачи"""
+        """Исполняет первую команду в очереди и удаляет ее из очереди"""
         command = CommandQueue.objects.first()
         if not command:
             return Response([], status=200)
