@@ -3,6 +3,7 @@ import os
 import time
 import urllib.request as req
 
+print("Служба запущена!")
 while True:
     url = 'http://localhost:8000/api/commands/'
     response = req.urlopen(url)
