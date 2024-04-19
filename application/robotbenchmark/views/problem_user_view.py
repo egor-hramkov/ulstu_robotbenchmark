@@ -60,16 +60,24 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        random_numbers = [random.randint(10000, 12000) for _ in range(3)]
-        ProblemUser.objects.create(
+        robot_panel_port = random.randint(10000, 12000)
+        vs_port = random.randint(10000, 12000)
+        webots_stream_port = random.randint(10000, 12000)
+
+        p = ProblemUser.objects.create(
             user=self.request.user,
             problem=serializer.validated_data['problem'],
             points=serializer.validated_data['points'],
-            is_complited=serializer.validated_data['is_complited'],
-            robot_panel_port=random_numbers[0],
-            vs_port=random_numbers[1],
-            webots_stream_port=random_numbers[2]
+            is_completed=serializer.validated_data['is_completed'],
+            robot_panel_port=robot_panel_port,
+            vs_port=vs_port,
+            webots_stream_port=webots_stream_port
         )
-        # ToDo Прокинуть команду на хост машину о выполнении и создания контейнера с портами
-        # CommandQueue.objects.create()
+        command = f"make all FLAVOR={p.user.username} ROBOT_PANEL_PORT={robot_panel_port} VS_PORT={vs_port} WEBOTS_STREAM_PORT={webots_stream_port}"
+
+        CommandQueue.objects.create(
+            command=command
+        )
+
+        serializer = self.get_serializer(p)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
