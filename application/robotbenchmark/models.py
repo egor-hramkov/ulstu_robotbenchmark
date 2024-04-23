@@ -10,6 +10,7 @@ class Problem(models.Model):
     title = models.CharField(max_length=300)
     description = models.CharField(max_length=1000, null=True)
     world_path = models.CharField(choices=WebotsRosProjects.get_choices())
+    image = models.ImageField(upload_to='images/', default="default_img.jpg", null=True, blank=True)
     difficulty = models.FloatField()
     author = models.ForeignKey(User, related_name='problems', on_delete=models.DO_NOTHING)
     users = models.ManyToManyField(User, related_name='user_problems', through="ProblemUser")

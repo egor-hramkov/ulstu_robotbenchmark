@@ -7,7 +7,7 @@ from .models import Problem, TournamentUser, Tournament, ProblemUser, CommandQue
 
 @admin.register(Problem)
 class ProblemAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'world_path', 'difficulty', 'author')  # Список полей, которые будут отображаться в списке объектов
+    list_display = ('id', 'title', 'world_path', 'difficulty', 'image', 'author')  # Список полей, которые будут отображаться в списке объектов
     list_display_links = ('id', 'title', 'world_path', 'difficulty')  # Список полей, которые будут отображаться в списке объектов
     list_filter = ('id', 'title', 'author')  # Список полей, по которым можно будет фильтровать объекты
     search_fields = ('id', 'title', 'author')  # Список полей, по которым можно будет искать объекты
