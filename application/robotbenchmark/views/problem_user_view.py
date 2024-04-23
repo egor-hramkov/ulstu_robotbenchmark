@@ -73,7 +73,8 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
             vs_port=vs_port,
             webots_stream_port=webots_stream_port
         )
-        command = f"make all FLAVOR={p.user.username + str(p.id)} ROBOT_PANEL_PORT={robot_panel_port} VS_PORT={vs_port} WEBOTS_STREAM_PORT={webots_stream_port}"
+        command = (f"make all FLAVOR={p.user.username + str(p.id)} ROBOT_PANEL_PORT={robot_panel_port} "
+                   f"VS_PORT={vs_port} WEBOTS_STREAM_PORT={webots_stream_port} ROS2_PROJECT={p.problem.world_path}")
 
         CommandQueue.objects.create(
             command=command

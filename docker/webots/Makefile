@@ -4,7 +4,7 @@ DOCKER_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 PROJECT_DIR:=$(shell dirname ${DOCKER_DIR})
 NVIDIA_GPU:=$(shell (docker info | grep Runtimes | grep nvidia 1> /dev/null && command -v nvidia-smi 1>/dev/null 2>/dev/null && nvidia-smi | grep Processes 1>/dev/null 2>/dev/null) && echo '--runtime nvidia --gpus all' || echo '')
 IMAGE=ulstu
-
+ROS2_PROJECT="webots_ros2_suv"
 FLAVOR=devel
 ROBOT_PANEL_PORT=8008
 VS_PORT=31415
@@ -57,8 +57,7 @@ test-nvidia: colors
 	true
 
 copy-working-files:
-	docker exec -it ulstu-${FLAVOR} ln -s /ulstu/repositories/webots_ros2_suv /ulstu/ros2_ws/src/webots_ros2_suv && \
-	#docker exec -it ulstu-${FLAVOR} ln -s /ulstu/repositories/webots_ros2_tesla /ulstu/ros2_ws/src/webots_ros2_tesla && \
+	docker exec -it ulstu-${FLAVOR} ln -s /ulstu/repositories/${ROS2_PROJECT} /ulstu/ros2_ws/src/${ROS2_PROJECT} && \
 	docker exec -it ulstu-${FLAVOR} ln -s /ulstu/repositories/robot_interfaces /ulstu/ros2_ws/src/robot_interfaces ; \
 
 copy-working-folders:
@@ -66,8 +65,7 @@ copy-working-folders:
 		echo "project dir exists. Remove it first" ; \
 	else \
 		mkdir ${PROJECT_DIR}/projects/${FLAVOR} && \
-		cp -r ${PROJECT_DIR}/simulation/webots_ros2_suv ${PROJECT_DIR}/projects/${FLAVOR}/webots_ros2_suv  && \
-		cp -r ${PROJECT_DIR}/simulation/webots_ros2_tesla ${PROJECT_DIR}/projects/${FLAVOR}/webots_ros2_tesla && \
+		cp -r ${PROJECT_DIR}/simulation/${ROS2_PROJECT} ${PROJECT_DIR}/projects/${FLAVOR}/${ROS2_PROJECT}  && \
 		cp -r ${PROJECT_DIR}/simulation/robot_interfaces ${PROJECT_DIR}/projects/${FLAVOR}/robot_interfaces ; \
 #cp -r ${PROJECT_DIR}/docker ${PROJECT_DIR}/docker/projects/${FLAVOR}/docker ; \
 	fi

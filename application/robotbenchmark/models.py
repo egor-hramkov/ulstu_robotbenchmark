@@ -2,12 +2,14 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from robotbenchmark.enums.webots_ros2_projects_dir import WebotsRosProjects
+
 
 class Problem(models.Model):
     """Модель задачи"""
     title = models.CharField(max_length=300)
     description = models.CharField(max_length=1000, null=True)
-    world_path = models.CharField()
+    world_path = models.CharField(choices=WebotsRosProjects.get_choices())
     difficulty = models.FloatField()
     author = models.ForeignKey(User, related_name='problems', on_delete=models.DO_NOTHING)
     users = models.ManyToManyField(User, related_name='user_problems', through="ProblemUser")
