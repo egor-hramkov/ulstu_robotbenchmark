@@ -26,6 +26,7 @@ class ProblemUserTestCase(TestCase):
     def test_create_problem_user(self):
         """Тест на создание задачи пользователю"""
         self.c.login(username='test_for_task', password='abcdefasd')
+        print(f"Отправляем запрос на {self.CREATE_PROBLEM_URL}")
         response = self.c.post(
             f"{self.CREATE_PROBLEM_URL}",
             {
@@ -37,13 +38,19 @@ class ProblemUserTestCase(TestCase):
             HTTP_AUTHORIZATION=f'Bearer {self.token}',
             content_type="application/json",
         )
-
+        print(f"Проверяем статус ответа {response.status_code=} == 201")
         assert response.status_code == 201
 
+        print(f"Проверяем что команда на создание контейнеров запушилась в очередь...")
         check_command = CommandQueue.objects.all()
+
+        print(f"Команд в очереди: {len(check_command)} > 0")
         assert len(check_command) > 0
 
+        print(f"Делаем запрос на исполнение команды: {self.GET_COMMAND_URL}")
         response = self.c.get(self.GET_COMMAND_URL)
         assert response.status_code == 200
         check_command = CommandQueue.objects.all()
+
+        print(f"Проверяем что команда на поднятие контейнера исполнилась: команд в очереди {len(check_command)} == 0")
         assert len(check_command) == 0
