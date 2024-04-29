@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
+from rest_framework_simplejwt.tokens import AccessToken
 
 from robotbenchmark.models import Problem, CommandQueue
 
@@ -20,6 +21,7 @@ class ProblemUserTestCase(TestCase):
             difficulty=1,
             author=self.user
         )
+        self.token = AccessToken.for_user(self.user)
 
     def test_create_problem_user(self):
         """Тест на создание задачи пользователю"""
@@ -32,8 +34,10 @@ class ProblemUserTestCase(TestCase):
                 "user": self.user.id,
                 "problem": self.problem.id
             },
+            HTTP_AUTHORIZATION=f'Bearer {self.token}',
             content_type="application/json",
         )
+
         assert response.status_code == 201
 
         check_command = CommandQueue.objects.all()
