@@ -27,11 +27,10 @@ const AppLayout: React.FC = () => {
           style={{ flex: 1, minWidth: 0 }}
         />
       </Header>
-      <Content style={{ padding: "0 48px" }}>
+      <Content style={{ flex: 1, padding: "0 48px", height: '100%' }}>
         <div
           style={{
             background: colorBgContainer,
-            minHeight: 280,
             padding: 24,
             borderRadius: borderRadiusLG,
             height: "100%",

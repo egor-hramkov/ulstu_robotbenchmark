@@ -7,7 +7,15 @@ interface MenuPoints {
 
 export const menuPoints: MenuPoints[] = [
   {
-    key: '/leaderboard',
-    label: 'Турнирная таблица',
+    key: "/leaderboard",
+    label: "Турнирная таблица",
   },
+  {
+    key: "/problems",
+    label: "Задачи",
+  },
+  {
+    key: "/tournaments",
+    label: "Турниры"
+  }
 ];

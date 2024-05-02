@@ -5,6 +5,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { TournamentList } from "./components/TournamentList/TournamentList.tsx";
 import { App } from "./App.tsx";
 import { LeaderboardList } from "./components/Leaderboard/LeaderboardList.tsx";
+import ProblemsList from "./components/Problems/ProblemsList.tsx";
+import ProblemDetail from "./components/Problems/ProblemDetail.tsx";
 
 const router = createBrowserRouter([
   {
@@ -13,12 +15,24 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <TournamentList />,
+        element: <LeaderboardList />,
+      },
+      {
+        path: "/tournaments",
+        element: <TournamentList />
       },
       {
         path: "/leaderboard",
         element: <LeaderboardList />,
       },
+      {
+        path: "/problems",
+        element: <ProblemsList />,
+      },
+      {
+        path: "/problems/:id",
+        element: <ProblemDetail />
+      }
     ],
   },
 ]);
