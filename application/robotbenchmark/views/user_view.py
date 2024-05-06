@@ -3,6 +3,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 
+from ..filters.user_filter import UserFilter
 from ..permissions import UserPermission
 from ..serializers.user_serializer import UserSerializer
 
@@ -52,4 +53,5 @@ class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
     queryset = UserModel.objects.all().order_by("-date_joined")
     permission_classes = [UserPermission, ]
+    filterset_class = UserFilter
 
