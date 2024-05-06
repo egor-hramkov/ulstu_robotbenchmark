@@ -3,8 +3,8 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import viewsets, status
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 
+from ..filters.problem_filter import ProblemFilter
 from ..models import Problem
 from ..serializers.problem_serializer import ProblemSerializer
 
@@ -53,6 +53,7 @@ class ProblemViewSet(viewsets.ModelViewSet):
     serializer_class = ProblemSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     permission_classes = [IsAuthenticated]
+    filterset_class = ProblemFilter
 
     # def retrieve(self, request, *args, **kwargs):
     #     instance = self.get_object()
