@@ -31,7 +31,7 @@ export const TournamentList = () => {
         setTournaments(response.data);
       })
       .catch((error) => console.error("Не удалось загрузить турниры:", error));
-  }, [apiClient]);
+  }, []);
 
   useEffect(() => {
     fetchTournaments();

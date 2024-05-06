@@ -1,10 +1,15 @@
-import { Button, Col, Row, Card } from "antd";
+import { Button, Col, Row, Card, Tabs, TabPaneProps } from "antd";
 import "./ProblemDetail.css"; // Basic CSS for additional styling if needed
 import { useEffect, useState } from "react";
 import { Problem, apiClientClass } from "../../shared/api";
 import { ApiConfig } from "../../shared/api/http-client";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useParams } from "react-router-dom";
+
+export interface Tab extends Omit<TabPaneProps, 'tab'> {
+  key: string;
+  label: React.ReactNode;
+}
 
 export const ProblemDetail = () => {
   const [problem, setProblem] = useState<Problem>();
@@ -30,32 +35,14 @@ export const ProblemDetail = () => {
     }
   }, [params.id]);
 
+  const items: Tab[] = [{key: '1', label: 'VS Code', children: <iframe src="http://localhost:10002" style={{height: '100%', width: '100%'}} />, style: {height: '100%'} },
+   {key: '2', label: 'Webots', children: <iframe src="http://localhost:10003/index.html" style={{height: '100%', width: '100%'}} />, style: {height: '100%'}},
+   {key: '3', label: 'Редактор карты', children: <iframe src="http://localhost:10001" style={{height: '100%', width: '100%'}} />, style: {height: '100%'}}]
+
   return (
     <div className="problem-detail-container">
       {problem ? (
-        <Row gutter={16} style={{ height: "100vh" }}>
-          <Col span={12} className="editor-col">
-            <h1>{problem.title}</h1>
-            <div></div>
-          </Col>
-          <Col span={12} className="robot-col">
-            <Card
-              title={problem.title}
-              bordered={false}
-              style={{ height: "90%" }}
-            >
-              <p>{problem.description}</p>
-            </Card>
-            <Button
-              type="primary"
-              onClick={() => {}}
-              style={{ marginRight: 8 }}
-            >
-              Start
-            </Button>
-            <Button onClick={() => {}}>Exit</Button>
-          </Col>
-        </Row>
+        <Tabs style={{height: '100vh'}} items={items} />
       ) : (
         <h1>Ничего нет</h1>
       )}

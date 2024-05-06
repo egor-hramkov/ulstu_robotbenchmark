@@ -22,10 +22,16 @@ export class Users<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
      * @request GET:/api/users/
      * @secure
      */
-    usersList = (params: RequestParams = {}) =>
+    usersList = (
+        query?: {
+            username?: string;
+        },
+        params: RequestParams = {},
+    ) =>
         this.request<User[], any>({
             path: `/api/users/`,
             method: "GET",
+            query: query,
             secure: true,
             format: "json",
             ...params,

@@ -26,6 +26,7 @@ export class Problems<SecurityDataType = unknown> extends HttpClient<SecurityDat
         query?: {
             /** Which field to use when ordering the results. */
             ordering?: string;
+            title?: string;
         },
         params: RequestParams = {},
     ) =>

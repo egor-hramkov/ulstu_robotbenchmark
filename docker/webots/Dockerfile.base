@@ -46,7 +46,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y -o Dpkg::Option
     dialog \
     fuse
 
-RUN apt install --yes xvfb ffmpeg lsb-release g++ make libavcodec-extra libglu1-mesa libegl1 libxkbcommon-x11-dev libxcb-keysyms1 libxcb-image0 libxcb-icccm4 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcomposite-dev libxtst6 libnss3
+RUN apt install --yes xvfb ffmpeg lsb-release g++ make libavcodec-extra libglu1-mesa libegl1 libxkbcommon-x11-dev libxcb-keysyms1 libxcb-image0 libxcb-icccm4 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcomposite-dev libxtst6 libnss3    
 
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get update && apt-get install -y nodejs
@@ -59,21 +59,23 @@ RUN curl -L -o /tmp/vscode.deb \
 
 #ENV DONT_PROMPT_WSL_INSTALL=No_Prompt_please
 
-RUN su ulstu -c 'code --install-extension eamodio.gitlens' && \
-    su ulstu -c 'code --install-extension ms-python.python' && \
-    su ulstu -c 'code --install-extension ms-vscode.cpptools-extension-pack' && \
-    su ulstu -c 'code --install-extension usernamehw.errorlens' && \
-    su ulstu -c 'code --install-extension redhat.vscode-xml' && \
-    su ulstu -c 'code --install-extension ms-iot.vscode-ros'
+# RUN su ulstu -c 'code --install-extension eamodio.gitlens' && \
+#     su ulstu -c 'code --install-extension ms-python.python' && \
+#     su ulstu -c 'code --install-extension ms-vscode.cpptools-extension-pack' && \
+#     su ulstu -c 'code --install-extension usernamehw.errorlens' && \
+#     su ulstu -c 'code --install-extension redhat.vscode-xml' && \
+#     su ulstu -c 'code --install-extension ms-iot.vscode-ros'
+
 
 # VS Code server
-RUN su ulstu -c 'curl -fsSL https://code-server.dev/install.sh | sh' && \
-    su ulstu -c 'code-server --install-extension eamodio.gitlens' && \
-    su ulstu -c 'code-server --install-extension ms-python.python' && \
-    su ulstu -c 'code-server --install-extension ms-vscode.cpptools-extension-pack' && \
-    su ulstu -c 'code-server --install-extension usernamehw.errorlens' && \
-    su ulstu -c 'code-server --install-extension redhat.vscode-xml' && \
-    su ulstu -c 'code-server --install-extension ms-iot.vscode-ros'
+# RUN su ulstu -c 'curl -fsSL https://code-server.dev/install.sh | sh' && \
+#     su ulstu -c 'code-server --install-extension eamodio.gitlens' && \
+#     su ulstu -c 'code-server --install-extension ms-python.python' && \
+#     su ulstu -c 'code-server --install-extension ms-vscode.cpptools-extension-pack' && \
+#     su ulstu -c 'code-server --install-extension usernamehw.errorlens' && \
+#     su ulstu -c 'code-server --install-extension redhat.vscode-xml' && \
+#     su ulstu -c 'code-server --install-extension ms-iot.vscode-ros'
+RUN su ulstu -c 'curl -fsSL https://code-server.dev/install.sh | sh' 
 
 # Webots
 RUN curl -L -o /tmp/webots.deb \
@@ -108,9 +110,9 @@ RUN cat /tmp/bashrc >> /ulstu/.bashrc && \
     mkdir  -p /ulstu/ros2_ws/src && \
     chown -R ulstu:ulstu /ulstu
 
-#RUN sudo -E rosdep init
+#RUN sudo -E rosdep init 
 RUN apt-get install -y python3-vcstool
-RUN rosdep --rosdistro "${ROS_DISTRO}" update
+RUN rosdep --rosdistro "${ROS_DISTRO}" update 
 RUN cd /ulstu/ros2_ws && yes | rosdep --rosdistro "${ROS_DISTRO}" install -r --from-paths src --ignore-src
 
 USER ulstu

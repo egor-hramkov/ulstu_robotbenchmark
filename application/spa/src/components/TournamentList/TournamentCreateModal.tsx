@@ -1,7 +1,43 @@
-import { Modal, Form, Input, DatePicker } from 'antd';
+import { Modal, Form, Input, DatePicker, Select, Spin } from 'antd';
+import { useCallback, useEffect, useState } from 'react';
+import { apiClientClass } from '../../shared/api';
+import { ApiConfig } from '../../shared/api/http-client';
+import { useAuthStore } from '../../store/useAuthStore';
+import { DefaultOptionType } from 'antd/es/select';
+import { debounce } from 'lodash';
+import DebounceSelect from '../../ui/header/Select/DebounceSelect';
 
 const CreateTournamentModal = ({ visible, onCreate, onCancel }) => {
+  const [options, setOptions] = useState<DefaultOptionType[] | undefined>([]);
+  const [fetching, setFetching] = useState<boolean>(false);
   const [form] = Form.useForm();
+  const token = useAuthStore((state) => state.token);
+
+  const configMcc: ApiConfig = {
+    baseUrl: "http://localhost:8000",
+    baseApiParams: {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  };
+
+  const apiClient = new apiClientClass(configMcc);
+
+  const fetchUsers = useCallback(async (username?: string) => {
+    await apiClient.Users.usersList({username: username}).then((value) => {
+      setOptions(value.data.map((item) => ({ label: item.username, value: item.id })));
+    });
+  }, [])
+
+  useEffect(() => {
+      fetchUsers();
+  }, [fetchUsers]);
+
+  const handleSearch = (value: string) => {
+    setFetching(true);
+    fetchUsers(value);
+  }; // Задержка в миллисекундах
 
   return (
     <Modal
@@ -62,6 +98,17 @@ const CreateTournamentModal = ({ visible, onCreate, onCancel }) => {
           rules={[{ required: true, message: 'Please select the end date and time!' }]}
         >
           <DatePicker showTime />
+        </Form.Item>
+        <Form.Item label="Пользователи" name="users" rules={[{ required: true, message: 'Please input!' }]}>
+        <Select
+      mode="multiple"
+      style={{
+        width: '100%',
+      }}
+      placeholder="Please select"
+      onSearch={(value) => handleSearch(value)}
+      options={options}
+    />
         </Form.Item>
       </Form>
     </Modal>

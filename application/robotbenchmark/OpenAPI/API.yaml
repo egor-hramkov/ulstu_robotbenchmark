@@ -93,6 +93,10 @@ paths:
         description: Which field to use when ordering the results.
         schema:
           type: string
+      - in: query
+        name: title
+        schema:
+          type: string
       tags:
       - problems
       security:
@@ -462,6 +466,11 @@ paths:
     get:
       operationId: users_list
       summary: Получение списка пользователей
+      parameters:
+      - in: query
+        name: username
+        schema:
+          type: string
       tags:
       - users
       security:
