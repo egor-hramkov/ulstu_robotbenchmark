@@ -1,8 +1,8 @@
 import random
 
-from django.contrib.auth.models import User
+from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema, extend_schema_view
+from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
 from rest_framework import viewsets, status
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
@@ -22,6 +22,10 @@ from robotbenchmark.serializers.problem_user_serializer import ProblemUserSerial
     ),
     list=extend_schema(
         summary="Детальная информация о всех задачах пользователей",
+        parameters=[
+            OpenApiParameter(name='user_id', required=False, description='Определённый пользователь', type=int),
+            OpenApiParameter(name='tournament_id', required=False, description='Определённый турнир', type=int),
+        ],
         responses={
             status.HTTP_200_OK: ProblemUserSerializer
         }
@@ -82,3 +86,19 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(p)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def list(self, request, *args, **kwargs):
+        """Получение списка задач турнира по айди турнира и пользователя"""
+        user_id = request.query_params.get('user_id')
+        tournament_id = request.query_params.get('tournament_id')
+        qs = self.filter_queryset(self.get_queryset())
+        condition = Q()
+
+        if tournament_id:
+            condition &= Q(problem__tournaments__id=tournament_id)
+        if user_id:
+            condition &= Q(user__id=user_id)
+
+        problem_users = qs.filter(condition)
+        serializer = self.get_serializer(problem_users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
