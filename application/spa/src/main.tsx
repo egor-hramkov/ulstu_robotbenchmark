@@ -2,11 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { TournamentList } from "./components/TournamentList/TournamentList.tsx";
+import { TournamentList } from "./components/Tournament/TournamentList.tsx";
 import { App } from "./App.tsx";
 import { LeaderboardList } from "./components/Leaderboard/LeaderboardList.tsx";
 import ProblemsList from "./components/Problems/ProblemsList.tsx";
 import ProblemDetail from "./components/Problems/ProblemDetail.tsx";
+import { TournamentDetail } from "./components/Tournament/TournamentDetail.tsx";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "/tournaments",
         element: <TournamentList />
+      },
+      {
+        path: "/tournaments/:id",
+        element: <TournamentDetail />
       },
       {
         path: "/leaderboard",

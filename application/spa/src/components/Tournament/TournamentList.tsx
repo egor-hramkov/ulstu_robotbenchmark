@@ -40,7 +40,6 @@ export const TournamentList = () => {
   const onCreate = (values: Tournament) => {
     apiClient.Tournament.tournamentCreate({
       ...values,
-      problems: [1, 2, 3], // Значения-заполнители
     }).then(() => {
       setVisible(false);
       fetchTournaments();
@@ -59,14 +58,14 @@ export const TournamentList = () => {
         onCancel={() => setVisible(false)}
       />
       {tournaments && tournaments.length > 0 ? (
-        <Row gutter={16} style={{marginTop: 16}}>
+        <Row gutter={16} style={{ marginTop: 16 }}>
           {tournaments.map((tournament) => (
             <Col key={tournament.id} span={8} style={{ marginBottom: 16 }}>
               <Card
                 title={tournament.name}
                 bordered={true}
                 hoverable
-                onClick={() => navigate(`/tournament/${tournament.id}`)}
+                onClick={() => navigate(`/tournaments/${tournament.id}`)}
               >
                 <p>Описание: {tournament.description}</p>
                 <p>Нажмите для просмотра деталей</p>
