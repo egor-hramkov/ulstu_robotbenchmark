@@ -10,6 +10,7 @@ from .views.finish_problem_view import FinishProblemView
 from .views.leaderboard_by_problem_view import LeaderboardByProblemView
 from .views.leaderboard_by_tournament_view import LeaderboardByTournamentView
 from .views.leaderboard_view import LeaderboardView
+from .views.token_obtain_view import CustomTokenObtainPairView
 from .views.tournament_view import TournamentViewSet
 from .views.tournament_user_view import TournamentUserViewSet
 from .views.problem_user_view import ProblemUserViewSet
@@ -31,7 +32,7 @@ urlpatterns = [
     path('commands/', CommandQueueView.as_view()),
     path('finish/<int:problemuser_id>', FinishProblemView.as_view()),
 
-    path('token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
