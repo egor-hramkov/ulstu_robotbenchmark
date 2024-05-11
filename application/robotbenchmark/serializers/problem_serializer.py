@@ -11,3 +11,13 @@ class ProblemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Problem
         fields = '__all__'
+
+
+class ProblemWithImageURLSerializer(serializers.ModelSerializer):
+    """Сериализатор для модель соревнования"""
+    users = UserSerializer(many=True, read_only=True)
+    image = serializers.CharField()
+
+    class Meta:
+        model = Problem
+        fields = '__all__'
