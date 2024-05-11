@@ -2,7 +2,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import viewsets, status
 from rest_framework.filters import OrderingFilter
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from ..models import Tournament
 from ..serializers.tournament_serializer import TournamentSerializer
@@ -52,4 +52,12 @@ class TournamentViewSet(viewsets.ModelViewSet):
     queryset = Tournament.objects.all()
     serializer_class = TournamentSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method in ['GET']:
+            # Для запросов GET требуется аутентификация пользователя
+            permission_classes = [IsAuthenticated]
+        else:
+            # Для запросов POST, PUT и DELETE требуется быть суперпользователем
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]

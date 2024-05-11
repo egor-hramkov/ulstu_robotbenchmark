@@ -2,7 +2,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import viewsets, status
 from rest_framework.filters import OrderingFilter
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from ..filters.problem_filter import ProblemFilter
 from ..models import Problem
@@ -52,25 +52,13 @@ class ProblemViewSet(viewsets.ModelViewSet):
     queryset = Problem.objects.all()
     serializer_class = ProblemSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    permission_classes = [IsAuthenticated]
     filterset_class = ProblemFilter
 
-    # def retrieve(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     serializer = self.get_serializer(instance)
-    #     init_url = 'ws://localhost:1999' + instance.world_path
-    #     return Response(
-    #         {'problem': serializer.data, "init_url": init_url}
-    #     )
-
-    # def home(request):
-    #     problems = Problem.objects.order_by('difficulty').all()
-    #     context = {'problems': problems}
-    #     return render(request, 'robotbenchmark/problemList.html', context)
-    #
-    #
-    # def problem(request, pk):
-    #     problem = Problem.objects.get(id=pk)
-    #     initUrl = 'ws://localhost:1999/' + problem.world_path
-    #     context = {'problem': problem, 'initUrl': initUrl}
-    #     return render(request, 'robotbenchmark/problem.html', context)
+    def get_permissions(self):
+        if self.request.method in ['GET']:
+            # Для запросов GET требуется аутентификация пользователя
+            permission_classes = [IsAuthenticated]
+        else:
+            # Для запросов POST, PUT и DELETE требуется быть суперпользователем
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
