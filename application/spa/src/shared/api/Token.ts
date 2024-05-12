@@ -9,7 +9,7 @@
  * ---------------------------------------------------------------
  */
 
-import { TokenObtainPair, TokenRefresh } from "./data-contracts";
+import { CustomTokenObtainPair, TokenRefresh } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class Token<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -20,8 +20,8 @@ export class Token<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
      * @name TokenCreate
      * @request POST:/api/token/
      */
-    tokenCreate = (data: TokenObtainPair, params: RequestParams = {}) =>
-        this.request<TokenObtainPair, any>({
+    tokenCreate = (data: CustomTokenObtainPair, params: RequestParams = {}) =>
+        this.request<CustomTokenObtainPair, any>({
             path: `/api/token/`,
             method: "POST",
             body: data,

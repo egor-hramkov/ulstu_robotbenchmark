@@ -14,7 +14,7 @@ import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class UsersProblem<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
     /**
-     * No description
+     * @description Получение списка задач турнира по айди турнира и пользователя
      *
      * @tags users-problem
      * @name UsersProblemList
@@ -26,6 +26,10 @@ export class UsersProblem<SecurityDataType = unknown> extends HttpClient<Securit
         query?: {
             /** Which field to use when ordering the results. */
             ordering?: string;
+            /** Определённый турнир */
+            tournament_id?: number;
+            /** Определённый пользователь */
+            user_id?: number;
         },
         params: RequestParams = {},
     ) =>
