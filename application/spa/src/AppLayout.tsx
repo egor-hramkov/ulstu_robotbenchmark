@@ -2,6 +2,7 @@ import { Layout, Menu, theme } from "antd";
 import "./App.css";
 import { Outlet, useNavigate } from "react-router-dom";
 import { menuPoints } from "./ui/header/nav";
+import Sider from "antd/es/layout/Sider";
 
 const { Header, Content, Footer } = Layout;
 
@@ -13,21 +14,18 @@ const AppLayout: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <Layout
-      style={{ height: "100%", display: "flex", flexDirection: "column" }}
-    >
-      <Header style={{ display: "flex", alignItems: "center" }}>
-        <div className="demo-logo" />
+    <Layout style={{ height: "100%" }}>
+      <Sider collapsible>
         <Menu
           theme="dark"
-          mode="horizontal"
           defaultSelectedKeys={["2"]}
           items={menuPoints}
+          mode="inline"
           onClick={(info) => navigate(info.key)}
           style={{ flex: 1, minWidth: 0 }}
         />
-      </Header>
-      <Content style={{ flex: 1, padding: "0 48px", height: '100%' }}>
+      </Sider>
+      <Content style={{ flex: 1, padding: 24, height: "100%" }}>
         <div
           style={{
             background: colorBgContainer,
@@ -39,9 +37,6 @@ const AppLayout: React.FC = () => {
           <Outlet />
         </div>
       </Content>
-      <Footer style={{ textAlign: "center" }}>
-        УлГТУ ©{new Date().getFullYear()}
-      </Footer>
     </Layout>
   );
 };

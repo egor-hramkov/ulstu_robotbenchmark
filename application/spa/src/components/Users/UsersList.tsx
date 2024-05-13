@@ -8,12 +8,12 @@ import { Card, Col, FloatButton, Row } from "antd";
 import CreateTournamentModal from "./TournamentCreateModal";
 import { PlusOutlined } from "@ant-design/icons";
 
-export const TournamentList = () => {
-  const [tournaments, setTournaments] = useState<Tournament[]>([]);
-  const navigate = useNavigate();
+export const UsersList = () => {
+  const [users, setUsers] = useState<Tournament[]>([]);
   const [visible, setVisible] = useState(false);
-
   const { token, is_super } = useAuthStore();
+
+  const navigate = useNavigate();
 
   const configMcc: ApiConfig = {
     baseUrl: "http://localhost:8000",
