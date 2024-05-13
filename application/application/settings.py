@@ -156,10 +156,11 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'Your Project API',
     'DESCRIPTION': 'Your project description',
     'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
     "SWAGGER_UI_SETTINGS": {
         "filter": True,  # включить поиск по тегам
     },
+    'SERVE_INCLUDE_SCHEMA': True,
+    'SCHEMA_PATH': '/robotbenchmark/OpenAPI/API.yaml',
 }
 
 STATICFILES_DIRS = [
