@@ -13,7 +13,7 @@ export const TournamentList = () => {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
 
-  const { token, is_super } = useAuthStore();
+  const { token } = useAuthStore();
 
   const configMcc: ApiConfig = {
     baseUrl: "http://localhost:8000",

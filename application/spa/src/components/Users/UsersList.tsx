@@ -3,14 +3,17 @@ import { apiClientClass } from "../../shared/api";
 import { ApiConfig } from "../../shared/api/http-client";
 import { useAuthStore } from "../../store/useAuthStore";
 import { User } from "../../shared/api/data-contracts";
-import { Col, FloatButton, List, Row } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { Button, FloatButton, Space, Table, Tooltip } from "antd";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import TournamentList from "../Tournament/TournamentList";
 import { UsersCreate } from "./UsersCreate";
+import { UsersEdit } from "./UsersEdit";
 
 export const UsersList = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [editData, setEditData] = useState<User>();
   const [showUserCreate, setShowUserCreate] = useState<boolean>(false);
+  const [showUserEdit, setShowUserEdit] = useState<number | boolean>(false);
   const { token } = useAuthStore();
 
   const configMcc: ApiConfig = {
@@ -32,13 +35,75 @@ export const UsersList = () => {
     fetchUsers();
   }, [fetchUsers]);
 
+  const usersTableColumns = [
+    {
+      title: "",
+      dataIndex: "id",
+      key: "id",
+      render: (id) => (
+        <Space>
+          <Tooltip title="Редактировать пользователя">
+            <Button
+              type="default"
+              shape="circle"
+              icon={<EditOutlined />}
+              onClick={() => {
+                onEditClick(id);
+                setShowUserEdit(true);
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="Удалить пользователя">
+            <Button type="default" shape="circle" icon={<DeleteOutlined />} />
+          </Tooltip>
+        </Space>
+      ),
+    },
+    {
+      title: "Логин",
+      dataIndex: "username",
+      key: "username",
+    },
+    {
+      title: "Имя",
+      dataIndex: "first_name",
+      key: "first_name",
+    },
+    {
+      title: "Фамилия",
+      dataIndex: "last_name",
+      key: "last_name",
+    },
+    {
+      title: "Почта",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Является админом",
+      dataIndex: "is_superuser",
+      key: "is_superuser",
+    },
+  ];
+
   const onCreate = (values: User) => {
     apiClient.Users.usersCreate({
-      ...values,is_superuser: values.is_superuser ?? false
+      ...values,
+      is_superuser: values.is_superuser ?? false,
     }).then(() => {
       setShowUserCreate(false);
       fetchUsers();
     });
+  };
+
+  const onEditClick = (id: number) => {
+    apiClient.Users.usersRetrieve(id)
+      .then(({ data }) => setEditData(data))
+      .then(() => setShowUserEdit(id));
+  };
+
+  const editUser = (data: User) => {
+    apiClient.Users.usersUpdate(showUserEdit, data).then(() => fetchUsers());
   };
 
   return (
@@ -49,21 +114,13 @@ export const UsersList = () => {
         onCreate={onCreate}
         onCancel={() => setShowUserCreate(false)}
       />
-      <List
-        bordered
-        dataSource={users}
-        renderItem={(item, index) => (
-          <List.Item key={index}>
-            <Row>
-              <Col>{item.username}</Col>
-              <Col>{item.first_name}</Col>
-              <Col>{item.last_name}</Col>
-              <Col>{item.email}</Col>
-              <Col>{item.is_superuser}</Col>
-            </Row>
-          </List.Item>
-        )}
+      <UsersEdit
+        visible={showUserEdit}
+        onEdit={(data) => editUser(data)}
+        data={editData}
+        onCancel={() => setShowUserEdit(false)}
       />
+      <Table columns={usersTableColumns} dataSource={users} />
       <FloatButton
         shape="square"
         tooltip={<>Создать пользователя</>}
