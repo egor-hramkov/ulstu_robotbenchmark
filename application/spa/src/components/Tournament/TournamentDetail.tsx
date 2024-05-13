@@ -10,7 +10,7 @@ import { useProblemsStore } from "../../store/useProblemsStore";
 export const TournamentDetail = () => {
   const params = useParams();
   const { token, userId } = useAuthStore();
-  const setLevelData = useProblemsStore((state) => state.setData)
+  const setLevelData = useProblemsStore((state) => state.setData);
   const [tournament, setTournament] = useState<Tournament>();
   const [issuesInWork, setIssuesInWork] = useState<ProblemUser[]>();
 
@@ -28,26 +28,54 @@ export const TournamentDetail = () => {
   const apiClient = new apiClientClass(configMcc);
 
   const startUserProblem = useCallback((userId: number, problemId: number) => {
-    apiClient.UsersProblem.usersProblemCreate({user: userId, problem: problemId, points: 1231313, is_completed: false}).then(({data}) => {setLevelData(data.vs_port, data.webots_stream_port, data.problem, data.robot_panel_port); navigate(`/problems/${data.problem}`)});
-  }, [])
+    apiClient.UsersProblem.usersProblemCreate({
+      user: userId,
+      problem: problemId,
+      points: 1231313,
+      is_completed: false,
+    }).then(({ data }) => {
+      setLevelData(
+        data.vs_port,
+        data.webots_stream_port,
+        data.problem,
+        data.robot_panel_port
+      );
+      navigate(`/problems/${data.problem}`);
+    });
+  }, []);
 
   const continueUserProblem = useCallback((problem: number) => {
-    apiClient.UsersProblem.usersProblemRetrieve(problem).then(({data}) => {setLevelData(data.vs_port, data.webots_stream_port, data.problem, data.robot_panel_port); navigate(`/problems/${data.problem}`)})
-  },[])
+    apiClient.UsersProblem.usersProblemRetrieve(problem).then(({ data }) => {
+      setLevelData(
+        data.vs_port,
+        data.webots_stream_port,
+        data.problem,
+        data.robot_panel_port
+      );
+      navigate(`/problems/${data.problem}`);
+    });
+  }, []);
 
   const findIssue = (id: number) => {
     if (issuesInWork)
-    for (let i = 0; i < issuesInWork.length; i++) {
-      if (issuesInWork[i].id === id) {
-        return issuesInWork[i].id;
-      } else return false;
-    }
-  }
+      for (let i = 0; i < issuesInWork.length; i++) {
+        if (issuesInWork[i].id === id) {
+          return issuesInWork[i].id;
+        } else return false;
+      }
+  };
 
   useEffect(() => {
     if (params.id) {
-      apiClient.Tournament.tournamentRetrieve(Number(params.id)).then((item) => setTournament(item.data));
-      apiClient.UsersProblem.usersProblemList({tournament_id: Number(params.id)}).then(({data}) => setIssuesInWork(data))
+      apiClient.Tournament.tournamentRetrieve(Number(params.id)).then(
+        (item) => {
+          setTournament(item.data);
+          console.log(item.data);
+        }
+      );
+      apiClient.UsersProblem.usersProblemList({
+        tournament_id: Number(params.id),
+      }).then(({ data }) => setIssuesInWork(data));
     }
   }, [params.id]);
 
@@ -75,11 +103,39 @@ export const TournamentDetail = () => {
             <List
               bordered
               dataSource={tournament.problems}
-              renderItem={(item) => <List.Item><Flex justify="space-between" align="center" style={{width: '100%'}}>Задача #{item}<Button
-              type="primary"
-              onClick={() => findIssue(item) ? continueUserProblem(findIssue(item)) : startUserProblem(userId, item)}
-              icon={<PlayCircleFilled />}
-            >Запустить задачу</Button></Flex></List.Item>}
+              renderItem={(item) => (
+                <List.Item>
+                  <Flex
+                    justify="space-between"
+                    align="center"
+                    style={{ width: "100%" }}
+                  >
+                    {findIssue(item) ? (
+                      <>
+                        Задача #{item}
+                        <Button
+                          type="default"
+                          onClick={() => continueUserProblem(findIssue(item))}
+                          icon={<PlayCircleFilled />}
+                        >
+                          Продолжить выполнение задачи
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        Задача #{item}
+                        <Button
+                          type="primary"
+                          onClick={() => startUserProblem(userId, item)}
+                          icon={<PlayCircleFilled />}
+                        >
+                          Запустить задачу
+                        </Button>
+                      </>
+                    )}
+                  </Flex>
+                </List.Item>
+              )}
             />
           </Card>
         </Col>
@@ -88,7 +144,9 @@ export const TournamentDetail = () => {
             <List
               bordered
               dataSource={tournament.users}
-              renderItem={(user) => <List.Item>Участник #{user.first_name}</List.Item>}
+              renderItem={(user) => (
+                <List.Item>Участник #{user.first_name}</List.Item>
+              )}
             />
           </Card>
         </Col>
