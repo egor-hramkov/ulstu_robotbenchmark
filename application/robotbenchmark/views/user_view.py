@@ -54,4 +54,3 @@ class UserViewSet(ModelViewSet):
     queryset = UserModel.objects.all().order_by("-date_joined")
     permission_classes = [UserPermission, ]
     filterset_class = UserFilter
-
