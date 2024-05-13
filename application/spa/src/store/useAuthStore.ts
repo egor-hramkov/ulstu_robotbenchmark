@@ -3,13 +3,14 @@ import { create } from "zustand";
 interface AuthState {
   isAuthenticated: boolean;
   token: string | undefined;
-  login: (token: string) => void;
+  userId?: number;
+  login: (token: string, userId: number) => void;
   logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
   token: undefined,
-  login: (token: string) => set({ isAuthenticated: true, token }),
+  login: (token: string, userId: number) => set({ isAuthenticated: true, token, userId }),
   logout: () => set({ isAuthenticated: false, token: undefined }),
 }));

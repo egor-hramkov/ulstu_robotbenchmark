@@ -27,9 +27,7 @@ export const Login = () => {
     apiClient.Token.tokenCreate({
       username: data.username,
       password: data.password,
-      access: "",
-      refresh: "",
-    }).then((data) => login(data.data.access));
+    }).then((data) => login(data.data.access, data.data.userId));
   }, []);
 
   return (

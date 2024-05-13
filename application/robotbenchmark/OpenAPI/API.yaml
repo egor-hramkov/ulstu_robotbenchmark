@@ -256,20 +256,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TokenObtainPair'
+              $ref: '#/components/schemas/CustomTokenObtainPair'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/TokenObtainPair'
+              $ref: '#/components/schemas/CustomTokenObtainPair'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/TokenObtainPair'
+              $ref: '#/components/schemas/CustomTokenObtainPair'
         required: true
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokenObtainPair'
+                $ref: '#/components/schemas/CustomTokenObtainPair'
           description: ''
   /api/token/refresh/:
     post:
@@ -513,6 +513,7 @@ paths:
   /api/users-problem/:
     get:
       operationId: users_problem_list
+      description: Получение списка задач турнира по айди турнира и пользователя
       summary: Детальная информация о всех задачах пользователей
       parameters:
       - name: ordering
@@ -521,6 +522,16 @@ paths:
         description: Which field to use when ordering the results.
         schema:
           type: string
+      - in: query
+        name: tournament_id
+        schema:
+          type: integer
+        description: Определённый турнир
+      - in: query
+        name: user_id
+        schema:
+          type: integer
+        description: Определённый пользователь
       tags:
       - users-problem
       security:
@@ -936,12 +947,29 @@ paths:
           description: ''
 components:
   schemas:
+    CustomTokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
     PatchedProblem:
       type: object
       description: Сериализатор для модель соревнования
       properties:
         id:
           type: integer
+          readOnly: true
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
           readOnly: true
         title:
           type: string
@@ -961,11 +989,6 @@ components:
           format: double
         author:
           type: integer
-        users:
-          type: array
-          items:
-            type: integer
-          readOnly: true
     PatchedProblemUser:
       type: object
       description: Сериализатор для модели many-to-many Соревнования-Пользователи
@@ -999,6 +1022,11 @@ components:
         id:
           type: integer
           readOnly: true
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          readOnly: true
         name:
           type: string
           maxLength: 255
@@ -1016,11 +1044,6 @@ components:
           type: array
           items:
             type: integer
-        users:
-          type: array
-          items:
-            type: integer
-          readOnly: true
     PatchedTournamentUser:
       type: object
       description: Сериализатор для модель many-to-many Соревнования-Пользователи
@@ -1048,6 +1071,11 @@ components:
           type: string
           writeOnly: true
           maxLength: 128
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
         username:
           type: string
           description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
@@ -1072,6 +1100,11 @@ components:
         id:
           type: integer
           readOnly: true
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          readOnly: true
         title:
           type: string
           maxLength: 300
@@ -1090,11 +1123,6 @@ components:
           format: double
         author:
           type: integer
-        users:
-          type: array
-          items:
-            type: integer
-          readOnly: true
       required:
       - author
       - difficulty
@@ -1135,26 +1163,6 @@ components:
       - user
       - vs_port
       - webots_stream_port
-    TokenObtainPair:
-      type: object
-      properties:
-        username:
-          type: string
-          writeOnly: true
-        password:
-          type: string
-          writeOnly: true
-        access:
-          type: string
-          readOnly: true
-        refresh:
-          type: string
-          readOnly: true
-      required:
-      - access
-      - password
-      - refresh
-      - username
     TokenRefresh:
       type: object
       properties:
@@ -1174,6 +1182,11 @@ components:
         id:
           type: integer
           readOnly: true
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          readOnly: true
         name:
           type: string
           maxLength: 255
@@ -1191,11 +1204,6 @@ components:
           type: array
           items:
             type: integer
-        users:
-          type: array
-          items:
-            type: integer
-          readOnly: true
       required:
       - date_end
       - date_start
@@ -1235,6 +1243,11 @@ components:
           type: string
           writeOnly: true
           maxLength: 128
+        is_superuser:
+          type: boolean
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
         username:
           type: string
           description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_

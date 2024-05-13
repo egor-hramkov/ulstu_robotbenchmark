@@ -9,9 +9,15 @@
  * ---------------------------------------------------------------
  */
 
+export interface CustomTokenObtainPair {
+    username: string;
+    password: string;
+}
+
 /** Сериализатор для модель соревнования */
 export interface PatchedProblem {
     id?: number;
+    users?: User[];
     /** @maxLength 300 */
     title?: string;
     /** @maxLength 1000 */
@@ -36,7 +42,6 @@ export interface PatchedProblem {
     /** @format double */
     difficulty?: number;
     author?: number;
-    users?: number[];
 }
 
 /** Сериализатор для модели many-to-many Соревнования-Пользователи */
@@ -58,6 +63,7 @@ export interface PatchedProblemUser {
 /** Сериализатор для модель соревнования */
 export interface PatchedTournament {
     id?: number;
+    users?: User[];
     /** @maxLength 255 */
     name?: string;
     /** @maxLength 5000 */
@@ -67,7 +73,6 @@ export interface PatchedTournament {
     /** @format date-time */
     date_end?: Date;
     problems?: number[];
-    users?: number[];
 }
 
 /** Сериализатор для модель many-to-many Соревнования-Пользователи */
@@ -87,6 +92,11 @@ export interface PatchedUser {
     id?: number;
     /** @maxLength 128 */
     password?: string;
+    /**
+     * Superuser status
+     * Designates that this user has all permissions without explicitly assigning them.
+     */
+    is_superuser?: boolean;
     /**
      * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
      * @maxLength 150
@@ -108,6 +118,7 @@ export interface PatchedUser {
 /** Сериализатор для модель соревнования */
 export interface Problem {
     id: number;
+    users: User[];
     /** @maxLength 300 */
     title: string;
     /** @maxLength 1000 */
@@ -132,7 +143,6 @@ export interface Problem {
     /** @format double */
     difficulty: number;
     author: number;
-    users: number[];
 }
 
 /** Сериализатор для модели many-to-many Соревнования-Пользователи */
@@ -151,13 +161,6 @@ export interface ProblemUser {
     problem: number;
 }
 
-export interface TokenObtainPair {
-    username: string;
-    password: string;
-    access: string;
-    refresh: string;
-}
-
 export interface TokenRefresh {
     access: string;
     refresh: string;
@@ -166,6 +169,7 @@ export interface TokenRefresh {
 /** Сериализатор для модель соревнования */
 export interface Tournament {
     id: number;
+    users: User[];
     /** @maxLength 255 */
     name: string;
     /** @maxLength 5000 */
@@ -175,7 +179,6 @@ export interface Tournament {
     /** @format date-time */
     date_end: Date;
     problems: number[];
-    users: number[];
 }
 
 /** Сериализатор для модель many-to-many Соревнования-Пользователи */
@@ -195,6 +198,11 @@ export interface User {
     id: number;
     /** @maxLength 128 */
     password: string;
+    /**
+     * Superuser status
+     * Designates that this user has all permissions without explicitly assigning them.
+     */
+    is_superuser?: boolean;
     /**
      * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
      * @maxLength 150
