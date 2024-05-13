@@ -4,13 +4,11 @@ import { useAuthStore } from "../../store/useAuthStore";
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-const is_super = useAuthStore().is_super;
-
-const adminPoints: MenuItem[] = is_super ? [{
+const adminPoints: MenuItem[] = [{
   key: '/users',
   label: 'Пользователи',
   icon: <UserOutlined />
-}] : [];
+}];
 
 export const menuPoints: MenuItem[] = [
   {

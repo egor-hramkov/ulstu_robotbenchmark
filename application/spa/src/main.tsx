@@ -8,8 +8,8 @@ import { LeaderboardList } from "./components/Leaderboard/LeaderboardList.tsx";
 import ProblemsList from "./components/Problems/ProblemsList.tsx";
 import ProblemDetail from "./components/Problems/ProblemDetail.tsx";
 import { TournamentDetail } from "./components/Tournament/TournamentDetail.tsx";
-import { Login } from "./components/Auth/Login/Login.tsx";
 import { Register } from "./components/Auth/Register/Register.tsx";
+import { UsersList } from "./components/Users/UsersList.tsx";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +40,10 @@ const router = createBrowserRouter([
         path: "/problems/:id",
         element: <ProblemDetail />,
       },
+      {
+        path: "/users",
+        element: <UsersList />
+      }
     ],
   },
   {

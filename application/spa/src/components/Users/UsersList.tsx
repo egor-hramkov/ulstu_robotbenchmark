@@ -1,19 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { apiClientClass } from "../../shared/api";
 import { ApiConfig } from "../../shared/api/http-client";
 import { useAuthStore } from "../../store/useAuthStore";
-import { Tournament } from "../../shared/api/data-contracts";
-import { Card, Col, FloatButton, Row } from "antd";
-import CreateTournamentModal from "./TournamentCreateModal";
+import { User } from "../../shared/api/data-contracts";
+import { Col, FloatButton, List, Row } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import TournamentList from "../Tournament/TournamentList";
+import { UsersCreate } from "./UsersCreate";
 
 export const UsersList = () => {
-  const [users, setUsers] = useState<Tournament[]>([]);
-  const [visible, setVisible] = useState(false);
-  const { token, is_super } = useAuthStore();
-
-  const navigate = useNavigate();
+  const [users, setUsers] = useState<User[]>([]);
+  const [showUserCreate, setShowUserCreate] = useState<boolean>(false);
+  const { token } = useAuthStore();
 
   const configMcc: ApiConfig = {
     baseUrl: "http://localhost:8000",
@@ -26,60 +24,52 @@ export const UsersList = () => {
 
   const apiClient = new apiClientClass(configMcc);
 
-  const fetchTournaments = useCallback(() => {
-    apiClient.Tournament.tournamentList()
-      .then((response) => {
-        setTournaments(response.data);
-      })
-      .catch((error) => console.error("Не удалось загрузить турниры:", error));
+  const fetchUsers = useCallback(() => {
+    apiClient.Users.usersList().then(({ data }) => setUsers(data));
   }, []);
 
   useEffect(() => {
-    fetchTournaments();
-  }, [fetchTournaments]);
+    fetchUsers();
+  }, [fetchUsers]);
 
-  const onCreate = (values: Tournament) => {
-    apiClient.Tournament.tournamentCreate({
-      ...values,
+  const onCreate = (values: User) => {
+    apiClient.Users.usersCreate({
+      ...values,is_superuser: values.is_superuser ?? false
     }).then(() => {
-      setVisible(false);
-      fetchTournaments();
+      setShowUserCreate(false);
+      fetchUsers();
     });
   };
 
   return (
     <div>
-      <h1>Открытые турниры</h1>
-      <CreateTournamentModal
-        visible={visible}
+      <h1>Пользователи</h1>
+      <UsersCreate
+        visible={showUserCreate}
         onCreate={onCreate}
-        onCancel={() => setVisible(false)}
+        onCancel={() => setShowUserCreate(false)}
       />
-      {tournaments && tournaments.length > 0 ? (
-        <Row gutter={16} style={{ marginTop: 16 }}>
-          {tournaments.map((tournament) => (
-            <Col key={tournament.id} span={8} style={{ marginBottom: 16 }}>
-              <Card
-                title={tournament.name}
-                bordered={true}
-                hoverable
-                onClick={() => navigate(`/tournaments/${tournament.id}`)}
-              >
-                <p>Описание: {tournament.description}</p>
-                <p>Нажмите для просмотра деталей</p>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      ) : (
-        <p>Нет открытых турниров</p>
-      )}
+      <List
+        bordered
+        dataSource={users}
+        renderItem={(item, index) => (
+          <List.Item key={index}>
+            <Row>
+              <Col>{item.username}</Col>
+              <Col>{item.first_name}</Col>
+              <Col>{item.last_name}</Col>
+              <Col>{item.email}</Col>
+              <Col>{item.is_superuser}</Col>
+            </Row>
+          </List.Item>
+        )}
+      />
       <FloatButton
         shape="square"
-        tooltip={<>Создать турнир</>}
+        tooltip={<>Создать пользователя</>}
         type="primary"
         style={{ right: 42 }}
-        onClick={() => setVisible(true)}
+        onClick={() => setShowUserCreate(true)}
         icon={<PlusOutlined />}
       />
     </div>
