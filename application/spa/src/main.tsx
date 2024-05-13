@@ -8,6 +8,8 @@ import { LeaderboardList } from "./components/Leaderboard/LeaderboardList.tsx";
 import ProblemsList from "./components/Problems/ProblemsList.tsx";
 import ProblemDetail from "./components/Problems/ProblemDetail.tsx";
 import { TournamentDetail } from "./components/Tournament/TournamentDetail.tsx";
+import { Login } from "./components/Auth/Login/Login.tsx";
+import { Register } from "./components/Auth/Register/Register.tsx";
 
 const router = createBrowserRouter([
   {
@@ -20,11 +22,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/tournaments",
-        element: <TournamentList />
+        element: <TournamentList />,
       },
       {
         path: "/tournaments/:id",
-        element: <TournamentDetail />
+        element: <TournamentDetail />,
       },
       {
         path: "/leaderboard",
@@ -36,14 +38,18 @@ const router = createBrowserRouter([
       },
       {
         path: "/problems/:id",
-        element: <ProblemDetail />
-      }
+        element: <ProblemDetail />,
+      },
     ],
+  },
+  {
+    path: "/register",
+    element: <Register />,
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-      <RouterProvider router={router} />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
