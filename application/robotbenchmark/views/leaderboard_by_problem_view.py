@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db.models import Sum, F
+from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -11,6 +12,10 @@ from ..serializers.leaderboard_serializer import LeaderboardProblemSerializer, L
 class LeaderboardByProblemView(APIView):
     """Вью для лидерборда определённой задачи"""
 
+    @extend_schema(
+        description="Return Leaderboard определённой задачи",
+        responses=LeaderboardProblemSerializer(),
+    )
     def get(self, request, problem_id: int, format=None):
         """Return Leaderboard определённой задачи"""
         problem = Problem.objects.get(pk=problem_id)

@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
+from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -11,6 +12,10 @@ from ..serializers.leaderboard_serializer import LeaderboardSerializer, Leaderbo
 class LeaderboardByTournamentView(APIView):
     """Вью для лидерборда определённого турнира"""
 
+    @extend_schema(
+        description="Return Leaderboard определённого турнира",
+        responses=LeaderboardTournamentSerializer(),
+    )
     def get(self, request, tournament_id: int, format=None):
         """Return Leaderboard определённого турнира"""
         tournament = Tournament.objects.get(pk=tournament_id)
