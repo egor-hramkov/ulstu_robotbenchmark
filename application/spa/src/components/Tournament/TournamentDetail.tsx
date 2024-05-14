@@ -3,10 +3,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ProblemUser, Tournament, apiClientClass } from "../../shared/api";
 import { ApiConfig } from "../../shared/api/http-client";
 import { useAuthStore } from "../../store/useAuthStore";
-import { Row, Col, Card, List, Button, Space, Flex } from "antd";
-import { PlayCircleFilled } from "@ant-design/icons";
+import { Row, Col, Card, List, Button, Space, Flex, FloatButton } from "antd";
+import { EditOutlined, PlayCircleFilled } from "@ant-design/icons";
 import { useProblemsStore } from "../../store/useProblemsStore";
-import './TournamentDetail.scss';
+import "./TournamentDetail.scss";
+import { TournamentEdit } from "./TournamentEdit";
 
 export const TournamentDetail = () => {
   const params = useParams();
@@ -14,6 +15,9 @@ export const TournamentDetail = () => {
   const setLevelData = useProblemsStore((state) => state.setData);
   const [tournament, setTournament] = useState<Tournament>();
   const [issuesInWork, setIssuesInWork] = useState<ProblemUser[]>();
+  const [showTournamentEdit, setShowTournamentEdit] = useState<
+    number | boolean
+  >(false);
 
   const navigate = useNavigate();
 
@@ -80,9 +84,29 @@ export const TournamentDetail = () => {
     }
   }, [params.id]);
 
+  const editData = useCallback((data: Tournament) => {
+    apiClient.Tournament.tournamentUpdate(params.id, data).then(({ data }) =>
+      setTournament(data)
+    );
+  }, []);
+
   if (tournament) {
     return (
       <Row gutter={16}>
+        <FloatButton
+          shape="square"
+          tooltip={<>Редактировать соревнование</>}
+          type="primary"
+          style={{ right: 42 }}
+          onClick={() => setShowTournamentEdit(Number(params.id))}
+          icon={<EditOutlined />}
+        />
+        <TournamentEdit
+          visible={showTournamentEdit}
+          onEdit={editData}
+          data={tournament}
+          onCancel={() => setShowTournamentEdit(false)}
+        />
         <Col span={12}>
           <Card title="Информация о соревновании">
             <p>

@@ -1,6 +1,5 @@
-import { TrophyOutlined, UserOutlined } from "@ant-design/icons";
+import { FileTextOutlined, TrophyOutlined, UserOutlined } from "@ant-design/icons";
 import { MenuProps } from "antd";
-import { useAuthStore } from "../../store/useAuthStore";
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -18,6 +17,7 @@ export const menuPoints: MenuItem[] = [
   {
     key: "/problems",
     label: "Задачи",
+    icon: <FileTextOutlined />,
   },
   {
     key: "/tournaments",
