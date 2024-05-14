@@ -6,6 +6,7 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { Row, Col, Card, List, Button, Space, Flex } from "antd";
 import { PlayCircleFilled } from "@ant-design/icons";
 import { useProblemsStore } from "../../store/useProblemsStore";
+import './TournamentDetail.scss';
 
 export const TournamentDetail = () => {
   const params = useParams();
@@ -117,6 +118,7 @@ export const TournamentDetail = () => {
                           type="default"
                           onClick={() => continueUserProblem(findIssue(item))}
                           icon={<PlayCircleFilled />}
+                          className="continue-btn"
                         >
                           Продолжить выполнение задачи
                         </Button>

@@ -4,15 +4,16 @@ import { apiClientClass } from "../../shared/api";
 import { ApiConfig } from "../../shared/api/http-client";
 import { useAuthStore } from "../../store/useAuthStore";
 import { Tournament } from "../../shared/api/data-contracts";
-import { Button, Card, Col, Row } from "antd";
+import { Card, Col, FloatButton, Row } from "antd";
 import CreateTournamentModal from "./TournamentCreateModal";
+import { PlusOutlined } from "@ant-design/icons";
 
 export const TournamentList = () => {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
 
-  const token = useAuthStore((state) => state.token);
+  const { token } = useAuthStore();
 
   const configMcc: ApiConfig = {
     baseUrl: "http://localhost:8000",
@@ -49,9 +50,6 @@ export const TournamentList = () => {
   return (
     <div>
       <h1>Открытые турниры</h1>
-      <Button type="primary" onClick={() => setVisible(true)}>
-        Создать турнир
-      </Button>
       <CreateTournamentModal
         visible={visible}
         onCreate={onCreate}
@@ -76,6 +74,14 @@ export const TournamentList = () => {
       ) : (
         <p>Нет открытых турниров</p>
       )}
+      <FloatButton
+        shape="square"
+        tooltip={<>Создать турнир</>}
+        type="primary"
+        style={{ right: 42 }}
+        onClick={() => setVisible(true)}
+        icon={<PlusOutlined />}
+      />
     </div>
   );
 };
