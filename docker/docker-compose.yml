@@ -29,7 +29,26 @@ services:
     ports:
       - 6432:5432
 
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:7.2
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "test@habr.com"
+      PGADMIN_DEFAULT_PASSWORD: "robotbenchmark1"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_LISTEN_PORT: 5050
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:5050"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+
 volumes:
   postgres_data:
-
+  pgadmin-data:
 
