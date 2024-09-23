@@ -6,3 +6,4 @@
 .idea/*
 .phpstorm.meta.php
 /docker/projects
+/application/venv/

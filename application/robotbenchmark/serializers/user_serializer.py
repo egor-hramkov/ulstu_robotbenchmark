@@ -6,9 +6,11 @@ UserModel = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
+    groups = serializers.SerializerMethodField()
+
     class Meta:
         model = UserModel
-        exclude = ['last_login', 'is_staff', 'groups', 'user_permissions', 'date_joined', 'is_active']
+        exclude = ['last_login', 'is_staff',  'user_permissions', 'date_joined', 'is_active']
         extra_kwargs = {
             "password": {"write_only": True}
         }
@@ -28,3 +30,6 @@ class UserSerializer(serializers.ModelSerializer):
     def validate_password(self, value: str) -> str:
         validate_password(value)
         return value
+
+    def get_groups(self, obj):
+        return obj.groups.values_list('name', flat=True)
