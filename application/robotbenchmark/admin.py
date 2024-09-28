@@ -16,8 +16,8 @@ class ProblemAdmin(admin.ModelAdmin):
 
 @admin.register(ProblemUser)
 class ProblemUserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'problem', 'is_completed', 'points')  # Список полей, которые будут отображаться в списке объектов
-    list_display_links = ('id', 'problem', 'is_completed', 'points')  # Список полей, которые будут отображаться в списке объектов
+    list_display = ('id', 'user', 'problem', 'is_completed', 'points', 'is_checked')  # Список полей, которые будут отображаться в списке объектов
+    list_display_links = ('id', 'problem', 'is_completed', 'points', 'is_checked')  # Список полей, которые будут отображаться в списке объектов
     list_filter = ('id', 'problem', 'points')  # Список полей, по которым можно будет фильтровать объекты
     search_fields = ('id', 'problem', 'points')  # Список полей, по которым можно будет искать объекты
     ordering = ('id',)  # Сортировка объектов по умолчанию
