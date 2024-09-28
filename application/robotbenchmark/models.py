@@ -30,6 +30,7 @@ class ProblemUser(models.Model):
     robot_panel_port = models.IntegerField(validators=[MinValueValidator(10000), MaxValueValidator(12000)])
     vs_port = models.IntegerField(validators=[MinValueValidator(10000), MaxValueValidator(12000)])
     webots_stream_port = models.IntegerField(validators=[MinValueValidator(10000), MaxValueValidator(12000)])
+    is_checked = models.BooleanField(default=False)
 
     class Meta:
         constraints = [
