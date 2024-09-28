@@ -25,6 +25,7 @@ from robotbenchmark.serializers.problem_user_serializer import ProblemUserSerial
         parameters=[
             OpenApiParameter(name='user_id', required=False, description='Определённый пользователь', type=int),
             OpenApiParameter(name='tournament_id', required=False, description='Определённый турнир', type=int),
+            OpenApiParameter(name='is_checked', required=False, description='Проверенные задачи', type=int),
         ],
         responses={
             status.HTTP_200_OK: ProblemUserSerializer
@@ -91,6 +92,7 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
         """Получение списка задач турнира по айди турнира и пользователя"""
         user_id = request.query_params.get('user_id')
         tournament_id = request.query_params.get('tournament_id')
+        is_checked = request.query_params.get('is_checked')
         qs = self.filter_queryset(self.get_queryset())
         condition = Q()
 
@@ -98,6 +100,8 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
             condition &= Q(problem__tournaments__id=tournament_id)
         if user_id:
             condition &= Q(user__id=user_id)
+        if is_checked:
+            condition &= Q(is_checked=is_checked)
 
         problem_users = qs.filter(condition)
         serializer = self.get_serializer(problem_users, many=True)
