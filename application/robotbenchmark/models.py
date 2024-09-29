@@ -49,6 +49,7 @@ class Tournament(models.Model):
     description = models.CharField(max_length=5000)
     date_start = models.DateTimeField(auto_now_add=True)
     date_end = models.DateTimeField()
+    is_blocked = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
