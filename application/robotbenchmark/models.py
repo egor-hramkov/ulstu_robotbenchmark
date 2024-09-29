@@ -3,6 +3,7 @@ import random
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models import JSONField
 
 from robotbenchmark.enums.webots_ros2_projects_dir import WebotsRosProjects
 
@@ -31,6 +32,7 @@ class ProblemUser(models.Model):
     vs_port = models.IntegerField(validators=[MinValueValidator(10000), MaxValueValidator(12000)])
     webots_stream_port = models.IntegerField(validators=[MinValueValidator(10000), MaxValueValidator(12000)])
     is_checked = models.BooleanField(default=False)
+    grades = JSONField(default=dict)
 
     class Meta:
         constraints = [

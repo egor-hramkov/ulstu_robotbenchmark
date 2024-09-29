@@ -16,8 +16,8 @@ class ProblemAdmin(admin.ModelAdmin):
 
 @admin.register(ProblemUser)
 class ProblemUserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'problem', 'is_completed', 'points', 'is_checked')  # Список полей, которые будут отображаться в списке объектов
-    list_display_links = ('id', 'problem', 'is_completed', 'points', 'is_checked')  # Список полей, которые будут отображаться в списке объектов
+    list_display = ('id', 'user', 'problem', 'is_completed', 'points', 'is_checked', 'grades')  # Список полей, которые будут отображаться в списке объектов
+    list_display_links = ('id', 'problem', 'is_completed', 'points', 'is_checked', 'grades')  # Список полей, которые будут отображаться в списке объектов
     list_filter = ('id', 'problem', 'points')  # Список полей, по которым можно будет фильтровать объекты
     search_fields = ('id', 'problem', 'points')  # Список полей, по которым можно будет искать объекты
     ordering = ('id',)  # Сортировка объектов по умолчанию
@@ -25,9 +25,9 @@ class ProblemUserAdmin(admin.ModelAdmin):
 
 @admin.register(Tournament)
 class TournamentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'date_start', 'date_end')  # Список полей, которые будут отображаться в списке объектов
+    list_display = ('id', 'name', 'date_start', 'date_end', 'is_blocked')  # Список полей, которые будут отображаться в списке объектов
     list_display_links = ('id', 'name')  # Список полей, которые будут отображаться в списке объектов
-    list_filter = ('id', 'name', 'date_start', 'date_end')  # Список полей, по которым можно будет фильтровать объекты
+    list_filter = ('id', 'name', 'date_start', 'date_end', 'is_blocked')  # Список полей, по которым можно будет фильтровать объекты
     search_fields = ('id', 'name', 'date_start')  # Список полей, по которым можно будет искать объекты
     ordering = ('id',)  # Сортировка объектов по умолчанию
 
