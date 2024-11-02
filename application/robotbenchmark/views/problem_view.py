@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from ..filters.problem_filter import ProblemFilter
 from ..models import Problem
+from ..permissions import IsAdminOrOperator
 from ..serializers.problem_serializer import ProblemSerializer
 
 
@@ -60,5 +61,5 @@ class ProblemViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated]
         else:
             # Для запросов POST, PUT и DELETE требуется быть суперпользователем
-            permission_classes = [IsAdminUser]
+            permission_classes = [IsAdminOrOperator]
         return [permission() for permission in permission_classes]

@@ -11,7 +11,7 @@ from .views.leaderboard_by_problem_view import LeaderboardByProblemView
 from .views.leaderboard_by_tournament_view import LeaderboardByTournamentView
 from .views.leaderboard_view import LeaderboardView
 from .views.token_obtain_view import CustomTokenObtainPairView
-from .views.tournament_view import TournamentViewSet
+from .views.tournament_view import TournamentViewSet, BlockTournamentAPIView
 from .views.tournament_user_view import TournamentUserViewSet
 from .views.problem_user_view import ProblemUserViewSet
 from .views.problem_view import ProblemViewSet
@@ -29,6 +29,7 @@ urlpatterns = [
     path('leaderboard/', LeaderboardView.as_view()),
     path('leaderboard/tournament/<int:tournament_id>/', LeaderboardByTournamentView.as_view()),
     path('leaderboard/problem/<int:problem_id>/', LeaderboardByProblemView.as_view()),
+    path('block/<int:tournament_id>/', BlockTournamentAPIView.as_view(), name='block-tournament'),
     path('commands/', CommandQueueView.as_view()),
     path('finish/<int:problemuser_id>', FinishProblemView.as_view()),
 

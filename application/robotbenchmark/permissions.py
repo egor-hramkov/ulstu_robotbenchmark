@@ -34,3 +34,13 @@ class UserPermission(permissions.BasePermission):
             return request.user.is_staff
         else:
             return False
+
+
+class IsAdminOrOperator(permissions.BasePermission):
+    """
+    Разрешение, позволяющее доступ только для администраторов и пользователей с ролью "Оператор".
+    """
+
+    def has_permission(self, request, view):
+        # Проверяем, является ли пользователь администратором или имеет роль "Operator"
+        return request.user.is_staff or request.user.groups.filter(name='Оператор').exists()
