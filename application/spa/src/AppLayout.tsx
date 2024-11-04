@@ -4,7 +4,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { menuPoints } from "./ui/header/nav";
 import Sider from "antd/es/layout/Sider";
 
-const { Header, Content, Footer } = Layout;
+const { Content } = Layout;
 
 const AppLayout: React.FC = () => {
   const {

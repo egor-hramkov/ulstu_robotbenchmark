@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ProblemUser, Tournament, apiClientClass } from "../../shared/api";
-import { ApiConfig } from "../../shared/api/http-client";
+import { ProblemUser, Tournament } from "../../shared/api";
 import { useAuthStore } from "../../store/useAuthStore";
-import { Row, Col, Card, List, Button, Space, Flex, FloatButton } from "antd";
+import { Row, Col, Card, List, Button, Flex, FloatButton } from "antd";
 import { EditOutlined, PlayCircleFilled } from "@ant-design/icons";
 import { useProblemsStore } from "../../store/useProblemsStore";
 import "./TournamentDetail.scss";
 import { TournamentEdit } from "./TournamentEdit";
+import useApiClient from "../../hooks/useApiClient";
 
 export const TournamentDetail = () => {
   const params = useParams();
-  const { token, userId } = useAuthStore();
+  const { userId } = useAuthStore();
   const setLevelData = useProblemsStore((state) => state.setData);
   const [tournament, setTournament] = useState<Tournament>();
   const [issuesInWork, setIssuesInWork] = useState<ProblemUser[]>();
@@ -20,17 +20,7 @@ export const TournamentDetail = () => {
   >(false);
 
   const navigate = useNavigate();
-
-  const configMcc: ApiConfig = {
-    baseUrl: "http://localhost:8000",
-    baseApiParams: {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  };
-
-  const apiClient = new apiClientClass(configMcc);
+  const apiClient = useApiClient();
 
   const startUserProblem = useCallback((userId: number, problemId: number) => {
     apiClient.UsersProblem.usersProblemCreate({
@@ -38,6 +28,10 @@ export const TournamentDetail = () => {
       problem: problemId,
       points: 1231313,
       is_completed: false,
+      id: 10,
+      robot_panel_port: 104504,
+      vs_port: 104503,
+      webots_stream_port: 104505
     }).then(({ data }) => {
       setLevelData(
         data.vs_port,
@@ -45,17 +39,17 @@ export const TournamentDetail = () => {
         data.problem,
         data.robot_panel_port
       );
-      navigate(`/problems/${data.problem}`);
+      navigate(`/problems/${data.id}`);
     });
   }, []);
 
   const continueUserProblem = useCallback((problem: number) => {
     apiClient.UsersProblem.usersProblemRetrieve(problem).then(({ data }) => {
       setLevelData(
-        data.vs_port,
-        data.webots_stream_port,
-        data.problem,
-        data.robot_panel_port
+        10302,
+        11891,
+        1,
+        10048
       );
       navigate(`/problems/${data.problem}`);
     });
@@ -82,10 +76,11 @@ export const TournamentDetail = () => {
         tournament_id: Number(params.id),
       }).then(({ data }) => setIssuesInWork(data));
     }
-  }, [params.id]);
+  }, [params.id]); 
 
   const editData = useCallback((data: Tournament) => {
-    apiClient.Tournament.tournamentUpdate(params.id, data).then(({ data }) =>
+    if (params.id) 
+    apiClient.Tournament.tournamentUpdate(Number(params.id), data).then(({ data }) =>
       setTournament(data)
     );
   }, []);

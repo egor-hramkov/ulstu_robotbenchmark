@@ -1,30 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiClientClass } from "../../shared/api";
-import { ApiConfig } from "../../shared/api/http-client";
-import { useAuthStore } from "../../store/useAuthStore";
 import { Tournament } from "../../shared/api/data-contracts";
 import { Card, Col, FloatButton, Row } from "antd";
 import CreateTournamentModal from "./TournamentCreateModal";
 import { PlusOutlined } from "@ant-design/icons";
+import useApiClient from "../../hooks/useApiClient";
 
 export const TournamentList = () => {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
-  const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
 
-  const { token } = useAuthStore();
-
-  const configMcc: ApiConfig = {
-    baseUrl: "http://localhost:8000",
-    baseApiParams: {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  };
-
-  const apiClient = new apiClientClass(configMcc);
+  const apiClient = useApiClient();
+  const navigate = useNavigate();
 
   const fetchTournaments = useCallback(() => {
     apiClient.Tournament.tournamentList()
@@ -32,6 +19,7 @@ export const TournamentList = () => {
         setTournaments(response.data);
       })
       .catch((error) => console.error("Не удалось загрузить турниры:", error));
+
   }, []);
 
   useEffect(() => {

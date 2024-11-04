@@ -38,7 +38,7 @@ export const ProblemsList = () => {
   }, []);
 
   const handleCreate = (problemDetails: Problem) => {
-    apiClient.Problems.problemCreate(problemDetails).then(() =>
+    apiClient.Problems.problemCreate({...problemDetails, author: 1}).then(() =>
       fetchProblems()
     );
     setVisible(false);
@@ -70,9 +70,6 @@ export const ProblemsList = () => {
             <Card
               title={problem.title}
               hoverable
-              cover={
-                problem.image ? <img alt="problem" src={problem.image} /> : null
-              }
               onClick={() => navigate(`/problems/${problem.id}`)}
             >
               <Card.Meta
