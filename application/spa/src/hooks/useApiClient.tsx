@@ -6,7 +6,6 @@ const useApiClient = () => {
     token: state.token,
   }));
 
-  // Create the apiClient instance with the current token
   const apiClient = new apiClientClass({
     baseUrl: "http://localhost:8000",
     baseApiParams: {

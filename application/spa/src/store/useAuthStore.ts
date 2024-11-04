@@ -1,44 +1,63 @@
 import { create } from "zustand";
-import useApiClient from "../hooks/useApiClient";
-import { User } from "../shared/api";
+import { User, apiClientClass } from "../shared/api";
+import { ApiConfig } from "../shared/api/http-client";
 
 interface AuthState {
-  isAuthenticated: () => boolean;
-  token: string | undefined;
+  isAuthenticated?: boolean;
+  token?: string;
   userId?: number;
   userInfo?: User;
-  login: (accessToken: string, refreshToken: string,  userId: number) => void;
+  login: (accessToken: string, refreshToken: string, userId: number) => void;
+  checkAuth: () => void;
   logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  isAuthenticated: () => {
-    const refreshToken = sessionStorage.getItem('refreshToken');
-    const accessToken = sessionStorage.getItem('accessToken');
-    const userId = sessionStorage.getItem('userId');
-    const apiClient = useApiClient();
+  checkAuth: () => {
+    const refreshToken = sessionStorage.getItem("refreshToken");
+    const accessToken = sessionStorage.getItem("accessToken");
+    const userId = sessionStorage.getItem("userId");
+
+    const configMcc: ApiConfig = {
+      baseUrl: "http://localhost:8000",
+      baseApiParams: {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    };
+  
+    const apiClient = new apiClientClass(configMcc);
+
     if (accessToken && refreshToken) {
       apiClient.Token.tokenRefreshCreate({
         access: accessToken,
-        refresh: refreshToken
+        refresh: refreshToken,
       })
-      set({token: accessToken});
-      apiClient.Users.usersRetrieve(Number(userId)).then(({data}) => set({userInfo: data, userId: data.id}));
-      return true;
-    } else return false;
-
+        .then(() => {
+          set({ token: accessToken, isAuthenticated: true });
+          return apiClient.Users.usersRetrieve(Number(userId));
+        })
+        .then(({ data }) => {
+          set({ userInfo: data, userId: data.id });
+        })
+        .catch(() => {
+          set({ isAuthenticated: false });
+        });
+    } else {
+      set({ isAuthenticated: false });
+    }
   },
-  token: undefined,
-  login: (accessToken: string, refreshToken: string,  userId: number) => {
-    sessionStorage.setItem('accessToken', accessToken);
-    sessionStorage.setItem('refreshToken', refreshToken)
-    sessionStorage.setItem('userId', `${userId}`);
-    set({ token: accessToken, userId})
+  login: (accessToken: string, refreshToken: string, userId: number) => {
+    sessionStorage.setItem("accessToken", accessToken);
+    sessionStorage.setItem("refreshToken", refreshToken);
+    sessionStorage.setItem("userId", `${userId}`);
+    set({ token: accessToken, userId, isAuthenticated: true });
   },
   logout: () => {
-    sessionStorage.removeItem('accessToken');
-    sessionStorage.removeItem('refreshToken');
-    sessionStorage.removeItem('userId');
-    set({ token: undefined })
+    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("refreshToken");
+    sessionStorage.removeItem("userId");
+    set({ token: undefined, isAuthenticated: false });
   },
 }));
