@@ -24,6 +24,8 @@ export class UsersProblem<SecurityDataType = unknown> extends HttpClient<Securit
      */
     usersProblemList = (
         query?: {
+            /** Проверенные задачи */
+            is_checked?: number;
             /** Which field to use when ordering the results. */
             ordering?: string;
             /** Определённый турнир */

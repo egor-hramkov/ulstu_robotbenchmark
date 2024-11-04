@@ -14,6 +14,28 @@ export interface CustomTokenObtainPair {
     password: string;
 }
 
+/** Сериализатор для лидерборда */
+export interface Leaderboard {
+    first_name?: string;
+    last_name?: string;
+    username: string;
+    total_points: number;
+}
+
+/** Сериализатор для лидерборда по задаче */
+export interface LeaderboardProblem {
+    /** Сериализатор для модель соревнования */
+    problem: ProblemWithImageURL;
+    items: Leaderboard[];
+}
+
+/** Сериализатор для лидерборда по задаче */
+export interface LeaderboardTournament {
+    /** Сериализатор для модель соревнования */
+    tournament: Tournament;
+    items: Leaderboard[];
+}
+
 /** Сериализатор для модель соревнования */
 export interface PatchedProblem {
     id?: number;
@@ -41,6 +63,7 @@ export interface PatchedProblem {
     image?: string | null;
     /** @format double */
     difficulty?: number;
+    is_blocked?: boolean;
     author?: number;
 }
 
@@ -56,6 +79,8 @@ export interface PatchedProblemUser {
     robot_panel_port?: number;
     vs_port?: number;
     webots_stream_port?: number;
+    is_checked?: boolean;
+    grades?: any;
     user?: number;
     problem?: number;
 }
@@ -72,6 +97,7 @@ export interface PatchedTournament {
     date_start?: Date;
     /** @format date-time */
     date_end?: Date;
+    is_blocked?: boolean;
     problems?: number[];
 }
 
@@ -90,6 +116,7 @@ export interface PatchedTournamentUser {
 
 export interface PatchedUser {
     id?: number;
+    groups?: string;
     /** @maxLength 128 */
     password?: string;
     /**
@@ -142,6 +169,7 @@ export interface Problem {
     image?: string | null;
     /** @format double */
     difficulty: number;
+    is_blocked?: boolean;
     author: number;
 }
 
@@ -157,8 +185,40 @@ export interface ProblemUser {
     robot_panel_port: number;
     vs_port: number;
     webots_stream_port: number;
+    is_checked?: boolean;
+    grades?: any;
     user: number;
     problem: number;
+}
+
+/** Сериализатор для модель соревнования */
+export interface ProblemWithImageURL {
+    id: number;
+    users: User[];
+    image: string;
+    /** @maxLength 300 */
+    title: string;
+    /** @maxLength 1000 */
+    description?: string | null;
+    /**
+     * * `webots_ros2_suv` - webots_ros2_suv
+     * * `webots_ros2_tesla` - webots_ros2_tesla
+     * * `webots_ros2_control` - webots_ros2_control
+     * * `webots_ros2_driver` - webots_ros2_driver
+     * * `webots_ros2_epuck` - webots_ros2_epuck
+     * * `webots_ros2_importer` - webots_ros2_importer
+     * * `webots_ros2_mavic` - webots_ros2_mavic
+     * * `webots_ros2_msgs` - webots_ros2_msgs
+     * * `webots_ros2_tests` - webots_ros2_tests
+     * * `webots_ros2_tiago` - webots_ros2_tiago
+     * * `webots_ros2_turtlebot` - webots_ros2_turtlebot
+     * * `webots_ros2_universal_robot` - webots_ros2_universal_robot
+     */
+    world_path: WorldPathEnum;
+    /** @format double */
+    difficulty: number;
+    is_blocked?: boolean;
+    author: number;
 }
 
 export interface TokenRefresh {
@@ -178,6 +238,7 @@ export interface Tournament {
     date_start: Date;
     /** @format date-time */
     date_end: Date;
+    is_blocked?: boolean;
     problems: number[];
 }
 
@@ -196,6 +257,7 @@ export interface TournamentUser {
 
 export interface User {
     id: number;
+    groups: string;
     /** @maxLength 128 */
     password: string;
     /**

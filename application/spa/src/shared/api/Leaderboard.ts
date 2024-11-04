@@ -9,6 +9,7 @@
  * ---------------------------------------------------------------
  */
 
+import { Leaderboard, LeaderboardProblem, LeaderboardTournament } from "./data-contracts";
 import { HttpClient, RequestParams } from "./http-client";
 
 export class Leaderboard<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -16,15 +17,16 @@ export class Leaderboard<SecurityDataType = unknown> extends HttpClient<Security
      * @description Return Общий Leaderboard
      *
      * @tags leaderboard
-     * @name LeaderboardRetrieve
+     * @name LeaderboardList
      * @request GET:/api/leaderboard/
      * @secure
      */
-    leaderboardRetrieve = (params: RequestParams = {}) =>
-        this.request<void, any>({
+    leaderboardList = (params: RequestParams = {}) =>
+        this.request<Leaderboard[], any>({
             path: `/api/leaderboard/`,
             method: "GET",
             secure: true,
+            format: "json",
             ...params,
         });
     /**
@@ -36,10 +38,11 @@ export class Leaderboard<SecurityDataType = unknown> extends HttpClient<Security
      * @secure
      */
     leaderboardProblemRetrieve = (problemId: number, params: RequestParams = {}) =>
-        this.request<void, any>({
+        this.request<LeaderboardProblem, any>({
             path: `/api/leaderboard/problem/${problemId}/`,
             method: "GET",
             secure: true,
+            format: "json",
             ...params,
         });
     /**
@@ -51,10 +54,11 @@ export class Leaderboard<SecurityDataType = unknown> extends HttpClient<Security
      * @secure
      */
     leaderboardTournamentRetrieve = (tournamentId: number, params: RequestParams = {}) =>
-        this.request<void, any>({
+        this.request<LeaderboardTournament, any>({
             path: `/api/leaderboard/tournament/${tournamentId}/`,
             method: "GET",
             secure: true,
+            format: "json",
             ...params,
         });
 }

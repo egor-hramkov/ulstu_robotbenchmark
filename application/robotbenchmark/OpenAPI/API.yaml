@@ -4,6 +4,22 @@ info:
   version: 1.0.0
   description: Your project description
 paths:
+  /api/block/{tournament_id}/:
+    post:
+      operationId: block_create
+      parameters:
+      - in: path
+        name: tournament_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - block
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
   /api/commands/:
     get:
       operationId: commands_retrieve
@@ -36,7 +52,7 @@ paths:
           description: No response body
   /api/leaderboard/:
     get:
-      operationId: leaderboard_retrieve
+      operationId: leaderboard_list
       description: Return Общий Leaderboard
       tags:
       - leaderboard
@@ -45,7 +61,13 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Leaderboard'
+          description: ''
   /api/leaderboard/problem/{problem_id}/:
     get:
       operationId: leaderboard_problem_retrieve
@@ -63,7 +85,11 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaderboardProblem'
+          description: ''
   /api/leaderboard/tournament/{tournament_id}/:
     get:
       operationId: leaderboard_tournament_retrieve
@@ -81,7 +107,11 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaderboardTournament'
+          description: ''
   /api/problem/:
     get:
       operationId: problem_list
@@ -243,6 +273,151 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Problem'
+          description: ''
+  /api/schema/:
+    get:
+      operationId: schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - ug
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - schema
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
           description: ''
   /api/token/:
     post:
@@ -516,6 +691,11 @@ paths:
       description: Получение списка задач турнира по айди турнира и пользователя
       summary: Детальная информация о всех задачах пользователей
       parameters:
+      - in: query
+        name: is_checked
+        schema:
+          type: integer
+        description: Проверенные задачи
       - name: ordering
         required: false
         in: query
@@ -959,6 +1139,47 @@ components:
       required:
       - password
       - username
+    Leaderboard:
+      type: object
+      description: Сериализатор для лидерборда
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        username:
+          type: string
+        total_points:
+          type: integer
+      required:
+      - total_points
+      - username
+    LeaderboardProblem:
+      type: object
+      description: Сериализатор для лидерборда по задаче
+      properties:
+        problem:
+          $ref: '#/components/schemas/ProblemWithImageURL'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Leaderboard'
+      required:
+      - items
+      - problem
+    LeaderboardTournament:
+      type: object
+      description: Сериализатор для лидерборда по задаче
+      properties:
+        tournament:
+          $ref: '#/components/schemas/Tournament'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Leaderboard'
+      required:
+      - items
+      - tournament
     PatchedProblem:
       type: object
       description: Сериализатор для модель соревнования
@@ -987,6 +1208,8 @@ components:
         difficulty:
           type: number
           format: double
+        is_blocked:
+          type: boolean
         author:
           type: integer
     PatchedProblemUser:
@@ -1011,6 +1234,9 @@ components:
         webots_stream_port:
           type: integer
           readOnly: true
+        is_checked:
+          type: boolean
+        grades: {}
         user:
           type: integer
         problem:
@@ -1040,6 +1266,8 @@ components:
         date_end:
           type: string
           format: date-time
+        is_blocked:
+          type: boolean
         problems:
           type: array
           items:
@@ -1066,6 +1294,9 @@ components:
       properties:
         id:
           type: integer
+          readOnly: true
+        groups:
+          type: string
           readOnly: true
         password:
           type: string
@@ -1121,6 +1352,8 @@ components:
         difficulty:
           type: number
           format: double
+        is_blocked:
+          type: boolean
         author:
           type: integer
       required:
@@ -1152,6 +1385,9 @@ components:
         webots_stream_port:
           type: integer
           readOnly: true
+        is_checked:
+          type: boolean
+        grades: {}
         user:
           type: integer
         problem:
@@ -1163,6 +1399,44 @@ components:
       - user
       - vs_port
       - webots_stream_port
+    ProblemWithImageURL:
+      type: object
+      description: Сериализатор для модель соревнования
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          readOnly: true
+        image:
+          type: string
+        title:
+          type: string
+          maxLength: 300
+        description:
+          type: string
+          nullable: true
+          maxLength: 1000
+        world_path:
+          $ref: '#/components/schemas/WorldPathEnum'
+        difficulty:
+          type: number
+          format: double
+        is_blocked:
+          type: boolean
+        author:
+          type: integer
+      required:
+      - author
+      - difficulty
+      - id
+      - image
+      - title
+      - users
+      - world_path
     TokenRefresh:
       type: object
       properties:
@@ -1200,6 +1474,8 @@ components:
         date_end:
           type: string
           format: date-time
+        is_blocked:
+          type: boolean
         problems:
           type: array
           items:
@@ -1239,6 +1515,9 @@ components:
         id:
           type: integer
           readOnly: true
+        groups:
+          type: string
+          readOnly: true
         password:
           type: string
           writeOnly: true
@@ -1266,6 +1545,7 @@ components:
           title: Email address
           maxLength: 254
       required:
+      - groups
       - id
       - password
       - username
