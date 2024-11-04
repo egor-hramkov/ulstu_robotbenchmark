@@ -41,7 +41,7 @@ export const UsersList = () => {
       dataIndex: "id",
       key: "id",
       render: (id) => (
-        <Space>
+        <Space key={id}>
           <Tooltip title="Редактировать пользователя">
             <Button
               type="default"

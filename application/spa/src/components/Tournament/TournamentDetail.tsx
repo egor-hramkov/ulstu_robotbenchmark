@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ProblemUser, Tournament } from "../../shared/api";
 import { useAuthStore } from "../../store/useAuthStore";
 import { Row, Col, Card, List, Button, Flex, FloatButton } from "antd";
-import { EditOutlined, PlayCircleFilled } from "@ant-design/icons";
+import { BugOutlined, EditOutlined, PlayCircleFilled } from "@ant-design/icons";
 import { useProblemsStore } from "../../store/useProblemsStore";
 import "./TournamentDetail.scss";
 import { TournamentEdit } from "./TournamentEdit";
@@ -85,6 +85,11 @@ export const TournamentDetail = () => {
     );
   }, []);
 
+  const blockTournament = () => {
+    if (tournament?.id)
+    apiClient.Block.blockCreate(tournament?.id).then(() => navigate(`/operator/${tournament.id}`));
+  }
+
   if (tournament) {
     return (
       <Row gutter={16}>
@@ -135,6 +140,7 @@ export const TournamentDetail = () => {
                         Задача #{item}
                         <Button
                           type="default"
+                          disabled={tournament.is_blocked}
                           onClick={() => continueUserProblem(findIssue(item))}
                           icon={<PlayCircleFilled />}
                           className="continue-btn"
@@ -147,6 +153,7 @@ export const TournamentDetail = () => {
                         Задача #{item}
                         <Button
                           type="primary"
+                          disabled={tournament.is_blocked}
                           onClick={() => startUserProblem(userId, item)}
                           icon={<PlayCircleFilled />}
                         >
@@ -159,6 +166,9 @@ export const TournamentDetail = () => {
               )}
             />
           </Card>
+          <Button style={{marginTop: 20}} type="dashed" onClick={() => blockTournament()} icon={<BugOutlined />}>
+            Начать проверку заданий
+          </Button>
         </Col>
         <Col span={12}>
           <Card title="Участники">

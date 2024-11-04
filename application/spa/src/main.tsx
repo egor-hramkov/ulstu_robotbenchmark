@@ -10,6 +10,7 @@ import ProblemDetail from "./components/Problems/ProblemDetail.tsx";
 import { TournamentDetail } from "./components/Tournament/TournamentDetail.tsx";
 import { Register } from "./components/Auth/Register/Register.tsx";
 import { UsersList } from "./components/Users/UsersList.tsx";
+import { OperatorCard } from "./components/Operator/OperatorCard.tsx";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: "/users",
         element: <UsersList />
+      },
+      {
+        path: "/operator/:id",
+        element: <OperatorCard />
       }
     ],
   },

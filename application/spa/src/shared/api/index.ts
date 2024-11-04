@@ -1,3 +1,4 @@
+import { Block } from "./Block";
 import { Leaderboard } from "./Leaderboard";
 import { Problems } from "./Problems";
 import { Token } from "./Token";
@@ -17,6 +18,7 @@ export class apiClientClass {
     this.UsersProblem = new UsersProblem(config);
     this.UsersTournament = new UsersTournament(config);
     this.Leaderboard = new Leaderboard(config);
+    this.Block = new Block(config);
   }
 
   /** Настройки системы. */
@@ -38,6 +40,8 @@ export class apiClientClass {
   public UsersTournament: UsersTournament;
 
   public Leaderboard: Leaderboard;
+
+  public Block: Block;
 }
 
 export * from "./data-contracts";
