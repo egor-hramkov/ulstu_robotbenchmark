@@ -17,7 +17,6 @@ class Problem(models.Model):
     difficulty = models.FloatField()
     author = models.ForeignKey(User, related_name='problems', on_delete=models.DO_NOTHING)
     users = models.ManyToManyField(User, related_name='user_problems', through="ProblemUser")
-    is_blocked = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
@@ -25,8 +24,9 @@ class Problem(models.Model):
 
 class ProblemUser(models.Model):
     """Многие ко многим Пользователь-Задача"""
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null=False)
+    tournament = models.ForeignKey("Tournament", on_delete=models.CASCADE, related_name='tournament_entries', null=False,)
     is_completed = models.BooleanField(null=False, default=False)
     points = models.IntegerField(default=0)
     robot_panel_port = models.IntegerField(validators=[MinValueValidator(10000), MaxValueValidator(12000)])
@@ -34,6 +34,8 @@ class ProblemUser(models.Model):
     webots_stream_port = models.IntegerField(validators=[MinValueValidator(10000), MaxValueValidator(12000)])
     is_checked = models.BooleanField(default=False)
     grades = JSONField(default=dict)
+    is_blocked = models.BooleanField(default=False)
+
 
     class Meta:
         constraints = [
@@ -41,7 +43,7 @@ class ProblemUser(models.Model):
         ]
 
     def __str__(self):
-        return self.user.username + " - " + self.problem.title
+        return self.user.username + " - " + self.problem.title + " - " + self.tournament.name
 
 
 class Tournament(models.Model):
@@ -85,6 +87,7 @@ class TournamentUser(models.Model):
                     problem=problem,
                     is_completed=False,
                     points=0,
+                    tournament=self.tournament,
                     robot_panel_port=robot_panel_port,
                     vs_port=vs_port,
                     webots_stream_port=webots_stream_port

@@ -72,6 +72,7 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
         p = ProblemUser.objects.create(
             user=self.request.user,
             problem=serializer.validated_data['problem'],
+            tournament=serializer.validated_data['tournament'],
             points=serializer.validated_data['points'],
             is_completed=serializer.validated_data['is_completed'],
             robot_panel_port=robot_panel_port,

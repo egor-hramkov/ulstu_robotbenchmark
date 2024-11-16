@@ -80,7 +80,7 @@ class BlockTournamentAPIView(APIView):
         tournament.save()
 
         # Блокируем все связанные задачи
-        problems = tournament.problems.all()
+        problems = tournament.tournament_entries.all()
         for problem in problems:
             problem.is_blocked = True
             problem.save()
