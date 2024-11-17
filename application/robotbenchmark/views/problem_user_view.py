@@ -75,6 +75,7 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
             tournament=serializer.validated_data['tournament'],
             points=serializer.validated_data['points'],
             is_completed=serializer.validated_data['is_completed'],
+            launch_command=serializer.validated_data['launch_command'],
             robot_panel_port=robot_panel_port,
             vs_port=vs_port,
             webots_stream_port=webots_stream_port

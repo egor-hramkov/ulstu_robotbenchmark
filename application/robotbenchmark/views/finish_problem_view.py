@@ -15,8 +15,6 @@ class FinishProblemView(APIView):
     def get(self, request, problemuser_id: int):
         """Удаляет докер контейнер и файлы в ОС пользователя по айди записи в таблице ProblemUser"""
         p = ProblemUser.objects.get(pk=problemuser_id)
-        print(p.user.id)
-        print(request.user.id)
         if p.user.id != request.user.id:
             return Response({"detail": "Недостаточно прав!"}, status=status.HTTP_403_FORBIDDEN)
 

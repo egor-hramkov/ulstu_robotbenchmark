@@ -35,6 +35,7 @@ class ProblemUser(models.Model):
     is_checked = models.BooleanField(default=False)
     grades = JSONField(default=dict)
     is_blocked = models.BooleanField(default=False)
+    launch_command = models.TextField(default="")
 
 
     class Meta:
