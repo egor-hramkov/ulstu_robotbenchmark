@@ -8,7 +8,7 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from robotbenchmark.models import ProblemUser, CommandQueue
+from robotbenchmark.models import ProblemUser, CommandQueue, TaskStatus
 from robotbenchmark.serializers.problem_user_serializer import ProblemUserSerializer
 
 
@@ -74,8 +74,8 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
             problem=serializer.validated_data['problem'],
             tournament=serializer.validated_data['tournament'],
             points=serializer.validated_data['points'],
-            is_completed=serializer.validated_data['is_completed'],
             launch_command=serializer.validated_data['launch_command'],
+            status=serializer.validated_data['status'],
             robot_panel_port=robot_panel_port,
             vs_port=vs_port,
             webots_stream_port=webots_stream_port
@@ -103,7 +103,7 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
         if user_id:
             condition &= Q(user__id=user_id)
         if is_checked:
-            condition &= Q(is_checked=is_checked)
+            condition &= Q(status=TaskStatus.CHECKED)
 
         problem_users = qs.filter(condition)
         serializer = self.get_serializer(problem_users, many=True)

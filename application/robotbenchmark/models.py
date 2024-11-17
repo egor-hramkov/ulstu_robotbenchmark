@@ -4,8 +4,18 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import JSONField
+from django.utils.translation import gettext_lazy as _
 
 from robotbenchmark.enums.webots_ros2_projects_dir import WebotsRosProjects
+
+
+class TaskStatus(models.TextChoices):
+    CREATED = 'CREATED', _('Создана')
+    IN_PROGRESS = 'IN_PROGRESS', _('В процессе')
+    COMPLETED = 'COMPLETED', _('Завершена')
+    QUARANTINE = 'QUARANTINE', _('В карантине')
+    CHECKED = 'CHECKED', _('Проверена')
+    REWORK = 'REWORK', _('Отправлена на доработку')
 
 
 class Problem(models.Model):
@@ -26,17 +36,22 @@ class ProblemUser(models.Model):
     """Многие ко многим Пользователь-Задача"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null=False)
-    tournament = models.ForeignKey("Tournament", on_delete=models.CASCADE, related_name='tournament_entries', null=False,)
-    is_completed = models.BooleanField(null=False, default=False)
+    tournament = models.ForeignKey(
+        "Tournament",
+        on_delete=models.CASCADE,
+        related_name='tournament_entries',
+        null=False,
+    )
     points = models.IntegerField(default=0)
     robot_panel_port = models.IntegerField(validators=[MinValueValidator(10000), MaxValueValidator(12000)])
     vs_port = models.IntegerField(validators=[MinValueValidator(10000), MaxValueValidator(12000)])
     webots_stream_port = models.IntegerField(validators=[MinValueValidator(10000), MaxValueValidator(12000)])
-    is_checked = models.BooleanField(default=False)
     grades = JSONField(default=dict)
-    is_blocked = models.BooleanField(default=False)
     launch_command = models.TextField(default="")
-
+    status = models.CharField(
+        choices=TaskStatus.choices,
+        default=TaskStatus.CREATED,
+    )
 
     class Meta:
         constraints = [
@@ -72,7 +87,7 @@ class TournamentUser(models.Model):
         return self.user.username + " - " + self.tournament.name
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         super(TournamentUser, self).save(force_insert, force_update, using, update_fields)
         all_problems = self.tournament.problems.all()
@@ -86,7 +101,6 @@ class TournamentUser(models.Model):
                 pu = ProblemUser.objects.create(
                     user=self.user,
                     problem=problem,
-                    is_completed=False,
                     points=0,
                     tournament=self.tournament,
                     robot_panel_port=robot_panel_port,
