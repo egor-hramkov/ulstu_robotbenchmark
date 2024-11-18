@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ..models import Tournament
+from ..models import Tournament, TaskStatus
 from ..permissions import IsAdminOrOperator
 from ..serializers.tournament_serializer import TournamentSerializer
 
@@ -80,9 +80,9 @@ class BlockTournamentAPIView(APIView):
         tournament.save()
 
         # Блокируем все связанные задачи
-        problems = tournament.tournament_entries.filter(is_completed=True)
+        problems = tournament.tournament_entries.filter(status=TaskStatus.COMPLETED)
         for problem in problems:
-            problem.is_blocked = True
+            problem.status = TaskStatus.QUARANTINE
             problem.save()
 
         return Response({"message": "Tournament and related problems have been blocked"}, status=status.HTTP_200_OK)
