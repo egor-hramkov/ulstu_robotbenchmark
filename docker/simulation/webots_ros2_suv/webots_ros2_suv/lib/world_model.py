@@ -8,6 +8,9 @@ import math
 from ament_index_python.packages import get_package_share_directory
 from .car_model import CarModel
 from .coords_transformer import CoordsTransformer
+from ackermann_msgs.msg import AckermannDrive
+from webots_ros2_suv.lib.map_utils import is_point_in_polygon, calc_dist_point
+from typing import List
 
 class WorldModel(object):
     '''
@@ -17,71 +20,36 @@ class WorldModel(object):
         self.__car_model = CarModel()
         self.coords_transformer = CoordsTransformer()
         
-        self.path = None            # спланированный путь
-        self.gps_path = None        # спланированный путь в глобальных координатах
-        self.rgb_image = None       # цветное изображение с камеры
-        self.range_image = None     # изображение с камеры глубины
-        self.point_cloud = None     # облако точек от лидара
-        self.seg_image = None       # сегментированное изображение во фронтальной проекции
-        self.seg_colorized = None   # раскрашенное сегментированное изображение во фронтальной проекции
-        self.seg_composited = None   # раскрашенное сегментированное изображение во фронтальной проекции
-        self.img_front_objects = None # изображение с камеры с детектированными объектами
-        self.objects = None         # объекты во фронтальной проекции   
-        self.ipm_image = None       # BEV сегментированное изображение 
-        self.ipm_colorized = None   # раскрашенное BEV сегментированное изображение
-        self.pov_point = None       # Точка в BEV, соответствующая арсположению авто
-        self.goal_point = None      # Точка в BEV, соответствующая цели
-        self.global_map = None      # текущие загруженные координаты точек глобальной карты
-        self.cur_path_segment = 0   # Текущий сегмент пути, заданный в редакторе карт
-        self.cur_turn_polygon = None# Текущий полигон для разворота
-        self.command_message = None # Сообщение типа AckermanDrive для движения автомобиля
-
-
+        self.path = None                    # спланированный путь в координатах BEV
+        self.gps_path = None                # спланированный путь в глобальных координатах
+        self.rgb_image = None               # цветное изображение с камеры
+        self.range_image = None             # изображение с камеры глубины
+        self.point_cloud = None             # облако точек от лидара
+        self.command_message = AckermannDrive() # Сообщение типа AckermanDrive для движения автомобиля
+    
     def load_map(self, mapyaml):
         self.global_map = []
         for f in mapyaml['features']:
             self.global_map.append({
                 'name': f['properties']['id'].replace('_point', ''),
                 'type': f['geometry']['type'],
-                'coordinates': f['geometry']['coordinates']
+                'coordinates': f['geometry']['coordinates'],
+                'seg_num': f['properties'].get('seg_num', 0)
             })
 
     def get_current_position(self):
         return self.__car_model.get_position()
 
-    def draw_scene(self):
-        colorized = self.ipm_colorized
-        prev_point = None
-        if self.path:
-            for n in self.path:
-                if prev_point:
-                    cv2.line(colorized, prev_point, n, (0, 255, 255), 2)
-                prev_point = n
-        cv2.circle(colorized, self.pov_point, 9, (0, 255, 0), 5)
-        cv2.circle(colorized, self.goal_point, 9, (255, 0, 0), 5)
-        points = [e['coordinates'] for e in self.global_map if e['name'] == 'moving'][self.cur_path_segment]
+    def fill_params(self):
+        pos = self.__car_model.get_position()
+        self.params["cur_point"] = self.cur_path_point
+        self.params["cur_path_segment"] = self.cur_path_segment
+        self.params['lat'] = pos[0]
+        self.params['lon'] = pos[1]
+        self.params['angle'] = pos[2]
 
-        font = cv2.FONT_HERSHEY_SIMPLEX 
-        fontScale = 1
-        color = (255, 255, 0) 
-        thickness = 2
-        for i, p in enumerate(points):
-            x, y = self.coords_transformer.get_relative_coordinates(p[0], p[1], self.get_current_position(), self.pov_point)
-            cv2.circle(colorized, (x, y), 8, (0, 0, 255), 2)
-            image = cv2.putText(colorized, f'{i}', (x + 20, y), font,  fontScale, color, thickness, cv2.LINE_AA)
-
-        colorized = cv2.resize(colorized, (500, 500), cv2.INTER_AREA)
-        # cv2.imshow("colorized seg", colorized)
-        # cv2.imshow("yolo drawing", self.img_front_objects)
-
-
-        #cv2.imshow("composited image", np.asarray(colorize(world_model.ipm_seg)))
-        #img_tracks = draw_absolute_tracks(self.__track_history_bev, 500, 500, self._logger)
-        #cv2.imshow("yolo drawing", img_tracks)
-
-
-        # if cv2.waitKey(10) & 0xFF == ord('q'):
-        #     return
+    def draw_scene(self, log=print):
+        pass
 
     def get_speed(self):
         return self.__car_model.get_speed()
@@ -91,3 +59,12 @@ class WorldModel(object):
 
     def update_car_pos(self, lat, lon, orientation):        
         self.__car_model.update(lat=lat, lon=lon, orientation=orientation)
+
+    def get_current_zones(self):
+        lat, lon, o = self.get_current_position()
+        zones = []
+        for p in self.global_map:
+            if p['type'] == 'Polygon':
+                if is_point_in_polygon(lat, lon, p['coordinates'][0]): # and self.cur_path_point > 2:
+                    zones.append(p)
+        return zones

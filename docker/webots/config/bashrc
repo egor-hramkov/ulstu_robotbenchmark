@@ -1,6 +1,11 @@
 export WEBOTS_HOME=/usr/local/webots
 export WEBOTS_OFFSCREEN=1
+export LIBGL_ALWAYS_INDIRECT=0
+export LIBGL_ALWAYS_SOFTWARE=0
 export USERNAME=default
+export __NV_PRIME_RENDER_OFFLOAD=1
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+
 
 if uname -v | grep -qi 'ubuntu'; then
     export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp

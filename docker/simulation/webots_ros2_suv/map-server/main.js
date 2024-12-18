@@ -5,6 +5,7 @@ import {Circle, Fill, Stroke, Style, Icon} from 'ol/style.js';
 import {OSM, Vector as VectorSource} from 'ol/source.js';
 import GeoJSON from "ol/format/GeoJSON";
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
+import LineString from 'ol/geom/LineString.js';
 import * as ol_color from 'ol/color';
 import {useGeographic, fromLonLat} from 'ol/proj.js';
 import {getCenter} from 'ol/extent.js';
@@ -55,6 +56,19 @@ const translate = new Translate({
   source: movePointSource, 
 });
 
+let polylineSource = new VectorSource();
+let polylineLayer = new VectorLayer({
+    source: polylineSource,
+    style: new Style({
+        stroke: new Stroke({
+            color: '#FF0000',
+            width: 2
+        })
+    })
+});
+
+
+
 // Создание объекта (feature) для отображения на карте
 let ego_feature = new Feature({
   geometry: new Point(init_point),//(fromLonLat(init_point)),
@@ -82,7 +96,7 @@ const ego_vehicle_layer = new VectorLayer({
 
 // Инициализация карты с добавлением созданных слоёв
 const map = new Map({
-  layers: [raster, vector, ego_vehicle_layer, movePointLayer],
+  layers: [raster, vector, ego_vehicle_layer, movePointLayer, polylineLayer],
   target: 'map',
   view: new View({
     center: init_point,
@@ -141,7 +155,7 @@ function addInteraction() {
 
     draw.on('drawend', function(e) { 
       e.feature.setStyle(s);
-      e.feature.setProperties({"id": typeSelect.options[typeSelect.selectedIndex].dataset.id}); 
+      e.feature.setProperties({"seg_num" : 0, "id": typeSelect.options[typeSelect.selectedIndex].dataset.id}); 
     });
     map.addInteraction(draw);
   }
@@ -262,9 +276,28 @@ document.getElementById('loadmap').addEventListener('click', function () {
   load_map(mapSelect.value);
 });
 
+// document.getElementById('savesegment').addEventListener('click', function () {
+//   $.get('/save_segment', function(data){comsole.log('path segment saved')});
+// });
+
 let selected = null;
 let isPointsMoveMode = false;
 let isDeleteMode= false;
+let isSegNumSettingMode = false;
+
+$('#segPointsCheckbox').change(function() {
+  if($(this).is(":checked")) {
+    isSegNumSettingMode = true;
+  }
+  else {
+    isSegNumSettingMode = false;
+    if (selected != null)
+      // Удаление translate interaction после перетаскивания
+      selected = null;
+  }
+  console.log('Path segment number mode: ' + isSegNumSettingMode);
+
+});
 
 $('#changePointsCheckbox').change(function() {
   if($(this).is(":checked")) {
@@ -291,7 +324,7 @@ $('#deletePointsCheckbox').change(function() {
       // Удаление translate interaction после перетаскивания
       selected = null;
   }
-  console.log('Change points mode: ' + isPointsMoveMode);
+  console.log('Delete points mode: ' + isDeleteMode);
 });
 
 // Обработчик клика по карте для вывода координат в консоль и изменения объектов
@@ -304,6 +337,26 @@ map.on('click', function(event) {
     });
 
   } 
+  else if (isSegNumSettingMode) {
+    map.forEachFeatureAtPixel(event.pixel, function(f, selLayer) {
+      $("<div id='seg_dynamic_dialog'><input name='seg_num' value='" + f.get('seg_num') + "' /></div>").dialog({
+        modal: true,
+        title:'Введите номер сегмента пути:',
+        buttons: {
+          'OK': function () {
+            var seg_num = $('input[name="seg_num"]').val();
+            f.setProperties({"seg_num": seg_num}); 
+            $(this).dialog('close');
+          },
+          'Отмена': function () {
+            $(this).dialog('close');
+          }
+        }
+      });
+  
+    });
+
+  }
   else if (isPointsMoveMode) {
     map.forEachFeatureAtPixel(event.pixel, function(f, selLayer) {
       selected = f;
@@ -355,13 +408,50 @@ if (current_map_file != null) {
   mapSelect.value = current_map_file;
 }
 
+
+const updatePolyline = (path) => {
+  polylineSource.clear(); // Очищаем текущий источник данных
+
+  if (path.length === 0) return; // Если путь пуст, ничего не делаем
+
+  const pathFeature = new Feature({
+      geometry: new LineString(path) // Создаем линию с преобразованными координатами
+  });
+
+  // Устанавливаем стиль для линии
+  pathFeature.setStyle(new Style({
+      stroke: new Stroke({
+          color: '#FF0000', // Цвет линии
+          width: 2 // Толщина линии
+      })
+  }));
+
+  polylineSource.addFeature(pathFeature); // Добавляем новую линию
+};
+
+
+const fetchData = () => {
+    fetch('/get_driving_points')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'ok' && Array.isArray(data.path)) {
+                updatePolyline(data.path);
+            } else {
+                console.error('Invalid data format:', data);
+            }
+        })
+        .catch(error => console.error('Error fetching data:', error));
+};
+setInterval(fetchData, 2000); // Запрос каждые 2 секунды
+
+
 // периодический запрос на обновление координат ТС
 setInterval(
   () => $.get('/get_position', function(data){
     ego_feature.setGeometry(new Point([data['lat'], data['lon']]));
     ego_marker_style.getImage().setRotation(data['orientation']);
   }),
-  2000,
+  1000,
 );
 
 setInterval(
@@ -378,6 +468,44 @@ setInterval(
     console.log('image seg changed');
     var unique = $.now();
     $('#img_seg').attr('src', '/get_image?img_type=seg&tm=' + unique);
+  },
+  700,
+);
+
+setInterval(
+  () => {
+    console.log('image seg changed');
+    var unique = $.now();
+    $('#img_sign').attr('src', '/get_image?img_type=sign&tm=' + unique);
+    $.ajax({
+      url: '/get_sign_label',
+      method: 'GET',
+      dataType: 'json',
+      success: function(data) {
+          $('#img_sign').attr('hidden', !data['detected'])
+          if (data['detected'])
+            $('#sign_text').text(data['sign']);
+      },
+      error: function() {
+        console.error('Не удалось сделать запрос на текст знака.')
+      }
+    });
+    $.getJSON('/get_params' , function(data) {
+      var tbl_body = document.createElement("tbody");
+      var odd_even = false;
+      for (var key in data){
+        var tbl_row = tbl_body.insertRow();
+        tbl_row.className = odd_even ? "odd" : "even";
+        var k_cell = tbl_row.insertCell();
+        k_cell.appendChild(document.createTextNode(key.toString()));
+        k_cell.className = "fw-bold";
+        var v_cell = tbl_row.insertCell();
+        v_cell.appendChild(document.createTextNode(data[key].toString()));   
+        odd_even = !odd_even; 
+      }
+      $("#params").empty();
+      $("#params").append(tbl_body);
+    });    
   },
   700,
 );

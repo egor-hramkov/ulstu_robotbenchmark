@@ -1,1 +1,3 @@
-make all FLAVOR="hiber" ROBOT_PANEL_PORT=10001 VS_PORT=10002 WEBOTS_STREAM_PORT=10003 ROS2_PROJECT="webots_ros2_suv"
+make all FLAVOR="devel" ROBOT_PANEL_PORT=8008 VS_PORT=31415 WEBOTS_STREAM_PORT=1234
+docker exec -it ulstu-devel sudo sed -i 's/\r$//g' /ulstu/.bashrc
+

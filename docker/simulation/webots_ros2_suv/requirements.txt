@@ -8,3 +8,12 @@ pyserial
 json-rpc
 shapely
 pyproj
+geopy
+open3d
+pyserial
+filterpy
+tensorflow
+dill
+dubins
+geopy
+segmentation-models-pytorch

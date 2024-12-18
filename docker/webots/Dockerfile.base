@@ -6,7 +6,7 @@ ARG UID=1000
 
 # User
 RUN useradd -d /ulstu -m \
-    -u $UID -U \
+    -u 1000 -U \
     -s /usr/bin/bash \
     -G dialout \
     -c "Ulstu Robotics" ulstu && \
@@ -44,6 +44,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y -o Dpkg::Option
     vim \
     rsync \
     dialog \
+    nano \
+    software-properties-common \
     fuse
 
 RUN apt install --yes xvfb ffmpeg lsb-release g++ make libavcodec-extra libglu1-mesa libegl1 libxkbcommon-x11-dev libxcb-keysyms1 libxcb-image0 libxcb-icccm4 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcomposite-dev libxtst6 libnss3    
@@ -79,18 +81,19 @@ RUN su ulstu -c 'curl -fsSL https://code-server.dev/install.sh | sh'
 
 # Webots
 RUN curl -L -o /tmp/webots.deb \
-    'https://github.com/cyberbotics/webots/releases/download/R2023b/webots_2023b_amd64.deb' && \
+    'https://github.com/cyberbotics/webots/releases/download/R2023b/webots_2023b_amd64.deb' 
+RUN apt-get update && \
     apt-get install -y /tmp/webots.deb && \
     rm -f /tmp/webots.deb && \
     mkdir -p /ulstu/.config/Cyberbotics
 
 # Groot
-RUN curl -L -o /opt/Groot2.AppImge \
-    'https://s3.us-west-1.amazonaws.com/download.behaviortree.dev/groot2_linux_installer/Groot2-v1.5.2-x86_64.AppImage' && \
-    chmod +x /opt/Groot2.AppImge && \
-    ln -sf /opt/Groot2.AppImge /usr/bin/groot2
+# RUN curl -L -o /opt/Groot2.AppImge \
+#     'https://s3.us-west-1.amazonaws.com/download.behaviortree.dev/groot2_linux_installer/Groot2-v1.5.2-x86_64.AppImage' && \
+#     chmod +x /opt/Groot2.AppImge && \
+#     ln -sf /opt/Groot2.AppImge /usr/bin/groot2
 
-RUN pip3 install scipy transforms3d fastseg prometheus_client cameratransform cherrypy pyyaml lapx ultralytics pyserial json-rpc shapely pyproj
+RUN pip3 install  --no-cache-dir  scipy transforms3d fastseg prometheus_client cameratransform cherrypy pyyaml lapx ultralytics pyserial json-rpc shapely pyproj geopy tensorflow scikit-learn
 
 #HOTFIX: https://github.com/ros-controls/ros2_controllers/issues/482
 RUN wget -O /tmp/diff_drive_controller.deb http://snapshots.ros.org/humble/2022-11-23/ubuntu/pool/main/r/ros-humble-diff-drive-controller/ros-humble-diff-drive-controller_2.12.0-1jammy.20221108.202153_amd64.deb && \
@@ -110,10 +113,13 @@ RUN cat /tmp/bashrc >> /ulstu/.bashrc && \
     mkdir  -p /ulstu/ros2_ws/src && \
     chown -R ulstu:ulstu /ulstu
 
+
 #RUN sudo -E rosdep init 
 RUN apt-get install -y python3-vcstool
 RUN rosdep --rosdistro "${ROS_DISTRO}" update 
 RUN cd /ulstu/ros2_ws && yes | rosdep --rosdistro "${ROS_DISTRO}" install -r --from-paths src --ignore-src
+
+RUN pip3 install matplotlib scipy --upgrade 
 
 USER ulstu
 WORKDIR /ulstu/ros2_ws
