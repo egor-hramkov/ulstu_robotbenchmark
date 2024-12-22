@@ -5,7 +5,7 @@ import urllib.request as req
 from urllib.error import URLError
 
 print("Служба запущена!")
-os.chdir("../docker/webots")
+os.chdir("../docker/webots/robocross.virtual-main")
 while True:
     try:
         url = 'http://localhost:8000/api/commands/'
