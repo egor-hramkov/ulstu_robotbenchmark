@@ -7,6 +7,7 @@ from rest_framework import viewsets, status
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from robotbenchmark.models import ProblemUser, CommandQueue, TaskStatus
 from robotbenchmark.serializers.problem_user_serializer import ProblemUserSerializer
@@ -108,3 +109,21 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
         problem_users = qs.filter(condition)
         serializer = self.get_serializer(problem_users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+
+class UserProblemLauncher(APIView):
+    """Вью для запуска решения предоставленной командой пользователя"""
+
+    def get(self, request, problem_user_id: int, format=None):
+        """Запуск решения командой пользователя (передача в контейнер команды)"""
+        pu = ProblemUser.objects.get(id=problem_user_id)
+        user_command = pu.launch_command
+        container_name = pu.user.username + str(pu.id)
+        command = f"docker exec -it ulstu-{container_name} /bin/bash -c '{user_command}'"
+        print(command)
+        CommandQueue.objects.create(
+            command=command
+        )
+        return Response(status=200)

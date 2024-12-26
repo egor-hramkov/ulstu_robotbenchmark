@@ -24,3 +24,11 @@ python3 consumer_service.py
 SWAGGER - 127.0.0.1:8000/api/swagger/
 
 Сейчас доступны контейнеры с app, бд. Дефолтный порт сервера 8000
+
+
+FAQ, Если при сборке возникли ошибки:
+
+1. **The path /mnt/wslg is not shared from the host and is not known to Docker.**
+
+Необходимо зайти в настройки Docker -> Preferences... -> Resources -> File Sharing. Записать туда пути /mnt и /tmp. 
+

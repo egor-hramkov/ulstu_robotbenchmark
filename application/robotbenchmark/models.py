@@ -107,8 +107,7 @@ class TournamentUser(models.Model):
                     vs_port=vs_port,
                     webots_stream_port=webots_stream_port
                 )
-                command = (f"make all FLAVOR={pu.user.username + str(pu.id)} ROBOT_PANEL_PORT={robot_panel_port} "
-                           f"VS_PORT={vs_port} WEBOTS_STREAM_PORT={webots_stream_port} ROS2_PROJECT={pu.problem.world_path}")
+                command = f"make all FLAVOR={pu.user.username + str(pu.id)} ROBOT_PANEL_PORT={robot_panel_port} VS_PORT={vs_port} WEBOTS_STREAM_PORT={webots_stream_port}"
 
                 CommandQueue.objects.create(
                     command=command
