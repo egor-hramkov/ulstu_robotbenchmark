@@ -95,9 +95,6 @@ export const ProblemDetail = () => {
     <div className="problem-detail-container">
       <div style={{ marginBottom: 16, display: "flex", justifyContent: "space-between" }}>
         <h2>Детали задачи</h2>
-        <Button type="primary" danger onClick={handleFinishTournament}>
-          Завершить соревнование
-        </Button>
       </div>
       {problem ? (
         <Tabs style={{ height: "100vh" }} items={items} />

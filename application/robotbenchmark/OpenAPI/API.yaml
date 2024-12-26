@@ -50,6 +50,24 @@ paths:
       responses:
         '200':
           description: No response body
+  /api/launch-user-problem/{problem_user_id}:
+    get:
+      operationId: launch_user_problem_retrieve
+      description: Запуск решения командой пользователя (передача в контейнер команды)
+      parameters:
+      - in: path
+        name: problem_user_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - launch-user-problem
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /api/leaderboard/:
     get:
       operationId: leaderboard_list
