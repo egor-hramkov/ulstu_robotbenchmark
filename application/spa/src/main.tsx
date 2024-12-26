@@ -10,6 +10,8 @@ import ProblemDetail from "./components/Problems/ProblemDetail.tsx";
 import { TournamentDetail } from "./components/Tournament/TournamentDetail.tsx";
 import { Register } from "./components/Auth/Register/Register.tsx";
 import { UsersList } from "./components/Users/UsersList.tsx";
+import { Operator } from "./components/Operator/Operator.tsx";
+import { OperatorTournament } from "./components/Operator/OperatorTournament.tsx";
 import { OperatorCard } from "./components/Operator/OperatorCard.tsx";
 
 const router = createBrowserRouter([
@@ -43,7 +45,15 @@ const router = createBrowserRouter([
       },
       {
         path: "/users",
-        element: <UsersList />
+        element: <UsersList />,
+      },
+      {
+        path: "/operator-tournament/:id",
+        element: <OperatorTournament />,
+      },
+      {
+        path: "/operator",
+        element: <Operator />,
       },
       {
         path: "/operator/:id",

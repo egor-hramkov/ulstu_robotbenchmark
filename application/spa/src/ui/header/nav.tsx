@@ -24,5 +24,9 @@ export const menuPoints: MenuItem[] = [
     label: "Турниры",
     icon: <TrophyOutlined />,
   },
+  {
+    key: "/operator",
+    label: 'Модерация',
+  },
   ...adminPoints
 ];
