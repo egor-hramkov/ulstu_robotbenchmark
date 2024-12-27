@@ -55,10 +55,19 @@ export const ProblemDetail = () => {
     setLaunchCommand(""); // Очистить поле после завершения
   };
 
+  // Function to open a new window with the specified URL
+  const openInNewWindow = (url: string) => {
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   const items: Tab[] = [
     {
       key: "1",
-      label: "VS Code",
+      label: (
+        <span>
+          VS Code <Button onClick={() => openInNewWindow(`http://localhost:${problem?.vs_port}`)} size="small">Открыть в новом окне</Button>
+        </span>
+      ),
       children: (
         <iframe
           src={`http://localhost:${problem?.vs_port}`}
@@ -69,7 +78,11 @@ export const ProblemDetail = () => {
     },
     {
       key: "2",
-      label: "Webots",
+      label: (
+        <span>
+          Webots <Button onClick={() => openInNewWindow(`http://localhost:${problem?.webots_stream_port}/index.html`)} size="small">Открыть в новом окне</Button>
+        </span>
+      ),
       children: (
         <iframe
           src={`http://localhost:${problem?.webots_stream_port}/index.html`}
@@ -80,7 +93,11 @@ export const ProblemDetail = () => {
     },
     {
       key: "3",
-      label: "Редактор карты",
+      label: (
+        <span>
+          Редактор карты <Button onClick={() => openInNewWindow(`http://localhost:${problem?.robot_panel_port}`)} size="small">Открыть в новом окне</Button>
+        </span>
+      ),
       children: (
         <iframe
           src={`http://localhost:${problem?.robot_panel_port}`}
@@ -95,6 +112,7 @@ export const ProblemDetail = () => {
     <div className="problem-detail-container">
       <div style={{ marginBottom: 16, display: "flex", justifyContent: "space-between" }}>
         <h2>Детали задачи</h2>
+        <Button onClick={handleFinishTournament} type="danger">Завершить соревнование</Button>
       </div>
       {problem ? (
         <Tabs style={{ height: "100vh" }} items={items} />

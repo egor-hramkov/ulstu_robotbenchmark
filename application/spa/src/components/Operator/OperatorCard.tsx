@@ -28,6 +28,7 @@ export const OperatorCard = () => {
   const [teamCommand, setTeamCommand] = useState("");
 
   const { id }: { id: string } = useParams();
+
   const { nextProblem, lastProblem, setProblems, problems, currentIndex } =
     useOperatorStore((state) => state);
 
@@ -36,6 +37,7 @@ export const OperatorCard = () => {
   useEffect(() => {
     if (id) {
       apiClient.Tournament.tournamentRetrieve(+id).then((res) => {
+        console.log(res, "2222");
         setTournamentInfo(res.data);
         setParticipants(res.data.users);
         setProblems(res.data.problems);
@@ -189,9 +191,7 @@ export const OperatorCard = () => {
         {/* Team Command Input Field */}
         {/* Team Command Display */}
         <Card title="Команда для запуска" style={{ marginTop: 20 }}>
-          <Text>
-            ros2 run my_package my_node
-          </Text>
+          <Text>ros2 run my_package my_node</Text>
         </Card>
       </Col>
 
