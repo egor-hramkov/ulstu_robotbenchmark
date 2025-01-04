@@ -1,17 +1,51 @@
 from django.contrib import admin
-from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser, Problem, TournamentUser, Tournament, ProblemUser, CommandQueue
 
-from .models import Problem, TournamentUser, Tournament, ProblemUser, CommandQueue
 
+@admin.register(CustomUser)
+class CustomUserAdmin(UserAdmin):
+    list_display = (
+        'id', 
+        'username', 
+        'first_name', 
+        'last_name', 
+        'email', 
+        'phone', 
+        'telegram', 
+        'organization', 
+        'team', 
+        'is_staff', 
+        'is_active', 
+    )
 
-# Register your models here.
+    list_display_links = search_fields = (
+        'id', 
+        'username', 
+        'first_name', 
+        'last_name', 
+        'email', 
+        'phone', 
+        'telegram', 
+        'organization', 
+        'team', 
+    )
 
-class UserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'is_staff', 'is_active')
-    list_display_links = ('id', 'username', 'email')
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}), 
+        ('Personal info', {'fields': ('first_name', 'last_name', 'email', 'phone', 'telegram', 'organization', 'team')}), 
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}), 
+        ('Important dates', {'fields': ('last_login', 'date_joined')}), 
+    )
 
-admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',), 
+            'fields': ('username', 'password1', 'password2', 'first_name', 'last_name', 'email', 'phone', 'telegram', 'organization', 'team'), 
+        }), 
+    )
+
+    ordering = ('id',)
 
 
 @admin.register(Problem)

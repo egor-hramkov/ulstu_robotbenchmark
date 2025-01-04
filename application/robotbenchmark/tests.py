@@ -1,8 +1,10 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 from rest_framework_simplejwt.tokens import AccessToken
-
 from robotbenchmark.models import Problem, CommandQueue
+
+
+UserModel = get_user_model()
 
 
 class ProblemUserTestCase(TestCase):
@@ -13,7 +15,7 @@ class ProblemUserTestCase(TestCase):
     GET_COMMAND_URL = "/api/commands/"
 
     def setUp(self):
-        self.user = User.objects.create_user(username='test_for_task', password='abcdefasd', email="task@mail.ru")
+        self.user = UserModel.objects.create_user(username='test_for_task', password='abcdefasd', email="task@mail.ru")
         self.problem = Problem.objects.create(
             title="test problem",
             description="string",

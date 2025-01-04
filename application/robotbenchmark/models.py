@@ -1,12 +1,18 @@
 import random
-
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import JSONField
 from django.utils.translation import gettext_lazy as _
-
 from robotbenchmark.enums.webots_ros2_projects_dir import WebotsRosProjects
+from django.conf import settings
+
+
+class CustomUser(AbstractUser):
+    phone = models.CharField(max_length=18, blank=True, null=True, verbose_name="Номер телефона")
+    telegram = models.CharField(max_length=50, blank=True, null=True, verbose_name="Telegram")
+    organization = models.CharField(max_length=150, blank=True, null=True, verbose_name="Название организации")
+    team = models.CharField(max_length=50, blank=True, null=True, verbose_name="Название команды")
 
 
 class TaskStatus(models.TextChoices):
@@ -22,11 +28,11 @@ class Problem(models.Model):
     """Модель задачи"""
     title = models.CharField(max_length=300)
     description = models.CharField(max_length=1000, null=True)
-    world_path = models.CharField(choices=WebotsRosProjects.get_choices())
+    world_path = models.CharField(choices=WebotsRosProjects.get_choices(), max_length=50)
     image = models.ImageField(upload_to='images/', default="default_img.jpg", null=True, blank=True)
     difficulty = models.FloatField()
-    author = models.ForeignKey(User, related_name='problems', on_delete=models.DO_NOTHING)
-    users = models.ManyToManyField(User, related_name='user_problems', through="ProblemUser")
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='problems', on_delete=models.DO_NOTHING)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='user_problems', through="ProblemUser")
 
     def __str__(self):
         return self.title
@@ -34,7 +40,7 @@ class Problem(models.Model):
 
 class ProblemUser(models.Model):
     """Многие ко многим Пользователь-Задача"""
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE, null=False)
     tournament = models.ForeignKey(
         "Tournament",
@@ -49,8 +55,9 @@ class ProblemUser(models.Model):
     grades = JSONField(default=dict)
     launch_command = models.TextField(default="")
     status = models.CharField(
-        choices=TaskStatus.choices,
-        default=TaskStatus.CREATED,
+        choices=TaskStatus.choices, 
+        default=TaskStatus.CREATED, 
+        max_length=25, 
     )
 
     class Meta:
@@ -65,7 +72,7 @@ class ProblemUser(models.Model):
 class Tournament(models.Model):
     """Модель Соревнования"""
     problems = models.ManyToManyField(Problem, related_name='tournaments')
-    users = models.ManyToManyField(User, related_name='user_tournaments', through="TournamentUser")
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='user_tournaments', through="TournamentUser")
     name = models.CharField(max_length=255, null=False, blank=False)
     description = models.CharField(max_length=5000)
     date_start = models.DateTimeField(auto_now_add=True)
@@ -78,7 +85,7 @@ class Tournament(models.Model):
 
 class TournamentUser(models.Model):
     """Многие ко многим Пользователь-Соревнование"""
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     is_completed = models.BooleanField(null=False, default=False)
     points = models.IntegerField(default=0)
@@ -119,4 +126,4 @@ class CommandQueue(models.Model):
     Модель для очереди задач, которые необходимо выполнить на хостовой машине.
     ! Лучше в будущем заменить на брокер сообщений !
     """
-    command = models.CharField()
+    command = models.CharField(max_length=250)

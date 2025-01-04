@@ -313,6 +313,17 @@ export interface User {
      * @maxLength 254
      */
     email?: string;
+    /**
+     * Phone number
+     * @pattern ^\+?[1-9]\d{1,14}$
+     */
+    phone?: string;
+    /** @maxLength 50 */
+    telegram?: string;
+    /** @maxLength 150 */
+    organization?: string;
+    /** @maxLength 50 */
+    team?: string;
 }
 
 /**

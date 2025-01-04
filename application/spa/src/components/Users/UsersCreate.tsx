@@ -1,4 +1,7 @@
 import { Modal, Form, Input, Checkbox } from "antd";
+import InputMask from "react-input-mask";
+
+const MESSAGE = 'Пожалуйста, заполните обязательное поле';
 
 export const UsersCreate = ({ visible, onCreate, onCancel }) => {
   const [form] = Form.useForm();
@@ -14,24 +17,35 @@ export const UsersCreate = ({ visible, onCreate, onCancel }) => {
         form
           .validateFields()
           .then((values) => {
+            values.phone = values.phone.slice(0, -1);
             form.resetFields();
             onCreate(values);
+            onCancel();
           })
           .catch((info) => {
-            console.log("Validate Failed:", info);
+            console.log("Validation Failed: ", info);
           });
       }}
     >
-      <Form form={form} layout="vertical" name="form_in_modal">
+      <Form 
+        form={form} 
+        layout="vertical" 
+        name="form_in_modal" 
+        initialValues={{
+          telegram: "", 
+          organization: "", 
+          team: "", 
+        }} 
+      >
         <Form.Item
           name="username"
           label="Логин"
           rules={[
             {
-              required: true,
-              message: "Please input the name of the tournament!",
-            },
-            { max: 255, message: "Name must be 255 characters or less" },
+              max: 150, 
+              required: true, 
+              message: MESSAGE, 
+            }, 
           ]}
         >
           <Input />
@@ -41,13 +55,10 @@ export const UsersCreate = ({ visible, onCreate, onCancel }) => {
           label="Пароль"
           rules={[
             {
-              required: true,
-              message: "Please input the description of the tournament!",
-            },
-            {
-              max: 5000,
-              message: "Description must be 5000 characters or less",
-            },
+              max: 128, 
+              required: true, 
+              message: MESSAGE, 
+            }, 
           ]}
         >
           <Input type="password" />
@@ -57,9 +68,10 @@ export const UsersCreate = ({ visible, onCreate, onCancel }) => {
           label="Имя"
           rules={[
             {
-              required: true,
-              message: "Please select the start date and time!",
-            },
+              max: 150, 
+              required: true, 
+              message: MESSAGE, 
+            }, 
           ]}
         >
           <Input type="text" />
@@ -68,7 +80,11 @@ export const UsersCreate = ({ visible, onCreate, onCancel }) => {
           name="last_name"
           label="Фамилия"
           rules={[
-            { required: true, message: "Please select the end date and time!" },
+            {
+              max: 150, 
+              required: true, 
+              message: MESSAGE, 
+            }, 
           ]}
         >
           <Input type="text" />
@@ -76,9 +92,75 @@ export const UsersCreate = ({ visible, onCreate, onCancel }) => {
         <Form.Item
           label="Адрес электронной почты"
           name="email"
-          rules={[{ required: true, message: "Please input!" }]}
+          rules={[
+            {
+              max: 254, 
+              required: true, 
+              message: MESSAGE, 
+            }, 
+          ]}
         >
           <Input type="email" />
+        </Form.Item>
+        <Form.Item
+          name="phone"
+          label="Номер телефона"
+          rules={[
+            {
+              len: 19, 
+              required: true, 
+              message: MESSAGE, 
+            }, 
+          ]}
+        >
+          <InputMask mask="+7 (999) 999 99-99" maskChar="_">
+            {(inputProps: any) => <Input {...inputProps} />}
+          </InputMask>
+        </Form.Item>
+        <Form.Item
+          name="telegram"
+          label="Telegram"
+          rules={[
+            {
+              max: 50, 
+              required: false, 
+              message: MESSAGE, 
+            }, 
+          ]}
+        >
+          <Input
+            type="text" 
+            addonBefore={<span style={{ color: 'gray' }}>@</span>} 
+            onChange={(e) => {
+              e.target.value = e.target.value.replace(/^@/, '');
+            }} 
+          />
+        </Form.Item>
+        <Form.Item
+          name="organization"
+          label="Название организации"
+          rules={[
+            {
+              max: 150, 
+              required: false, 
+              message: MESSAGE, 
+            }, 
+          ]}
+        >
+          <Input type="text" />
+        </Form.Item>
+        <Form.Item
+          name="team"
+          label="Название команды"
+          rules={[
+            {
+              max: 50, 
+              required: false, 
+              message: MESSAGE, 
+            }, 
+          ]}
+        >
+          <Input type="text" />
         </Form.Item>
         <Form.Item label="Является администратором" name="is_superuser">
           <Checkbox defaultChecked={false} value={false} />

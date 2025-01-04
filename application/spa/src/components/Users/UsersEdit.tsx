@@ -1,5 +1,8 @@
 import { Modal, Form, Input, Checkbox } from "antd";
 import { useEffect } from "react";
+import InputMask from "react-input-mask";
+
+const MESSAGE = 'Пожалуйста, заполните обязательное поле';
 
 export const UsersEdit = ({ visible, onEdit, onCancel, data }) => {
   const [form] = Form.useForm();
@@ -12,6 +15,10 @@ export const UsersEdit = ({ visible, onEdit, onCancel, data }) => {
       first_name: data.first_name,
       last_name: data.last_name,
       email: data.email,
+      phone: data.phone,
+      telegram: data.telegram,
+      organization: data.organization,
+      team: data.team,
       is_superuser: data.is_superuser,
     });
   }, [data]);
@@ -20,18 +27,20 @@ export const UsersEdit = ({ visible, onEdit, onCancel, data }) => {
     <Modal
       open={visible}
       title="Редактировать пользователя"
-      okText="Создать"
+      okText="Применить"
       cancelText="Закрыть"
       onCancel={onCancel}
       onOk={() => {
         form
           .validateFields()
           .then((values) => {
+            values.phone = values.phone.slice(0, -1);
             form.resetFields();
             onEdit(values);
+            onCancel();
           })
           .catch((info) => {
-            console.log("Validate Failed:", info);
+            console.log("Validation Failed: ", info);
           });
       }}
     >
@@ -41,10 +50,10 @@ export const UsersEdit = ({ visible, onEdit, onCancel, data }) => {
           label="Логин"
           rules={[
             {
-              required: true,
-              message: "Please input the name of the tournament!",
-            },
-            { max: 255, message: "Name must be 255 characters or less" },
+              max: 150, 
+              required: true, 
+              message: MESSAGE, 
+            }, 
           ]}
         >
           <Input />
@@ -54,13 +63,10 @@ export const UsersEdit = ({ visible, onEdit, onCancel, data }) => {
           label="Пароль"
           rules={[
             {
-              required: true,
-              message: "Please input the description of the tournament!",
-            },
-            {
-              max: 5000,
-              message: "Description must be 5000 characters or less",
-            },
+              max: 128, 
+              required: true, 
+              message: MESSAGE, 
+            }, 
           ]}
         >
           <Input type="password" />
@@ -70,9 +76,10 @@ export const UsersEdit = ({ visible, onEdit, onCancel, data }) => {
           label="Имя"
           rules={[
             {
-              required: true,
-              message: "Please select the start date and time!",
-            },
+              max: 150, 
+              required: true, 
+              message: MESSAGE, 
+            }, 
           ]}
         >
           <Input type="text" />
@@ -81,7 +88,11 @@ export const UsersEdit = ({ visible, onEdit, onCancel, data }) => {
           name="last_name"
           label="Фамилия"
           rules={[
-            { required: true, message: "Please select the end date and time!" },
+            {
+              max: 150, 
+              required: true, 
+              message: MESSAGE, 
+            }, 
           ]}
         >
           <Input type="text" />
@@ -89,9 +100,75 @@ export const UsersEdit = ({ visible, onEdit, onCancel, data }) => {
         <Form.Item
           label="Адрес электронной почты"
           name="email"
-          rules={[{ required: true, message: "Please input!" }]}
+          rules={[
+            {
+              max: 254, 
+              required: true, 
+              message: MESSAGE, 
+            }, 
+          ]}
         >
           <Input type="email" />
+        </Form.Item>
+        <Form.Item
+          name="phone"
+          label="Номер телефона"
+          rules={[
+            {
+              len: 19, 
+              required: true, 
+              message: MESSAGE, 
+            }, 
+          ]}
+        >
+          <InputMask mask="+7 (999) 999 99-99" maskChar="_">
+            {(inputProps: any) => <Input {...inputProps} />}
+          </InputMask>
+        </Form.Item>
+        <Form.Item
+          name="telegram"
+          label="Telegram"
+          rules={[
+            {
+              max: 50, 
+              required: false, 
+              message: MESSAGE, 
+            }, 
+          ]}
+        >
+          <Input
+            type="text" 
+            addonBefore={<span style={{ color: 'gray' }}>@</span>} 
+            onChange={(e) => {
+              e.target.value = e.target.value.replace(/^@/, '');
+            }} 
+          />
+        </Form.Item>
+        <Form.Item
+          name="organization"
+          label="Название организации"
+          rules={[
+            {
+              max: 150, 
+              required: false, 
+              message: MESSAGE, 
+            }, 
+          ]}
+        >
+          <Input type="text" />
+        </Form.Item>
+        <Form.Item
+          name="team"
+          label="Название команды"
+          rules={[
+            {
+              max: 50, 
+              required: false, 
+              message: MESSAGE, 
+            }, 
+          ]}
+        >
+          <Input type="text" />
         </Form.Item>
         <Form.Item label="Является администратором" name="is_superuser">
           <Checkbox defaultChecked={false} value={false} />

@@ -1,6 +1,9 @@
-from django.contrib.auth.models import User
-from django.core.management.base import BaseCommand, CommandError
+from django.contrib.auth import get_user_model
+from django.core.management.base import BaseCommand
 from robotbenchmark.models import Problem
+
+
+UserModel = get_user_model()
 
 
 def createProblem(params):
@@ -18,7 +21,7 @@ class Command(BaseCommand):
     help = 'Add robotbenchmark problems'
 
     def handle(self, *args, **options):
-        user = User.objects.first()
+        user = UserModel.objects.first()
 
         # 1
         createProblem({
