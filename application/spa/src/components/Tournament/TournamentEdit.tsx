@@ -131,7 +131,7 @@ export const TournamentEdit = ({ visible, onEdit, onCancel, data }) => {
         </Form.Item>
         <Form.Item
           label="Пользователи"
-          name="users"
+          name="users_ids"
           rules={[{ required: true, message: "Please input!" }]}
           shouldUpdate
         >

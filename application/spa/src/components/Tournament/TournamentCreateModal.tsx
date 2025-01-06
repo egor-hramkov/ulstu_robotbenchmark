@@ -122,7 +122,7 @@ const CreateTournamentModal = ({ visible, onCreate, onCancel }) => {
         </Form.Item>
         <Form.Item
           label="Пользователи"
-          name="users"
+          name="users_ids"
           rules={[{ required: true, message: "Please input!" }]}
           shouldUpdate
         >

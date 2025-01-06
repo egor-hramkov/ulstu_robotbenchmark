@@ -1,5 +1,4 @@
 from rest_framework_simplejwt.views import TokenObtainPairView
-
 from robotbenchmark.serializers.token_obtain_serializer import CustomTokenObtainPairSerializer
 
 

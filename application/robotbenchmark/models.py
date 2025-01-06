@@ -6,6 +6,8 @@ from django.db.models import JSONField
 from django.utils.translation import gettext_lazy as _
 from robotbenchmark.enums.webots_ros2_projects_dir import WebotsRosProjects
 from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class CustomUser(AbstractUser):
@@ -70,13 +72,13 @@ class ProblemUser(models.Model):
 
 
 class Tournament(models.Model):
-    """Модель Соревнования"""
-    problems = models.ManyToManyField(Problem, related_name='tournaments')
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='user_tournaments', through="TournamentUser")
-    name = models.CharField(max_length=255, null=False, blank=False)
+    """Модель Соревнование"""
+    name = models.CharField(max_length=150, null=False, blank=False)
     description = models.CharField(max_length=5000)
-    date_start = models.DateTimeField(auto_now_add=True)
+    date_start = models.DateTimeField()
     date_end = models.DateTimeField()
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='user_tournaments', through='TournamentUser')
+    problems = models.ManyToManyField(Problem, related_name='tournaments')
     is_blocked = models.BooleanField(default=False)
 
     def __str__(self):
@@ -84,41 +86,39 @@ class Tournament(models.Model):
 
 
 class TournamentUser(models.Model):
-    """Многие ко многим Пользователь-Соревнование"""
+    """Модель Пользователь-Соревнование (многие ко многим)"""
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     is_completed = models.BooleanField(null=False, default=False)
     points = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.user.username + " - " + self.tournament.name
+        return self.user.username + ' - ' + self.tournament.name
 
-    def save(
-            self, force_insert=False, force_update=False, using=None, update_fields=None
-    ):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         super(TournamentUser, self).save(force_insert, force_update, using, update_fields)
         all_problems = self.tournament.problems.all()
+
         for problem in all_problems:
             try:
-                pu = ProblemUser.objects.get(problem=problem, user=self.user)
+                problem_user = ProblemUser.objects.get(problem=problem, user=self.user)
             except ProblemUser.DoesNotExist:
                 robot_panel_port = random.randint(10000, 12000)
                 vs_port = random.randint(10000, 12000)
                 webots_stream_port = random.randint(10000, 12000)
-                pu = ProblemUser.objects.create(
-                    user=self.user,
-                    problem=problem,
-                    points=0,
-                    tournament=self.tournament,
-                    robot_panel_port=robot_panel_port,
-                    vs_port=vs_port,
-                    webots_stream_port=webots_stream_port
-                )
-                command = f"make all FLAVOR={pu.user.username + str(pu.id)} ROBOT_PANEL_PORT={robot_panel_port} VS_PORT={vs_port} WEBOTS_STREAM_PORT={webots_stream_port}"
 
-                CommandQueue.objects.create(
-                    command=command
+                problem_user = ProblemUser.objects.create(
+                    user=self.user, 
+                    problem=problem, 
+                    tournament=self.tournament, 
+                    points=0, 
+                    robot_panel_port=robot_panel_port, 
+                    vs_port=vs_port, 
+                    webots_stream_port=webots_stream_port, 
                 )
+
+                command = f'make all FLAVOR={problem_user.user.username + str(problem_user.id)} ROBOT_PANEL_PORT={robot_panel_port} VS_PORT={vs_port} WEBOTS_STREAM_PORT={webots_stream_port}'
+                CommandQueue.objects.create(command=command)
 
 
 class CommandQueue(models.Model):
