@@ -1,67 +1,22 @@
 import random
-
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiParameter
 from rest_framework import viewsets, status
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from robotbenchmark.models import ProblemUser, CommandQueue, TaskStatus
 from robotbenchmark.serializers.problem_user_serializer import ProblemUserSerializer
+from ..swagger_schemas.problem_user_view_schema import problem_user_view_schema
 
 
-@extend_schema(tags=["users-problem"])
-@extend_schema_view(
-    retrieve=extend_schema(
-        summary="Детальная информация о задачах пользователя",
-        responses={
-            status.HTTP_200_OK: ProblemUserSerializer
-        }
-    ),
-    list=extend_schema(
-        summary="Детальная информация о всех задачах пользователей",
-        parameters=[
-            OpenApiParameter(name='user_id', required=False, description='Определённый пользователь', type=int),
-            OpenApiParameter(name='tournament_id', required=False, description='Определённый турнир', type=int),
-            OpenApiParameter(name='is_checked', required=False, description='Проверенные задачи', type=int),
-        ],
-        responses={
-            status.HTTP_200_OK: ProblemUserSerializer
-        }
-    ),
-    update=extend_schema(
-        summary="Обновление данных о задачах пользователя",
-        responses={
-            status.HTTP_200_OK: ProblemUserSerializer
-        }
-    ),
-    create=extend_schema(
-        summary="Создание задачах пользователю",
-        responses={
-            status.HTTP_200_OK: ProblemUserSerializer
-        }
-    ),
-    destroy=extend_schema(
-        summary="Удаление задачах пользователю",
-        responses={
-            status.HTTP_200_OK: ProblemUserSerializer
-        }
-    ),
-    partial_update=extend_schema(
-        summary="Обновление с необ. полями задачах пользователю",
-        responses={
-            status.HTTP_200_OK: ProblemUserSerializer
-        }
-    )
-)
+@problem_user_view_schema
 class ProblemUserViewSet(viewsets.ModelViewSet):
-    queryset = ProblemUser.objects.all()
     serializer_class = ProblemUserSerializer
-    filter_backends = [DjangoFilterBackend, OrderingFilter]
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    queryset = ProblemUser.objects.all()
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -111,8 +66,6 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-
-
 class UserProblemLauncher(APIView):
     """Вью для запуска решения предоставленной командой пользователя"""
 
@@ -121,8 +74,7 @@ class UserProblemLauncher(APIView):
         pu = ProblemUser.objects.get(id=problem_user_id)
         user_command = pu.launch_command
         container_name = pu.user.username + str(pu.id)
-        command = f"docker exec -it ulstu-{container_name} /bin/bash -c '{user_command}'"
-        print(command)
+        command = f"""docker exec -d ulstu-{container_name} bash -i -c 'echo "source /ulstu/ros2_ws/install/setup.bash" >> ~/.bashrc; {user_command}'"""
         CommandQueue.objects.create(
             command=command
         )

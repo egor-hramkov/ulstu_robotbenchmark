@@ -1261,19 +1261,14 @@ components:
           type: integer
     PatchedTournament:
       type: object
-      description: Сериализатор для модель соревнования
+      description: Сериализатор для модели Соревнование
       properties:
         id:
           type: integer
           readOnly: true
-        users:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-          readOnly: true
         name:
           type: string
-          maxLength: 255
+          maxLength: 150
         description:
           type: string
           maxLength: 5000
@@ -1284,29 +1279,35 @@ components:
         date_end:
           type: string
           format: date-time
-        is_blocked:
-          type: boolean
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          readOnly: true
         problems:
           type: array
           items:
-            type: integer
+            $ref: '#/components/schemas/Problem'
+          readOnly: true
+        is_blocked:
+          type: boolean
     PatchedTournamentUser:
       type: object
-      description: Сериализатор для модель many-to-many Соревнования-Пользователи
+      description: Модель Пользователь-Соревнование (многие ко многим)
       properties:
         id:
           type: integer
           readOnly: true
+        user:
+          type: integer
+        tournament:
+          type: integer
         is_completed:
           type: boolean
         points:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
-        user:
-          type: integer
-        tournament:
-          type: integer
     PatchedUser:
       type: object
       properties:

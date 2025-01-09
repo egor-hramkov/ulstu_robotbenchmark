@@ -105,19 +105,22 @@ export const OperatorTournament = () => {
             dataSource={participants}
             renderItem={(user) => (
               <List.Item>
-                <Row style={{ width: "100%", alignItems: "center" }}>
-                  <Col span={6}>
-                    <Text strong>{user.username}</Text>
+                <Row style={{ width: "100%", alignItems: "center" }} justify="space-between">
+                  <Col>
+                    <Text>{user.username}</Text>
                   </Col>
-                  <Col span={6}>
-                    {user.first_name || "Имя не указано"} {user.last_name || ""}
+                  <Col>
+                    {user.first_name} {user.last_name}
                   </Col>
-                  <Col span={6}>
-                    <Text type="secondary">{user.email}</Text>
+                  <Col>
+                    <Text>{user.organization}</Text>
                   </Col>
-                  <Col span={6}>
+                  <Col>
+                    <Text>{user.team}</Text>
+                  </Col>
+                  <Col>
                     <Button
-                      type="primary"
+                      type="primary" 
                       onClick={() => handleUserVerification(user.id)}
                     >
                       Начать проверку

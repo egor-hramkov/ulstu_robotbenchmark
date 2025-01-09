@@ -93,11 +93,10 @@ export interface PatchedProblemUser {
     tournament?: number;
 }
 
-/** Сериализатор для модель соревнования */
+/** Сериализатор для модели Соревнование */
 export interface PatchedTournament {
     id?: number;
-    users?: User[];
-    /** @maxLength 255 */
+    /** @maxLength 150 */
     name?: string;
     /** @maxLength 5000 */
     description?: string;
@@ -105,21 +104,22 @@ export interface PatchedTournament {
     date_start?: Date;
     /** @format date-time */
     date_end?: Date;
-    is_blocked?: boolean;
+    users_ids?: User[];
     problems?: number[];
+    is_blocked?: boolean;
 }
 
-/** Сериализатор для модель many-to-many Соревнования-Пользователи */
+/** Модель Пользователь-Соревнование (многие ко многим) */
 export interface PatchedTournamentUser {
     id?: number;
+    user?: number;
+    tournament?: number;
     is_completed?: boolean;
     /**
      * @min -2147483648
      * @max 2147483647
      */
     points?: number;
-    user?: number;
-    tournament?: number;
 }
 
 export interface PatchedUser {
@@ -313,6 +313,17 @@ export interface User {
      * @maxLength 254
      */
     email?: string;
+    /**
+     * Phone number
+     * @pattern ^\+?[1-9]\d{1,14}$
+     */
+    phone?: string;
+    /** @maxLength 50 */
+    telegram?: string;
+    /** @maxLength 150 */
+    organization?: string;
+    /** @maxLength 50 */
+    team?: string;
 }
 
 /**
