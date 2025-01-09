@@ -1,7 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .ant-tabs-content {
     height: 100%;
 }
 
 iframe {
     border: none;
+}
+
+.ant-layout-sider-children {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

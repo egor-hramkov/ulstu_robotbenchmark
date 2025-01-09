@@ -63,14 +63,12 @@ export interface PatchedProblem {
     image?: string | null;
     /** @format double */
     difficulty?: number;
-    is_blocked?: boolean;
     author?: number;
 }
 
 /** Сериализатор для модели many-to-many Соревнования-Пользователи */
 export interface PatchedProblemUser {
     id?: number;
-    is_completed?: boolean;
     /**
      * @min -2147483648
      * @max 2147483647
@@ -79,10 +77,20 @@ export interface PatchedProblemUser {
     robot_panel_port?: number;
     vs_port?: number;
     webots_stream_port?: number;
-    is_checked?: boolean;
     grades?: any;
+    launch_command?: string;
+    /**
+     * * `CREATED` - Создана
+     * * `IN_PROGRESS` - В процессе
+     * * `COMPLETED` - Завершена
+     * * `QUARANTINE` - В карантине
+     * * `CHECKED` - Проверена
+     * * `REWORK` - Отправлена на доработку
+     */
+    status?: StatusEnum;
     user?: number;
     problem?: number;
+    tournament?: number;
 }
 
 /** Сериализатор для модель соревнования */
@@ -169,14 +177,12 @@ export interface Problem {
     image?: string | null;
     /** @format double */
     difficulty: number;
-    is_blocked?: boolean;
     author: number;
 }
 
 /** Сериализатор для модели many-to-many Соревнования-Пользователи */
 export interface ProblemUser {
     id: number;
-    is_completed?: boolean;
     /**
      * @min -2147483648
      * @max 2147483647
@@ -185,10 +191,20 @@ export interface ProblemUser {
     robot_panel_port: number;
     vs_port: number;
     webots_stream_port: number;
-    is_checked?: boolean;
     grades?: any;
+    launch_command?: string;
+    /**
+     * * `CREATED` - Создана
+     * * `IN_PROGRESS` - В процессе
+     * * `COMPLETED` - Завершена
+     * * `QUARANTINE` - В карантине
+     * * `CHECKED` - Проверена
+     * * `REWORK` - Отправлена на доработку
+     */
+    status?: StatusEnum;
     user: number;
     problem: number;
+    tournament: number;
 }
 
 /** Сериализатор для модель соревнования */
@@ -217,8 +233,24 @@ export interface ProblemWithImageURL {
     world_path: WorldPathEnum;
     /** @format double */
     difficulty: number;
-    is_blocked?: boolean;
     author: number;
+}
+
+/**
+ * * `CREATED` - Создана
+ * * `IN_PROGRESS` - В процессе
+ * * `COMPLETED` - Завершена
+ * * `QUARANTINE` - В карантине
+ * * `CHECKED` - Проверена
+ * * `REWORK` - Отправлена на доработку
+ */
+export enum StatusEnum {
+    CREATED = "CREATED",
+    IN_PROGRESS = "IN_PROGRESS",
+    COMPLETED = "COMPLETED",
+    QUARANTINE = "QUARANTINE",
+    CHECKED = "CHECKED",
+    REWORK = "REWORK",
 }
 
 export interface TokenRefresh {

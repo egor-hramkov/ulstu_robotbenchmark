@@ -50,6 +50,24 @@ paths:
       responses:
         '200':
           description: No response body
+  /api/launch-user-problem/{problem_user_id}:
+    get:
+      operationId: launch_user_problem_retrieve
+      description: Запуск решения командой пользователя (передача в контейнер команды)
+      parameters:
+      - in: path
+        name: problem_user_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - launch-user-problem
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /api/leaderboard/:
     get:
       operationId: leaderboard_list
@@ -1208,8 +1226,6 @@ components:
         difficulty:
           type: number
           format: double
-        is_blocked:
-          type: boolean
         author:
           type: integer
     PatchedProblemUser:
@@ -1219,8 +1235,6 @@ components:
         id:
           type: integer
           readOnly: true
-        is_completed:
-          type: boolean
         points:
           type: integer
           maximum: 2147483647
@@ -1234,12 +1248,16 @@ components:
         webots_stream_port:
           type: integer
           readOnly: true
-        is_checked:
-          type: boolean
         grades: {}
+        launch_command:
+          type: string
+        status:
+          $ref: '#/components/schemas/StatusEnum'
         user:
           type: integer
         problem:
+          type: integer
+        tournament:
           type: integer
     PatchedTournament:
       type: object
@@ -1352,8 +1370,6 @@ components:
         difficulty:
           type: number
           format: double
-        is_blocked:
-          type: boolean
         author:
           type: integer
       required:
@@ -1370,8 +1386,6 @@ components:
         id:
           type: integer
           readOnly: true
-        is_completed:
-          type: boolean
         points:
           type: integer
           maximum: 2147483647
@@ -1385,17 +1399,22 @@ components:
         webots_stream_port:
           type: integer
           readOnly: true
-        is_checked:
-          type: boolean
         grades: {}
+        launch_command:
+          type: string
+        status:
+          $ref: '#/components/schemas/StatusEnum'
         user:
           type: integer
         problem:
+          type: integer
+        tournament:
           type: integer
       required:
       - id
       - problem
       - robot_panel_port
+      - tournament
       - user
       - vs_port
       - webots_stream_port
@@ -1425,8 +1444,6 @@ components:
         difficulty:
           type: number
           format: double
-        is_blocked:
-          type: boolean
         author:
           type: integer
       required:
@@ -1437,6 +1454,22 @@ components:
       - title
       - users
       - world_path
+    StatusEnum:
+      enum:
+      - CREATED
+      - IN_PROGRESS
+      - COMPLETED
+      - QUARANTINE
+      - CHECKED
+      - REWORK
+      type: string
+      description: |-
+        * `CREATED` - Создана
+        * `IN_PROGRESS` - В процессе
+        * `COMPLETED` - Завершена
+        * `QUARANTINE` - В карантине
+        * `CHECKED` - Проверена
+        * `REWORK` - Отправлена на доработку
     TokenRefresh:
       type: object
       properties:

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ProblemUser, Tournament } from "../../shared/api";
+import { ProblemUser, StatusEnum, Tournament } from "../../shared/api";
 import { useAuthStore } from "../../store/useAuthStore";
 import { Row, Col, Card, List, Button, Flex, FloatButton } from "antd";
 import { BugOutlined, EditOutlined, PlayCircleFilled } from "@ant-design/icons";
@@ -26,12 +26,10 @@ export const TournamentDetail = () => {
     apiClient.UsersProblem.usersProblemCreate({
       user: userId,
       problem: problemId,
-      points: 1231313,
-      is_completed: false,
-      id: 10,
-      robot_panel_port: 104504,
-      vs_port: 104503,
-      webots_stream_port: 104505
+      tournament: Number(params.id!),
+      points: 224124124,
+      launch_command: '212121',
+      status: StatusEnum.IN_PROGRESS,
     }).then(({ data }) => {
       setLevelData(
         data.vs_port,
@@ -45,12 +43,7 @@ export const TournamentDetail = () => {
 
   const continueUserProblem = useCallback((problem: number) => {
     apiClient.UsersProblem.usersProblemRetrieve(problem).then(({ data }) => {
-      setLevelData(
-        10302,
-        11891,
-        1,
-        10048
-      );
+      setLevelData(10302, 11891, 1, 10048);
       navigate(`/problems/${data.problem}`);
     });
   }, []);
@@ -76,19 +69,21 @@ export const TournamentDetail = () => {
         tournament_id: Number(params.id),
       }).then(({ data }) => setIssuesInWork(data));
     }
-  }, [params.id]); 
+  }, [params.id]);
 
   const editData = useCallback((data: Tournament) => {
-    if (params.id) 
-    apiClient.Tournament.tournamentUpdate(Number(params.id), data).then(({ data }) =>
-      setTournament(data)
-    );
+    if (params.id)
+      apiClient.Tournament.tournamentUpdate(Number(params.id), data).then(
+        ({ data }) => setTournament(data)
+      );
   }, []);
 
   const blockTournament = () => {
     if (tournament?.id)
-    apiClient.Block.blockCreate(tournament?.id).then(() => navigate(`/operator/${tournament.id}`));
-  }
+      apiClient.Block.blockCreate(tournament?.id).then(() =>
+        navigate(`/operator/${tournament.id}`)
+      );
+  };
 
   if (tournament) {
     return (
@@ -166,7 +161,12 @@ export const TournamentDetail = () => {
               )}
             />
           </Card>
-          <Button style={{marginTop: 20}} type="dashed" onClick={() => blockTournament()} icon={<BugOutlined />}>
+          <Button
+            style={{ marginTop: 20 }}
+            type="dashed"
+            onClick={() => blockTournament()}
+            icon={<BugOutlined />}
+          >
             Начать проверку заданий
           </Button>
         </Col>

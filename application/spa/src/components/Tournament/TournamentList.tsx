@@ -27,6 +27,7 @@ export const TournamentList = () => {
   }, [fetchTournaments]);
 
   const onCreate = (values: Tournament) => {
+    console.log(values);
     apiClient.Tournament.tournamentCreate({
       ...values,
     }).then(() => {
