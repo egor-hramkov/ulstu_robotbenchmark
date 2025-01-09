@@ -31,7 +31,6 @@ export const UsersEdit = ({ visible, onEdit, onCancel, data }) => {
             onEdit(values);
           })
           .catch((info) => {
-            console.log("Validate Failed:", info);
           });
       }}
     >

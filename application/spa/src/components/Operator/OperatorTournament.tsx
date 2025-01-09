@@ -21,7 +21,6 @@ export const OperatorTournament = () => {
     apiClient.Tournament.tournamentRetrieve(+id)
       .then((res) => {
         setTournamentInfo(res.data);
-
         // Получаем участников
         setParticipants(res.data.users);
 

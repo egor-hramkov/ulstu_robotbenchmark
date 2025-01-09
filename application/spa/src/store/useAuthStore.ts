@@ -39,7 +39,6 @@ export const useAuthStore = create<AuthState>((set) => ({
           return apiClient.Users.usersRetrieve(Number(userId));
         })
         .then(({ data }) => {
-          console.log(data, '2221412')
           set({ userInfo: data, userId: data.id });
         })
         .catch(() => {

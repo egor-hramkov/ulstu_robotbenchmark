@@ -37,7 +37,6 @@ export const OperatorCard = () => {
   useEffect(() => {
     if (id) {
       apiClient.Tournament.tournamentRetrieve(+id).then((res) => {
-        console.log(res, "2222");
         setTournamentInfo(res.data);
         setParticipants(res.data.users);
         setProblems(res.data.problems);
@@ -89,9 +88,7 @@ export const OperatorCard = () => {
   };
 
   const handleOk = () => {
-    // Handle the score submission logic here
     console.log("Score submitted:", score);
-    // You can also add logic to submit this score to your backend or state management
     setIsModalVisible(false);
   };
 

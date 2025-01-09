@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { Button, Card, List } from "antd";
+import { Button, Card, FloatButton, List } from "antd";
 import { Problem, apiClientClass } from "../../shared/api";
 import { ApiConfig } from "../../shared/api/http-client";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import ProblemCreateModal from "./ProblemCreateModal";
+import { PlusOutlined } from "@ant-design/icons";
 
 export const ProblemsList = () => {
   const [problems, setProblems] = useState<Problem[]>([]);
@@ -46,9 +47,14 @@ export const ProblemsList = () => {
 
   return (
     <>
-      <Button type="primary" onClick={() => setVisible(true)}>
-        Add New Problem
-      </Button>
+      <FloatButton
+        shape="square"
+        tooltip={<>Создать задачу</>}
+        type="primary"
+        style={{ right: 42 }}
+        onClick={() => setVisible(true)}
+        icon={<PlusOutlined />}
+      />
       <ProblemCreateModal
         visible={visible}
         onCreate={handleCreate}

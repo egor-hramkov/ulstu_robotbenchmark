@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ProblemUser, StatusEnum, Tournament } from "../../shared/api";
 import { useAuthStore } from "../../store/useAuthStore";
 import { Row, Col, Card, List, Button, Flex, FloatButton } from "antd";
-import { BugOutlined, EditOutlined, PlayCircleFilled } from "@ant-design/icons";
+import { EditOutlined, PlayCircleFilled } from "@ant-design/icons";
 import { useProblemsStore } from "../../store/useProblemsStore";
 import "./TournamentDetail.scss";
 import { TournamentEdit } from "./TournamentEdit";
@@ -43,7 +43,6 @@ export const TournamentDetail = () => {
 
   const continueUserProblem = useCallback((problem: number) => {
     apiClient.UsersProblem.usersProblemRetrieve(problem).then(({ data }) => {
-      setLevelData(10302, 11891, 1, 10048);
       navigate(`/problems/${data.problem}`);
     });
   }, []);
@@ -62,7 +61,6 @@ export const TournamentDetail = () => {
       apiClient.Tournament.tournamentRetrieve(Number(params.id)).then(
         (item) => {
           setTournament(item.data);
-          console.log(item.data);
         }
       );
       apiClient.UsersProblem.usersProblemList({
@@ -77,13 +75,6 @@ export const TournamentDetail = () => {
         ({ data }) => setTournament(data)
       );
   }, []);
-
-  const blockTournament = () => {
-    if (tournament?.id)
-      apiClient.Block.blockCreate(tournament?.id).then(() =>
-        navigate(`/operator/${tournament.id}`)
-      );
-  };
 
   if (tournament) {
     return (
@@ -161,14 +152,6 @@ export const TournamentDetail = () => {
               )}
             />
           </Card>
-          <Button
-            style={{ marginTop: 20 }}
-            type="dashed"
-            onClick={() => blockTournament()}
-            icon={<BugOutlined />}
-          >
-            Начать проверку заданий
-          </Button>
         </Col>
         <Col span={12}>
           <Card title="Участники">

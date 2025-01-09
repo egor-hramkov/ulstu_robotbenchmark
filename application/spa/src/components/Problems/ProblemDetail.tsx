@@ -7,6 +7,7 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { useParams } from "react-router-dom";
 import { useProblemsStore } from "../../store/useProblemsStore";
 import useApiClient from "../../hooks/useApiClient";
+import { ExportOutlined } from '@ant-design/icons';
 
 export interface Tab extends Omit<TabPaneProps, 'tab'> {
   key: string;
@@ -49,7 +50,6 @@ export const ProblemDetail = () => {
     }
 
     // Здесь можно сделать запрос на сервер с командой запуска
-    console.log("Команда запуска:", launchCommand);
     message.success("Соревнование завершено и решение запущено!");
     setIsCommandModalVisible(false);
     setLaunchCommand(""); // Очистить поле после завершения
@@ -65,7 +65,7 @@ export const ProblemDetail = () => {
       key: "1",
       label: (
         <span>
-          VS Code <Button onClick={() => openInNewWindow(`http://localhost:${problem?.vs_port}`)} size="small">Открыть в новом окне</Button>
+          VS Code <Button onClick={() => openInNewWindow(`http://localhost:${problem?.vs_port}`)} size="small" icon={<ExportOutlined />} />
         </span>
       ),
       children: (
@@ -80,7 +80,7 @@ export const ProblemDetail = () => {
       key: "2",
       label: (
         <span>
-          Webots <Button onClick={() => openInNewWindow(`http://localhost:${problem?.webots_stream_port}/index.html`)} size="small">Открыть в новом окне</Button>
+          Webots <Button onClick={() => openInNewWindow(`http://localhost:${problem?.webots_stream_port}/index.html`)} size="small" icon={<ExportOutlined />} />
         </span>
       ),
       children: (
@@ -95,7 +95,7 @@ export const ProblemDetail = () => {
       key: "3",
       label: (
         <span>
-          Редактор карты <Button onClick={() => openInNewWindow(`http://localhost:${problem?.robot_panel_port}`)} size="small">Открыть в новом окне</Button>
+          Редактор карты <Button onClick={() => openInNewWindow(`http://localhost:${problem?.robot_panel_port}`)} size="small" icon={<ExportOutlined />} />
         </span>
       ),
       children: (
