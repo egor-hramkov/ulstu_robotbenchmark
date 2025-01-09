@@ -2,12 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ProblemUser, StatusEnum, Tournament } from "../../shared/api";
 import { useAuthStore } from "../../store/useAuthStore";
-import { Row, Col, Card, List, Button, Flex, FloatButton } from "antd";
+import { Row, Col, Card, List, Button, Flex, FloatButton, Typography } from "antd";
 import { BugOutlined, EditOutlined, PlayCircleFilled } from "@ant-design/icons";
 import { useProblemsStore } from "../../store/useProblemsStore";
 import "./TournamentDetail.scss";
 import { TournamentEdit } from "./TournamentEdit";
 import useApiClient from "../../hooks/useApiClient";
+
+const Text = Typography;
 
 export const TournamentDetail = () => {
   const params = useParams();
@@ -176,8 +178,23 @@ export const TournamentDetail = () => {
               bordered
               dataSource={tournament.users}
               renderItem={(user) => (
-                <List.Item>Участник #{user.first_name}</List.Item>
-              )}
+              <List.Item>
+                <Row style={{ width: "100%", alignItems: "center" }} justify="space-between">
+                  <Col>
+                    <Text>{user.username}</Text>
+                  </Col>
+                  <Col>
+                    {user.first_name} {user.last_name}
+                  </Col>
+                  <Col>
+                    <Text>{user.organization}</Text>
+                  </Col>
+                  <Col>
+                    <Text>{user.team}</Text>
+                  </Col>
+                </Row>
+              </List.Item>
+            )}
             />
           </Card>
         </Col>

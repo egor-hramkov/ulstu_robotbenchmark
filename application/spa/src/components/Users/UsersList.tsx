@@ -80,7 +80,28 @@ export const UsersList = () => {
       key: "email",
     },
     {
-      title: "Является админом",
+      title: "Номер телефона",
+      dataIndex: "phone",
+      key: "phone",
+    },
+    {
+      title: "Telegram",
+      dataIndex: "telegram",
+      key: "telegram",
+      render: (text) => text ? `@${text}` : text,
+    },
+    {
+      title: "Название организации",
+      dataIndex: "organization",
+      key: "organization",
+    },
+    {
+      title: "Название команды",
+      dataIndex: "team",
+      key: "team",
+    },
+    {
+      title: "Статус администратора",
       dataIndex: "is_superuser",
       key: "is_superuser",
     },

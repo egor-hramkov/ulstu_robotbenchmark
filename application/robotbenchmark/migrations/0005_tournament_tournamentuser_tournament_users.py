@@ -8,8 +8,8 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('robotbenchmark', '0004_problemuser_problem_users'),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('robotbenchmark', '0004_problemuser_problem_users'), 
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL), 
     ]
 
     operations = [
