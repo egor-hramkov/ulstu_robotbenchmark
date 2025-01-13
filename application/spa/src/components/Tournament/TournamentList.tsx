@@ -20,7 +20,7 @@ export const TournamentList = () => {
       })
       .catch((error) => console.error("Не удалось загрузить турниры:", error));
 
-  }, []);
+  }, [setTournaments]);
 
   useEffect(() => {
     fetchTournaments();

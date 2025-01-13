@@ -2,7 +2,7 @@ import { Button, Card, Col, List, Row, Typography, Spin } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useApiClient from "../../hooks/useApiClient";
-import { Tournament, User, Problem } from "../../shared/api";
+import { User, Problem, Tournament } from "../../shared/api";
 
 const { Title, Text } = Typography;
 
@@ -14,7 +14,7 @@ export const OperatorTournament = () => {
 
   const navigate = useNavigate();
 
-  const { id }: { id: string } = useParams();
+  const { id } = useParams();
   const apiClient = useApiClient();
 
   const fetchData = useCallback((id: number) => {
@@ -44,13 +44,13 @@ export const OperatorTournament = () => {
   }, [id, fetchData]);
 
   const handleFreezeTournament = async () => {
-    await apiClient.Block.blockCreate(+id).then(() => fetchData(+id));
+    await apiClient.Block.blockCreate(+id!).then(() => fetchData(+id!));
   };
 
   const handleStartVerification = () => {
     console.log("Начата проверка всех задач");
     // Добавьте API вызов для начала проверки
-    navigate(`/operator/${+id}`)
+    navigate(`/operator/${+id!}`)
   };
 
   const handleUserVerification = (userId: number) => {
@@ -121,7 +121,7 @@ export const OperatorTournament = () => {
                   <Col>
                     <Button
                       type="primary" 
-                      onClick={() => handleUserVerification(user.id)}
+                      onClick={() => user.id && handleUserVerification(user.id)}
                     >
                       Начать проверку
                     </Button>

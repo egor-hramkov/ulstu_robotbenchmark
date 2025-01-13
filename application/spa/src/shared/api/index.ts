@@ -1,8 +1,8 @@
 import { Block } from "./Block";
-import { Leaderboard } from "./Leaderboard";
+import { ILeaderboard } from "./Leaderboard";
 import { Problems } from "./Problems";
 import { Token } from "./Token";
-import { Tournament } from "./Tournament";
+import { ITournament } from "./Tournament";
 import { Users } from "./Users";
 import { UsersProblem } from "./UsersProblem";
 import { UsersTournament } from "./UsersTournament";
@@ -13,11 +13,11 @@ export class apiClientClass {
   constructor(config: ApiConfig) {
     this.Token = new Token(config);
     this.Problems = new Problems(config);
-    this.Tournament = new Tournament(config);
+    this.Tournament = new ITournament(config);
     this.Users = new Users(config);
     this.UsersProblem = new UsersProblem(config);
     this.UsersTournament = new UsersTournament(config);
-    this.Leaderboard = new Leaderboard(config);
+    this.Leaderboard = new ILeaderboard(config);
     this.Block = new Block(config);
   }
 
@@ -28,7 +28,7 @@ export class apiClientClass {
   public Problems: Problems;
 
   /** Работа с gitlab. */
-  public Tournament: Tournament;
+  public Tournament: ITournament;
 
   /** Работа с отделами. */
   public Users: Users;
@@ -39,7 +39,7 @@ export class apiClientClass {
   /** Опции выпадающих списков. */
   public UsersTournament: UsersTournament;
 
-  public Leaderboard: Leaderboard;
+  public Leaderboard: ILeaderboard;
 
   public Block: Block;
 }

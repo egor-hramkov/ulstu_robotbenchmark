@@ -10,10 +10,10 @@ import {
   Form,
   Input,
 } from "antd";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useApiClient from "../../hooks/useApiClient";
 import { useParams } from "react-router-dom";
-import { Tournament, User, Problem } from "../../shared/api";
+import { Tournament, User, Problem, ProblemUser } from "../../shared/api";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useOperatorStore } from "./store/useOperatorStore";
 
@@ -22,17 +22,21 @@ const { Title, Text } = Typography;
 export const OperatorCard = () => {
   const [tournamentInfo, setTournamentInfo] = useState<Tournament>();
   const [participants, setParticipants] = useState<User[]>([]);
-  const [currentProblem, setCurrentProblem] = useState<Problem | null>(null);
+  const [currentProblem, setCurrentProblem] = useState<ProblemUser | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [score, setScore] = useState(0);
   const [teamCommand, setTeamCommand] = useState("");
 
-  const { id }: { id: string } = useParams();
+  const { id } = useParams();
 
   const { nextProblem, lastProblem, setProblems, problems, currentIndex } =
     useOperatorStore((state) => state);
 
   const apiClient = useApiClient();
+
+  const fetchCurrentProblem = useCallback((problemId: number) => {
+    apiClient.UsersProblem;
+  }, []);
 
   useEffect(() => {
     if (id) {
@@ -40,7 +44,7 @@ export const OperatorCard = () => {
         setTournamentInfo(res.data);
         setParticipants(res.data.users);
         setProblems(res.data.problems);
-        setCurrentProblem(res.data.problems[0]);
+        fetchCurrentProblem(res.data.problems[0]);
       });
     }
   }, [id, setProblems]);

@@ -18,6 +18,13 @@ services:
     depends_on:
       - db
 
+  spa:
+    build:
+      context: ../
+      dockerfile: ./docker/spa/Dockerfile
+    ports:
+      - "80:80"
+
   db:
     image: postgres:12.0-alpine
     volumes:

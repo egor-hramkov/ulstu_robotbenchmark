@@ -12,6 +12,9 @@
 export interface CustomTokenObtainPair {
     username: string;
     password: string;
+    access?: string;
+    refresh?: string;
+    user_id?: number;
 }
 
 /** Сериализатор для лидерборда */
@@ -288,8 +291,8 @@ export interface TournamentUser {
 }
 
 export interface User {
-    id: number;
-    groups: string;
+    id?: number;
+    groups?: string;
     /** @maxLength 128 */
     password: string;
     /**

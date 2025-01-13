@@ -12,7 +12,7 @@
 import { Leaderboard, LeaderboardProblem, LeaderboardTournament } from "./data-contracts";
 import { HttpClient, RequestParams } from "./http-client";
 
-export class Leaderboard<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class ILeaderboard<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
     /**
      * @description Return Общий Leaderboard
      *

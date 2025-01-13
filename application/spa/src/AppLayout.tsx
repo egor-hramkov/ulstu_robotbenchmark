@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Menu, theme, Button, Typography, Card } from "antd";
+import { Layout, Menu, theme, Button, Typography } from "antd";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons"; // Импортируем иконки
 import "./App.css";
 import { Outlet, useNavigate } from "react-router-dom";

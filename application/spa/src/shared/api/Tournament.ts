@@ -12,7 +12,7 @@
 import { PatchedTournament, Tournament } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
-export class Tournament<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class ITournament<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
     /**
      * @description ViewSet Соревнования
      *

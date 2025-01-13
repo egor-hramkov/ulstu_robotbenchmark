@@ -123,9 +123,9 @@ export const UsersList = () => {
       .then(() => setShowUserEdit(id));
   };
 
-  const editUser = (data: User) => {
-    apiClient.Users.usersUpdate(showUserEdit, data).then(() => fetchUsers());
-  };
+  // const editUser = (data: User) => {
+  //   apiClient.Users.usersUpdate(showUserEdit, data).then(() => fetchUsers());
+  // };
 
   return (
     <div>
@@ -135,12 +135,12 @@ export const UsersList = () => {
         onCreate={onCreate}
         onCancel={() => setShowUserCreate(false)}
       />
-      <UsersEdit
+      {/* <UsersEdit
         visible={showUserEdit}
         onEdit={(data) => editUser(data)}
         data={editData}
         onCancel={() => setShowUserEdit(false)}
-      />
+      /> */}
       <Table columns={usersTableColumns} dataSource={users} />
       <FloatButton
         shape="square"

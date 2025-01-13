@@ -24,24 +24,24 @@ export const TournamentDetail = () => {
   const navigate = useNavigate();
   const apiClient = useApiClient();
 
-  const startUserProblem = useCallback((userId: number, problemId: number) => {
-    apiClient.UsersProblem.usersProblemCreate({
-      user: userId,
-      problem: problemId,
-      tournament: Number(params.id!),
-      points: 224124124,
-      launch_command: '212121',
-      status: StatusEnum.IN_PROGRESS,
-    }).then(({ data }) => {
-      setLevelData(
-        data.vs_port,
-        data.webots_stream_port,
-        data.problem,
-        data.robot_panel_port
-      );
-      navigate(`/problems/${data.id}`);
-    });
-  }, []);
+  // const startUserProblem = useCallback((userId: number, problemId: number) => {
+  //   apiClient.UsersProblem.usersProblemCreate({
+  //     user: userId,
+  //     problem: problemId,
+  //     tournament: Number(params.id!),
+  //     points: 224124124,
+  //     launch_command: '212121',
+  //     status: StatusEnum.IN_PROGRESS,
+  //   }).then(({ data }) => {
+  //     setLevelData(
+  //       data.vs_port,
+  //       data.webots_stream_port,
+  //       data.problem,
+  //       data.robot_panel_port
+  //     );
+  //     navigate(`/problems/${data.id}`);
+  //   });
+  // }, []);
 
   const continueUserProblem = useCallback((problem: number) => {
     apiClient.UsersProblem.usersProblemRetrieve(problem).then(({ data }) => {
@@ -126,7 +126,7 @@ export const TournamentDetail = () => {
                     {findIssue(item) ? (
                       <>
                         Задача #{item}
-                        <Button
+                        {/* <Button
                           type="default"
                           disabled={tournament.is_blocked}
                           onClick={() => continueUserProblem(findIssue(item))}
@@ -134,19 +134,19 @@ export const TournamentDetail = () => {
                           className="continue-btn"
                         >
                           Продолжить выполнение задачи
-                        </Button>
+                        </Button> */}
                       </>
                     ) : (
                       <>
                         Задача #{item}
-                        <Button
+                        {/* <Button
                           type="primary"
                           disabled={tournament.is_blocked}
                           onClick={() => startUserProblem(userId, item)}
                           icon={<PlayCircleFilled />}
                         >
                           Запустить задачу
-                        </Button>
+                        </Button> */}
                       </>
                     )}
                   </Flex>
