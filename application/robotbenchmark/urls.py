@@ -16,28 +16,37 @@ from .views.tournament_user_view import TournamentUserViewSet
 from .views.problem_user_view import ProblemUserViewSet, UserProblemLauncher
 from .views.problem_view import ProblemViewSet
 from .views.user_view import UserViewSet
+from .views.get_problem_user_view import GetProblemUserView
+
 
 router = routers.DefaultRouter()
-router.register("users", UserViewSet)
-router.register("problem", ProblemViewSet)
-router.register("users-problem", ProblemUserViewSet)
-router.register("users-tournament", TournamentUserViewSet)
-router.register("tournament", TournamentViewSet)
+
+router.register('users', UserViewSet)
+router.register('problem', ProblemViewSet)
+router.register('users-problem', ProblemUserViewSet)
+router.register('users-tournament', TournamentUserViewSet)
+router.register('tournament', TournamentViewSet)
 
 urlpatterns = [
-    path("", include(router.urls)),
-    path('leaderboard/', LeaderboardView.as_view()),
-    path('leaderboard/tournament/<int:tournament_id>/', LeaderboardByTournamentView.as_view()),
-    path('leaderboard/problem/<int:problem_id>/', LeaderboardByProblemView.as_view()),
-    path('block/<int:tournament_id>/', BlockTournamentAPIView.as_view(), name='block-tournament'),
-    path('commands/', CommandQueueView.as_view()),
-    path('launch-user-problem/<int:problem_user_id>', UserProblemLauncher.as_view()),
-    path('finish/<int:problemuser_id>', FinishProblemView.as_view()),
+    path('', include(router.urls)), 
 
-    path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    path('leaderboard/', LeaderboardView.as_view()), 
+    path('leaderboard/tournament/<int:tournament_id>/', LeaderboardByTournamentView.as_view()), 
+    path('leaderboard/problem/<int:problem_id>/', LeaderboardByProblemView.as_view()), 
 
-    path('schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path('block/<int:tournament_id>/', BlockTournamentAPIView.as_view(), name='block-tournament'), 
+
+    path('commands/', CommandQueueView.as_view()), 
+
+    path('launch-user-problem/<int:problem_user_id>', UserProblemLauncher.as_view()), 
+    path('get-problem-user/<int:problem_id>/<int:tournament_id>/<int:user_id>/', GetProblemUserView.as_view(), name='get_problem_user'), 
+
+    path('finish/<int:problemuser_id>', FinishProblemView.as_view()), 
+
+    path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'), 
+    path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'), 
+
+    path('schema/', SpectacularAPIView.as_view(), name='schema'), 
+    path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'), 
+    path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'), 
 ]
