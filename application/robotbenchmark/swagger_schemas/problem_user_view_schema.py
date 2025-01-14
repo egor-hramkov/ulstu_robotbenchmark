@@ -11,7 +11,7 @@ problem_user_view_schema = extend_schema_view(
         }
     ), 
     retrieve=extend_schema(
-        summary="Детальная информация о задачах конкретного пользователя", 
+        summary="Детальная информация о задаче конкретного пользователя на турнире", 
         responses={
             status.HTTP_200_OK: ProblemUserSerializer, 
         }
@@ -37,10 +37,10 @@ problem_user_view_schema = extend_schema_view(
     list=extend_schema(
         summary="Получение списка всех задач у конкретного пользователя", 
         parameters=[
+            OpenApiParameter(name='problem_id', required=False, description='Определённая задача', type=int), 
+            OpenApiParameter(name='tournament_id', required=False, description='Определённое соревнование', type=int), 
             OpenApiParameter(name='user_id', required=False, description='Определённый пользователь', type=int), 
-            OpenApiParameter(name='tournament_id', required=False, description='Определённый турнир', type=int), 
-            OpenApiParameter(name='is_checked', required=False, description='Проверенные задачи', type=int), 
-        ],
+        ], 
         responses={
             status.HTTP_200_OK: ProblemUserSerializer, 
         }

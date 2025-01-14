@@ -16,7 +16,6 @@ from .views.tournament_user_view import TournamentUserViewSet
 from .views.problem_user_view import ProblemUserViewSet, UserProblemLauncher
 from .views.problem_view import ProblemViewSet
 from .views.user_view import UserViewSet
-from .views.get_problem_user_view import GetProblemUserView
 
 
 router = routers.DefaultRouter()
@@ -39,8 +38,6 @@ urlpatterns = [
     path('commands/', CommandQueueView.as_view()), 
 
     path('launch-user-problem/<int:problem_user_id>', UserProblemLauncher.as_view()), 
-    path('get-problem-user/<int:problem_id>/<int:tournament_id>/<int:user_id>/', GetProblemUserView.as_view(), name='get_problem_user'), 
-
     path('finish/<int:problemuser_id>', FinishProblemView.as_view()), 
 
     path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'), 
