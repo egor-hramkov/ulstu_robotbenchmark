@@ -74,7 +74,7 @@ class UserProblemLauncher(APIView):
         pu = ProblemUser.objects.get(id=problem_user_id)
         user_command = pu.launch_command
         container_name = pu.user.username + str(pu.id)
-        command = f"""docker exec -d ulstu-{container_name} bash -i -c 'echo "source /ulstu/ros2_ws/install/setup.bash" >> ~/.bashrc; {user_command}'"""
+        command = f"""docker exec -d ulstu-{container_name} bash -i -c 'echo "source /ulstu/ros2_ws/install/setup.bash" >> ~/.bashrc; cd ~/ros2_ws; colcon build; source /ulstu/.bashrc; {user_command}'"""
         CommandQueue.objects.create(
             command=command
         )
