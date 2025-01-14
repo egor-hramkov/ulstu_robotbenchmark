@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'robotbenchmark',
     'drf_spectacular',
     'corsheaders',
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -79,7 +80,13 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'application.wsgi.application'
+# WSGI_APPLICATION = 'application.wsgi.application'
+ASGI_APPLICATION = "application.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  # Используем локальное хранилище
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
