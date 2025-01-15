@@ -40,7 +40,8 @@ problem_user_view_schema = extend_schema_view(
             OpenApiParameter(name='problem_id', required=False, description='Определённая задача', type=int), 
             OpenApiParameter(name='tournament_id', required=False, description='Определённое соревнование', type=int), 
             OpenApiParameter(name='user_id', required=False, description='Определённый пользователь', type=int), 
-        ], 
+            OpenApiParameter(name='is_checked', required=False, description='Проверенные задачи', type=bool),
+        ],
         responses={
             status.HTTP_200_OK: ProblemUserSerializer, 
         }
