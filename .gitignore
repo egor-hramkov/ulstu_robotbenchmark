@@ -19,3 +19,8 @@ application/robotbenchmark/migrations/__pycache__/
 application/robotbenchmark/serializers/__pycache__/
 application/robotbenchmark/swagger_schemas/__pycache__/
 application/robotbenchmark/views/__pycache__/
+
+**/__pycache__/
+*.pyc
+*.pyo
+*.log
