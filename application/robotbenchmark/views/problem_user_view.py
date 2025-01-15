@@ -15,7 +15,7 @@ from rest_framework.exceptions import NotFound
 @problem_user_view_schema
 class ProblemUserViewSet(viewsets.ModelViewSet):
     serializer_class = ProblemUserSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     queryset = ProblemUser.objects.all()
 
@@ -53,6 +53,10 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
         problem_id = request.query_params.get('problem_id')
         tournament_id = request.query_params.get('tournament_id')
         user_id = request.query_params.get('user_id')
+        is_checked = request.query_params.get('is_checked')
+
+        if is_checked:
+            queryset = queryset.filter(status=TaskStatus.CHECKED)
 
         if problem_id or tournament_id or user_id:
             if problem_id:
@@ -61,12 +65,6 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
                 queryset = queryset.filter(tournament=tournament_id)
             if user_id:
                 queryset = queryset.filter(user=user_id)
-
-        page = self.paginate_queryset(queryset)
-
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
