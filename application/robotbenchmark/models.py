@@ -101,7 +101,7 @@ class TournamentUser(models.Model):
 
         for problem in all_problems:
             try:
-                problem_user = ProblemUser.objects.get(problem=problem, user=self.user)
+                problem_user = ProblemUser.objects.get(user=self.user, problem=problem, tournament=self.tournament.pk)
             except ProblemUser.DoesNotExist:
                 robot_panel_port = random.randint(10000, 12000)
                 vs_port = random.randint(10000, 12000)

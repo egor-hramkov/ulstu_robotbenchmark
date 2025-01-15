@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from robotbenchmark.models import ProblemUser, CommandQueue, TaskStatus
 from robotbenchmark.serializers.problem_user_serializer import ProblemUserSerializer
 from ..swagger_schemas.problem_user_view_schema import problem_user_view_schema
+from rest_framework.exceptions import NotFound
 
 
 @problem_user_view_schema
@@ -47,22 +48,25 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def list(self, request, *args, **kwargs):
-        """Получение списка задач турнира по айди турнира и пользователя"""
-        user_id = request.query_params.get('user_id')
+        queryset = self.filter_queryset(self.get_queryset())
+
+        problem_id = request.query_params.get('problem_id')
         tournament_id = request.query_params.get('tournament_id')
+        user_id = request.query_params.get('user_id')
         is_checked = request.query_params.get('is_checked')
-        qs = self.filter_queryset(self.get_queryset())
-        condition = Q()
 
-        if tournament_id:
-            condition &= Q(problem__tournaments__id=tournament_id)
-        if user_id:
-            condition &= Q(user__id=user_id)
         if is_checked:
-            condition &= Q(status=TaskStatus.CHECKED)
+            queryset = queryset.filter(status=TaskStatus.CHECKED)
 
-        problem_users = qs.filter(condition)
-        serializer = self.get_serializer(problem_users, many=True)
+        if problem_id or tournament_id or user_id:
+            if problem_id:
+                queryset = queryset.filter(problem=problem_id)
+            if tournament_id:
+                queryset = queryset.filter(tournament=tournament_id)
+            if user_id:
+                queryset = queryset.filter(user=user_id)
+
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
