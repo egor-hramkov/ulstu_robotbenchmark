@@ -3,6 +3,17 @@ import os
 import time
 import urllib.request as req
 from urllib.error import URLError
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,  # Уровень логирования (INFO, DEBUG, WARNING, ERROR, CRITICAL)
+    format="%(levelname)s - %(message)s",  # Формат сообщения лога
+    handlers=[
+        logging.StreamHandler()  # Обеспечивает вывод в консоль
+    ]
+)
+
+logger = logging.getLogger(__name__)
 
 print("Служба запущена!")
 os.chdir("../docker/webots/robocross.virtual-main")
@@ -11,12 +22,33 @@ while True:
         url = 'http://localhost:8000/api/commands/'
         response = req.urlopen(url)
     except URLError:
-        print("Сервер недоступен!")
+        logger.info('Сервер недоступен!')
     else:
         data = response.read()
         data_dict = json.loads(data)
+
         if data_dict:
-            print(data_dict['command'])
-            os.system(data_dict['command'])
+            if data_dict['command_type'] == 'os_command':
+                logger.info(data_dict['command'])
+                os.system(data_dict['command'])
+            else:
+                logger.info(data_dict['command'])
+                parts = [part.strip() for part in data_dict['command'].split(';')]
+                dirs_part = parts[0].split('DIRS - ')[1].strip()
+                dirs = [d.strip() for d in dirs_part.split(',')]
+                tournament_id = int(parts[1].split('tournament_id - ')[1].strip())
+                filename = parts[2].split('filename - ')[1].strip()
+
+                url = f'http://localhost:8000/media/webots_files/{tournament_id}/{filename}'
+                response = req.urlopen(url)
+
+                for user_dir in dirs:
+                    save_directory = f"../../projects/{user_dir}/webots_ros2_suv/worlds"
+                    for filename in os.listdir(save_directory):
+                        if filename.endswith('.wbt'):
+                            file_to_remove = os.path.join(save_directory, filename)
+                            os.remove(file_to_remove)
+                            with open(file_to_remove, 'wb') as output_file:
+                                output_file.write(response.read())
     finally:
         time.sleep(5)
