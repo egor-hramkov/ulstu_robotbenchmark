@@ -10,6 +10,7 @@ docker/.env
 docker/projects
 
 application/venv/
+application/media/
 application/application/__pycache__/
 application/robotbenchmark/__pycache__/
 application/robotbenchmark/enums/__pycache__/
