@@ -121,9 +121,20 @@ class TournamentUser(models.Model):
                 CommandQueue.objects.create(command=command)
 
 
+class CommandType(models.TextChoices):
+    OS_COMMAND = 'os_command', 'OS Command'
+    CUSTOM = 'custom', 'Custom Command'
+
+
 class CommandQueue(models.Model):
     """
     Модель для очереди задач, которые необходимо выполнить на хостовой машине.
     ! Лучше в будущем заменить на брокер сообщений !
     """
     command = models.CharField(max_length=250)
+    command_type = models.CharField(
+        max_length=20,
+        choices=CommandType.choices,
+        default=CommandType.OS_COMMAND,
+        verbose_name="Тип команды"
+    )

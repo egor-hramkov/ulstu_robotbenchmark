@@ -148,8 +148,7 @@ class TournamentUserAdmin(admin.ModelAdmin):
 
 @admin.register(CommandQueue)
 class CommandQueueAdmin(admin.ModelAdmin):
-    list_display = ('id', 'command')  # Список полей, которые будут отображаться в списке объектов
+    list_display = ('id', 'command', 'command_type')  # Список полей, которые будут отображаться в списке объектов
     list_display_links = ('id', 'command')  # Список полей, которые будут отображаться в списке объектов
     search_fields = ('id', 'command')  # Список полей, по которым можно будет искать объекты
-
     ordering = ('id',)
