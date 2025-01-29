@@ -1,4 +1,6 @@
 import random
+from datetime import datetime
+
 from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
@@ -78,7 +80,13 @@ class UserProblemLauncher(APIView):
         pu = ProblemUser.objects.get(id=problem_user_id)
         user_command = pu.launch_command
         container_name = pu.user.username + str(pu.id)
-        command = f"""docker exec -d ulstu-{container_name} bash -i -c 'echo "source /ulstu/ros2_ws/install/setup.bash" >> ~/.bashrc; cd ~/ros2_ws; colcon build; source /ulstu/.bashrc; {user_command}'"""
+
+        now = datetime.now()
+        formatted_time = now.strftime('%Y-%m-%d_%H-%M')
+
+        command_for_start_record = f"ros2 service call /Ros2Supervisor/animation_start_recording webots_ros2_msgs/srv/SetString \"{{value: '/ulstu/records/{formatted_time}/webots_animation.html'}}\""
+        command_to_container = f'echo "source /ulstu/ros2_ws/install/setup.bash" >> ~/.bashrc; cd ~/ros2_ws; colcon build; source /ulstu/.bashrc; mkdir /ulstu/records; mkdir /ulstu/records/{formatted_time}; {user_command} > /dev/null 2>&1 & {command_for_start_record}'
+        command = f"""docker exec -d ulstu-{container_name} bash -i -c '{command_to_container}'"""
         CommandQueue.objects.create(
             command=command
         )

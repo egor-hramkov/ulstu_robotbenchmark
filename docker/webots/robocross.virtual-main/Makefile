@@ -1,7 +1,8 @@
 -MAKEFLAGS+=--silent
 UID:=$(shell id +-u)
 DOCKER_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
-#PROJECT_DIR:=$(shell dirname ${DOCKER_DIR})
+WEBOTS_ORIGINAL_PROJECT:=$(shell dirname ${DOCKER_DIR})
+DIR_FOR_COPY_PROJECT := $(shell dirname $(WEBOTS_ORIGINAL_PROJECT))
 PROJECT_DIR:=${DOCKER_DIR}
 NVIDIA_GPU:=$(shell (docker info | grep Runtimes | grep nvidia 1> /dev/null && command -v nvidia-smi 1>/dev/null 2>/dev/null && nvidia-smi | grep Processes 1>/dev/null 2>/dev/null) && echo '--runtime nvidia --gpus all' || echo '')
 IMAGE=ulstu
@@ -15,7 +16,7 @@ DISPLAY=:1
 
 #
 
-all: run copy-working-files start-code-server 
+all: copy-working-folders run copy-working-files start-code-server
 colors:
 	$(eval NC=\033[1;0m)
 	$(eval RED=\033[1;31m)
@@ -45,12 +46,12 @@ run:
 		-e WAYLAND_DISPLAY=$WAYLAND_DISPLAY \
       	-e DISPLAY=:1 \
 		--device=/dev/dxg \
-		-it --gpus all --device /dev/dri:/dev/dri \
+		-i --gpus all --device /dev/dri:/dev/dri \
 		-e LD_LIBRARY_PATH=/usr/lib/wsl/lib \
 		-v /tmp/.X11-unix/:/tmp/.X11-unix:rw \
 		-v /dev:/dev:rw \
-		-v ${PROJECT_DIR}/projects/devel:/ulstu/repositories:rw \
-		-d -it ${IMAGE} 1>/dev/null
+		-v ${DIR_FOR_COPY_PROJECT}/projects/${FLAVOR}:/ulstu/repositories:rw \
+		-d -i ${IMAGE} 1>/dev/null
 
 #--net=host 
 #-v /usr/lib/wsl:/usr/lib/wsl 
@@ -66,17 +67,17 @@ test-nvidia: colors
 	true
 
 copy-working-files:
-	docker exec -it ${IMAGE}-${FLAVOR} ln -s /ulstu/repositories/webots_ros2_suv /ulstu/ros2_ws/src/webots_ros2_suv && \
-	docker exec -it ${IMAGE}-${FLAVOR} ln -s /ulstu/repositories/robot_interfaces /ulstu/ros2_ws/src/robot_interfaces ; \
+	docker exec -i ${IMAGE}-${FLAVOR} ln -s /ulstu/repositories/webots_ros2_suv /ulstu/ros2_ws/src/webots_ros2_suv && \
+	docker exec -i ${IMAGE}-${FLAVOR} ln -s /ulstu/repositories/robot_interfaces /ulstu/ros2_ws/src/robot_interfaces ; \
 
 
 copy-working-folders:
-	if [ -d ${PROJECT_DIR}/docker/projects/${FLAVOR}/]; then \
+	if [ -d ${DIR_FOR_COPY_PROJECT}/projects/${FLAVOR}/]; then \
         echo "project dir exists. Remove it first" ; \
 	else \
-        mkdir ${PROJECT_DIR}/docker/projects/${FLAVOR} && \
-        cp -r ${PROJECT_DIR}/projects/devel/webots_ros2_suv ${PROJECT_DIR}/docker/projects/${FLAVOR}/webots_ros2_suv  && \
-        cp -r ${PROJECT_DIR}/projects/devel/robot_interfaces ${PROJECT_DIR}/docker/projects/${FLAVOR}/robot_interfaces ; \
+        mkdir ${DIR_FOR_COPY_PROJECT}/projects/${FLAVOR} && \
+        cp -r ${PROJECT_DIR}/projects/devel/webots_ros2_suv ${DIR_FOR_COPY_PROJECT}/projects/${FLAVOR}/webots_ros2_suv  && \
+        cp -r ${PROJECT_DIR}/projects/devel/robot_interfaces ${DIR_FOR_COPY_PROJECT}/projects/${FLAVOR}/robot_interfaces ; \
     fi
 
 
@@ -84,24 +85,24 @@ td:
 	echo ${PROJECT_DIR}
 
 start-code-server:
-	docker exec -d -it ulstu-${FLAVOR} bash -c 'pgrep code-server || code-server /ulstu/ros2_ws' && \
+	docker exec -d -i ulstu-${FLAVOR} bash -c 'pgrep code-server || code-server /ulstu/ros2_ws' && \
 	xdg-open 'localhost:31415?folder=/ulstu/ros2_ws'
 
 stop-code-server:
-	docker exec -it ulstu-${FLAVOR} pkill -f code-server
+	docker exec -i ulstu-${FLAVOR} pkill -f code-server
 
 exec:
-	docker exec -it ulstu-${FLAVOR} bash
+	docker exec -i ulstu-${FLAVOR} bash
 
 destroy:
 	docker container kill ulstu-${FLAVOR} 1>/dev/null || true
 	docker container rm -f ulstu-${FLAVOR} 1>/dev/null || true
 
 setup-default: colors
-	docker exec -it ulstu-${FLAVOR} sh -c '/usr/bin/setup.sh --first-time-ros-setup'
+	docker exec -i ulstu-${FLAVOR} sh -c '/usr/bin/setup.sh --first-time-ros-setup'
 
 setup-interactive: colors
-	docker exec -it ulstu-${FLAVOR} sh -c '/usr/bin/setup.sh --interactive'
+	docker exec -i ulstu-${FLAVOR} sh -c '/usr/bin/setup.sh --interactive'
 	printf '%b\n%b\n' "${GREEN}Interactive setup complete!${NC}" \
-		"Run ${BOLD}make exec${NC} or ${BOLD}docker exec -it ulstu-${FLAVOR}${NC} to access the container"
+		"Run ${BOLD}make exec${NC} or ${BOLD}docker exec -i ulstu-${FLAVOR}${NC} to access the container"
 

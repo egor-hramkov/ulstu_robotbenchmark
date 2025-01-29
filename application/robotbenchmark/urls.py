@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
@@ -15,8 +17,8 @@ from .views.tournament_view import TournamentViewSet, BlockTournamentAPIView
 from .views.tournament_user_view import TournamentUserViewSet
 from .views.problem_user_view import ProblemUserViewSet, UserProblemLauncher
 from .views.problem_view import ProblemViewSet
+from .views.wbt_files_view import UploadWBTFileView
 from .views.user_view import UserViewSet
-
 
 router = routers.DefaultRouter()
 
@@ -34,7 +36,7 @@ urlpatterns = [
     path('leaderboard/problem/<int:problem_id>/', LeaderboardByProblemView.as_view()), 
 
     path('block/<int:tournament_id>/', BlockTournamentAPIView.as_view(), name='block-tournament'), 
-
+    path('upload-wbt/', UploadWBTFileView.as_view(), name='upload_wbt'),
     path('commands/', CommandQueueView.as_view()), 
 
     path('launch-user-problem/<int:problem_user_id>', UserProblemLauncher.as_view()), 
@@ -46,4 +48,4 @@ urlpatterns = [
     path('schema/', SpectacularAPIView.as_view(), name='schema'), 
     path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'), 
     path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'), 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
