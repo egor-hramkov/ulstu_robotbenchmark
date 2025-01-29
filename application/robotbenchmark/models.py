@@ -124,6 +124,7 @@ class TournamentUser(models.Model):
 class CommandType(models.TextChoices):
     OS_COMMAND = 'os_command', 'OS Command'
     CUSTOM = 'custom', 'Custom Command'
+    SYNC = 'sync', 'Sync Command'
 
 
 class CommandQueue(models.Model):
@@ -131,7 +132,7 @@ class CommandQueue(models.Model):
     Модель для очереди задач, которые необходимо выполнить на хостовой машине.
     ! Лучше в будущем заменить на брокер сообщений !
     """
-    command = models.CharField(max_length=250)
+    command = models.CharField()
     command_type = models.CharField(
         max_length=20,
         choices=CommandType.choices,

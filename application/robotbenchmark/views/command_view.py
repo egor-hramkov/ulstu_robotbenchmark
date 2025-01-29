@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from robotbenchmark.models import CommandQueue
 from robotbenchmark.serializers.command_serializer import CommandQueueSerializer
+from robotbenchmark.models import CommandType
 
 
 class CommandQueueView(APIView):
@@ -9,6 +10,7 @@ class CommandQueueView(APIView):
         command = CommandQueue.objects.first()
 
         if not command:
+            CommandQueue.objects.create(command_type=CommandType.SYNC, command="")
             return Response([], status=200)
 
         serializer = CommandQueueSerializer(command)
