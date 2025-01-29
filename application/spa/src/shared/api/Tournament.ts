@@ -18,7 +18,7 @@ export class ITournament<SecurityDataType = unknown> extends HttpClient<Security
      *
      * @tags tournament
      * @name TournamentList
-     * @summary Получение списка соревнований
+     * @summary Получение списка всех соревнований
      * @request GET:/api/tournament/
      * @secure
      */
@@ -42,7 +42,7 @@ export class ITournament<SecurityDataType = unknown> extends HttpClient<Security
      *
      * @tags tournament
      * @name TournamentCreate
-     * @summary Создание соревнования
+     * @summary Создание нового соревнования
      * @request POST:/api/tournament/
      * @secure
      */
@@ -61,7 +61,7 @@ export class ITournament<SecurityDataType = unknown> extends HttpClient<Security
      *
      * @tags tournament
      * @name TournamentRetrieve
-     * @summary Детальная информация о соревновании
+     * @summary Детальная информация о конкретном соревновании
      * @request GET:/api/tournament/{id}/
      * @secure
      */
@@ -78,7 +78,7 @@ export class ITournament<SecurityDataType = unknown> extends HttpClient<Security
      *
      * @tags tournament
      * @name TournamentUpdate
-     * @summary Обновление данных о соревновании
+     * @summary Обновление информации о конкретном соревновании
      * @request PUT:/api/tournament/{id}/
      * @secure
      */
@@ -97,7 +97,7 @@ export class ITournament<SecurityDataType = unknown> extends HttpClient<Security
      *
      * @tags tournament
      * @name TournamentPartialUpdate
-     * @summary Обновление с необязательными полями соревнования
+     * @summary Частичное обновление информации о конкретном соревновании
      * @request PATCH:/api/tournament/{id}/
      * @secure
      */
@@ -116,7 +116,7 @@ export class ITournament<SecurityDataType = unknown> extends HttpClient<Security
      *
      * @tags tournament
      * @name TournamentDestroy
-     * @summary Удаление соревнования
+     * @summary Удаление конкретного соревнования
      * @request DELETE:/api/tournament/{id}/
      * @secure
      */

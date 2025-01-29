@@ -112,25 +112,12 @@ export const ProblemDetail = () => {
     <div className="problem-detail-container">
       <div style={{ marginBottom: 16, display: "flex", justifyContent: "space-between" }}>
         <h2>Детали задачи</h2>
-        <Button onClick={handleFinishTournament} type="primary">Завершить соревнование</Button>
       </div>
       {problem ? (
         <Tabs style={{ height: "100vh" }} items={items} />
       ) : (
         <Spin size={"default"} />
       )}
-
-      {/* Confirm Modal */}
-      <Modal
-        title="Подтверждение завершения"
-        visible={isModalVisible}
-        onOk={handleConfirmFinish}
-        onCancel={() => setIsModalVisible(false)}
-        okText="Подтвердить"
-        cancelText="Отмена"
-      >
-        Вы уверены, что хотите завершить соревнование? Это действие нельзя отменить.
-      </Modal>
 
       {/* Command Input Modal */}
       <Modal

@@ -12,9 +12,6 @@
 export interface CustomTokenObtainPair {
     username: string;
     password: string;
-    access?: string;
-    refresh?: string;
-    user_id?: number;
 }
 
 /** Сериализатор для лидерборда */
@@ -34,7 +31,7 @@ export interface LeaderboardProblem {
 
 /** Сериализатор для лидерборда по задаче */
 export interface LeaderboardTournament {
-    /** Сериализатор для модель соревнования */
+    /** Сериализатор для модели Соревнование */
     tournament: Tournament;
     items: Leaderboard[];
 }
@@ -69,7 +66,7 @@ export interface PatchedProblem {
     author?: number;
 }
 
-/** Сериализатор для модели many-to-many Соревнования-Пользователи */
+/** Сериализатор для модели Соревнование-Пользователь (многие ко многим) */
 export interface PatchedProblemUser {
     id?: number;
     /**
@@ -99,6 +96,8 @@ export interface PatchedProblemUser {
 /** Сериализатор для модели Соревнование */
 export interface PatchedTournament {
     id?: number;
+    users?: User[];
+    users_ids?: number[];
     /** @maxLength 150 */
     name?: string;
     /** @maxLength 5000 */
@@ -107,22 +106,21 @@ export interface PatchedTournament {
     date_start?: Date;
     /** @format date-time */
     date_end?: Date;
-    users_ids?: User[];
-    problems?: number[];
     is_blocked?: boolean;
+    problems?: number[];
 }
 
-/** Модель Пользователь-Соревнование (многие ко многим) */
+/** Сериализатор для модель many-to-many Соревнования-Пользователи */
 export interface PatchedTournamentUser {
     id?: number;
-    user?: number;
-    tournament?: number;
     is_completed?: boolean;
     /**
      * @min -2147483648
      * @max 2147483647
      */
     points?: number;
+    user?: number;
+    tournament?: number;
 }
 
 export interface PatchedUser {
@@ -151,6 +149,23 @@ export interface PatchedUser {
      * @maxLength 254
      */
     email?: string;
+    /**
+     * Номер телефона
+     * @maxLength 18
+     */
+    phone?: string | null;
+    /** @maxLength 50 */
+    telegram?: string | null;
+    /**
+     * Название организации
+     * @maxLength 150
+     */
+    organization?: string | null;
+    /**
+     * Название команды
+     * @maxLength 50
+     */
+    team?: string | null;
 }
 
 /** Сериализатор для модель соревнования */
@@ -183,7 +198,7 @@ export interface Problem {
     author: number;
 }
 
-/** Сериализатор для модели many-to-many Соревнования-Пользователи */
+/** Сериализатор для модели Соревнование-Пользователь (многие ко многим) */
 export interface ProblemUser {
     id: number;
     /**
@@ -261,11 +276,12 @@ export interface TokenRefresh {
     refresh: string;
 }
 
-/** Сериализатор для модель соревнования */
+/** Сериализатор для модели Соревнование */
 export interface Tournament {
     id: number;
     users: User[];
-    /** @maxLength 255 */
+    users_ids: number[];
+    /** @maxLength 150 */
     name: string;
     /** @maxLength 5000 */
     description: string;
@@ -291,8 +307,8 @@ export interface TournamentUser {
 }
 
 export interface User {
-    id?: number;
-    groups?: string;
+    id: number;
+    groups: string;
     /** @maxLength 128 */
     password: string;
     /**
@@ -317,16 +333,22 @@ export interface User {
      */
     email?: string;
     /**
-     * Phone number
-     * @pattern ^\+?[1-9]\d{1,14}$
+     * Номер телефона
+     * @maxLength 18
      */
-    phone?: string;
+    phone?: string | null;
     /** @maxLength 50 */
-    telegram?: string;
-    /** @maxLength 150 */
-    organization?: string;
-    /** @maxLength 50 */
-    team?: string;
+    telegram?: string | null;
+    /**
+     * Название организации
+     * @maxLength 150
+     */
+    organization?: string | null;
+    /**
+     * Название команды
+     * @maxLength 50
+     */
+    team?: string | null;
 }
 
 /**

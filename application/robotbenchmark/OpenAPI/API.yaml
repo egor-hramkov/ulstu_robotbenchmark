@@ -23,7 +23,6 @@ paths:
   /api/commands/:
     get:
       operationId: commands_retrieve
-      description: Исполняет первую команду в очереди и удаляет ее из очереди
       tags:
       - commands
       security:
@@ -71,7 +70,7 @@ paths:
   /api/leaderboard/:
     get:
       operationId: leaderboard_list
-      description: Return Общий Leaderboard
+      description: Общая таблица лидеров
       tags:
       - leaderboard
       security:
@@ -89,7 +88,7 @@ paths:
   /api/leaderboard/problem/{problem_id}/:
     get:
       operationId: leaderboard_problem_retrieve
-      description: Return Leaderboard определённой задачи
+      description: Таблица лидеров определённой задачи
       parameters:
       - in: path
         name: problem_id
@@ -111,7 +110,7 @@ paths:
   /api/leaderboard/tournament/{tournament_id}/:
     get:
       operationId: leaderboard_tournament_retrieve
-      description: Return Leaderboard определённого турнира
+      description: Таблица лидеров определённого турнира
       parameters:
       - in: path
         name: tournament_id
@@ -133,7 +132,7 @@ paths:
   /api/problem/:
     get:
       operationId: problem_list
-      summary: Получение списка задач
+      summary: Получение списка всех задач
       parameters:
       - name: ordering
         required: false
@@ -146,7 +145,7 @@ paths:
         schema:
           type: string
       tags:
-      - problems
+      - problem
       security:
       - jwtAuth: []
       responses:
@@ -160,9 +159,9 @@ paths:
           description: ''
     post:
       operationId: problem_create
-      summary: Создание задачи
+      summary: Создание новой задачи
       tags:
-      - problems
+      - problem
       requestBody:
         content:
           application/json:
@@ -187,7 +186,7 @@ paths:
   /api/problem/{id}/:
     get:
       operationId: problem_retrieve
-      summary: Детальная информация о задаче
+      summary: Детальная информация о конкретной задаче
       parameters:
       - in: path
         name: id
@@ -196,7 +195,7 @@ paths:
         description: A unique integer value identifying this problem.
         required: true
       tags:
-      - problems
+      - problem
       security:
       - jwtAuth: []
       responses:
@@ -208,7 +207,7 @@ paths:
           description: ''
     put:
       operationId: problem_update
-      summary: Обновление данных о задачи
+      summary: Обновление информации о конкретной задаче
       parameters:
       - in: path
         name: id
@@ -217,7 +216,7 @@ paths:
         description: A unique integer value identifying this problem.
         required: true
       tags:
-      - problems
+      - problem
       requestBody:
         content:
           application/json:
@@ -241,7 +240,7 @@ paths:
           description: ''
     patch:
       operationId: problem_partial_update
-      summary: Обновление с необязательными полями задачи
+      summary: Частичное обновление информации о конкретной задаче
       parameters:
       - in: path
         name: id
@@ -250,7 +249,7 @@ paths:
         description: A unique integer value identifying this problem.
         required: true
       tags:
-      - problems
+      - problem
       requestBody:
         content:
           application/json:
@@ -273,7 +272,7 @@ paths:
           description: ''
     delete:
       operationId: problem_destroy
-      summary: Удаление задачи
+      summary: Удаление конкретной задачи
       parameters:
       - in: path
         name: id
@@ -282,7 +281,7 @@ paths:
         description: A unique integer value identifying this problem.
         required: true
       tags:
-      - problems
+      - problem
       security:
       - jwtAuth: []
       responses:
@@ -495,7 +494,7 @@ paths:
     get:
       operationId: tournament_list
       description: ViewSet Соревнования
-      summary: Получение списка соревнований
+      summary: Получение списка всех соревнований
       parameters:
       - name: ordering
         required: false
@@ -519,7 +518,7 @@ paths:
     post:
       operationId: tournament_create
       description: ViewSet Соревнования
-      summary: Создание соревнования
+      summary: Создание нового соревнования
       tags:
       - tournament
       requestBody:
@@ -547,7 +546,7 @@ paths:
     get:
       operationId: tournament_retrieve
       description: ViewSet Соревнования
-      summary: Детальная информация о соревновании
+      summary: Детальная информация о конкретном соревновании
       parameters:
       - in: path
         name: id
@@ -569,7 +568,7 @@ paths:
     put:
       operationId: tournament_update
       description: ViewSet Соревнования
-      summary: Обновление данных о соревновании
+      summary: Обновление информации о конкретном соревновании
       parameters:
       - in: path
         name: id
@@ -603,7 +602,7 @@ paths:
     patch:
       operationId: tournament_partial_update
       description: ViewSet Соревнования
-      summary: Обновление с необязательными полями соревнования
+      summary: Частичное обновление информации о конкретном соревновании
       parameters:
       - in: path
         name: id
@@ -636,7 +635,7 @@ paths:
     delete:
       operationId: tournament_destroy
       description: ViewSet Соревнования
-      summary: Удаление соревнования
+      summary: Удаление конкретного соревнования
       parameters:
       - in: path
         name: id
@@ -658,7 +657,7 @@ paths:
   /api/users/:
     get:
       operationId: users_list
-      summary: Получение списка пользователей
+      summary: Получение списка всех пользователей
       parameters:
       - in: query
         name: username
@@ -679,7 +678,7 @@ paths:
           description: ''
     post:
       operationId: users_create
-      summary: Создание пользователя
+      summary: Создание нового пользователя
       tags:
       - users
       requestBody:
@@ -706,13 +705,12 @@ paths:
   /api/users-problem/:
     get:
       operationId: users_problem_list
-      description: Получение списка задач турнира по айди турнира и пользователя
-      summary: Детальная информация о всех задачах пользователей
+      summary: Получение списка всех задач у конкретного пользователя
       parameters:
       - in: query
         name: is_checked
         schema:
-          type: integer
+          type: boolean
         description: Проверенные задачи
       - name: ordering
         required: false
@@ -721,10 +719,15 @@ paths:
         schema:
           type: string
       - in: query
+        name: problem_id
+        schema:
+          type: integer
+        description: Определённая задача
+      - in: query
         name: tournament_id
         schema:
           type: integer
-        description: Определённый турнир
+        description: Определённое соревнование
       - in: query
         name: user_id
         schema:
@@ -745,7 +748,7 @@ paths:
           description: ''
     post:
       operationId: users_problem_create
-      summary: Создание задачах пользователю
+      summary: Создание новых задач конкретному пользователю
       tags:
       - users-problem
       requestBody:
@@ -772,7 +775,7 @@ paths:
   /api/users-problem/{id}/:
     get:
       operationId: users_problem_retrieve
-      summary: Детальная информация о задачах пользователя
+      summary: Детальная информация о задаче конкретного пользователя на турнире
       parameters:
       - in: path
         name: id
@@ -793,7 +796,7 @@ paths:
           description: ''
     put:
       operationId: users_problem_update
-      summary: Обновление данных о задачах пользователя
+      summary: Обновление информации о задачах конкретного пользователя
       parameters:
       - in: path
         name: id
@@ -826,7 +829,7 @@ paths:
           description: ''
     patch:
       operationId: users_problem_partial_update
-      summary: Обновление с необ. полями задачах пользователю
+      summary: Частичное обновление информации о задачах конкретного пользователя
       parameters:
       - in: path
         name: id
@@ -858,7 +861,7 @@ paths:
           description: ''
     delete:
       operationId: users_problem_destroy
-      summary: Удаление задачах пользователю
+      summary: Удаление задач у конкретного пользователя
       parameters:
       - in: path
         name: id
@@ -880,7 +883,7 @@ paths:
   /api/users-tournament/:
     get:
       operationId: users_tournament_list
-      summary: Детальная информация о всех соревнованиях пользователей
+      summary: Получение списка всех соревнований у конкретного пользователя
       parameters:
       - name: ordering
         required: false
@@ -903,7 +906,7 @@ paths:
           description: ''
     post:
       operationId: users_tournament_create
-      summary: Создание соревнования пользователю
+      summary: Создание нового соревнования для конкретного пользователя
       tags:
       - users-tournament
       requestBody:
@@ -930,7 +933,7 @@ paths:
   /api/users-tournament/{id}/:
     get:
       operationId: users_tournament_retrieve
-      summary: Детальная информация о соревнованиях пользователя
+      summary: Детальная информация о соревнованиях конкретного пользователя
       parameters:
       - in: path
         name: id
@@ -951,7 +954,7 @@ paths:
           description: ''
     put:
       operationId: users_tournament_update
-      summary: Обновление данных о соревновании пользователя
+      summary: Обновление информации о соревновании конкретного пользователя
       parameters:
       - in: path
         name: id
@@ -984,7 +987,7 @@ paths:
           description: ''
     patch:
       operationId: users_tournament_partial_update
-      summary: Обновление с необ. полями соревнования пользователю
+      summary: Частичное обновление информации о соревновании конкретного пользователя
       parameters:
       - in: path
         name: id
@@ -1016,7 +1019,7 @@ paths:
           description: ''
     delete:
       operationId: users_tournament_destroy
-      summary: Удаление соревнования пользователю
+      summary: Удаление соревнования у конкретного пользователя
       parameters:
       - in: path
         name: id
@@ -1038,7 +1041,7 @@ paths:
   /api/users/{id}/:
     get:
       operationId: users_retrieve
-      summary: Детальная информация пользователе
+      summary: Детальная информация о конкретном пользователе
       parameters:
       - in: path
         name: id
@@ -1059,7 +1062,7 @@ paths:
           description: ''
     put:
       operationId: users_update
-      summary: Обновление данных о пользователе
+      summary: Обновление информации о конкретном пользователе
       parameters:
       - in: path
         name: id
@@ -1092,7 +1095,7 @@ paths:
           description: ''
     patch:
       operationId: users_partial_update
-      summary: Обновление с необязательными полями пользователей
+      summary: Частичное обновление информации о конкретном пользователе
       parameters:
       - in: path
         name: id
@@ -1124,7 +1127,7 @@ paths:
           description: ''
     delete:
       operationId: users_destroy
-      summary: Удаление пользователя
+      summary: Удаление конкретного пользователя
       parameters:
       - in: path
         name: id
@@ -1230,7 +1233,7 @@ components:
           type: integer
     PatchedProblemUser:
       type: object
-      description: Сериализатор для модели many-to-many Соревнования-Пользователи
+      description: Сериализатор для модели Соревнование-Пользователь (многие ко многим)
       properties:
         id:
           type: integer
@@ -1266,6 +1269,16 @@ components:
         id:
           type: integer
           readOnly: true
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          readOnly: true
+        users_ids:
+          type: array
+          items:
+            type: integer
+          writeOnly: true
         name:
           type: string
           maxLength: 150
@@ -1275,39 +1288,32 @@ components:
         date_start:
           type: string
           format: date-time
-          readOnly: true
         date_end:
           type: string
           format: date-time
-        users:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-          readOnly: true
+        is_blocked:
+          type: boolean
         problems:
           type: array
           items:
-            $ref: '#/components/schemas/Problem'
-          readOnly: true
-        is_blocked:
-          type: boolean
+            type: integer
     PatchedTournamentUser:
       type: object
-      description: Модель Пользователь-Соревнование (многие ко многим)
+      description: Сериализатор для модель many-to-many Соревнования-Пользователи
       properties:
         id:
           type: integer
           readOnly: true
-        user:
-          type: integer
-        tournament:
-          type: integer
         is_completed:
           type: boolean
         points:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
+        user:
+          type: integer
+        tournament:
+          type: integer
     PatchedUser:
       type: object
       properties:
@@ -1343,6 +1349,25 @@ components:
           format: email
           title: Email address
           maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          title: Номер телефона
+          maxLength: 18
+        telegram:
+          type: string
+          nullable: true
+          maxLength: 50
+        organization:
+          type: string
+          nullable: true
+          title: Название организации
+          maxLength: 150
+        team:
+          type: string
+          nullable: true
+          title: Название команды
+          maxLength: 50
     Problem:
       type: object
       description: Сериализатор для модель соревнования
@@ -1382,7 +1407,7 @@ components:
       - world_path
     ProblemUser:
       type: object
-      description: Сериализатор для модели many-to-many Соревнования-Пользователи
+      description: Сериализатор для модели Соревнование-Пользователь (многие ко многим)
       properties:
         id:
           type: integer
@@ -1485,7 +1510,7 @@ components:
       - refresh
     Tournament:
       type: object
-      description: Сериализатор для модель соревнования
+      description: Сериализатор для модели Соревнование
       properties:
         id:
           type: integer
@@ -1495,16 +1520,20 @@ components:
           items:
             $ref: '#/components/schemas/User'
           readOnly: true
+        users_ids:
+          type: array
+          items:
+            type: integer
+          writeOnly: true
         name:
           type: string
-          maxLength: 255
+          maxLength: 150
         description:
           type: string
           maxLength: 5000
         date_start:
           type: string
           format: date-time
-          readOnly: true
         date_end:
           type: string
           format: date-time
@@ -1522,6 +1551,7 @@ components:
       - name
       - problems
       - users
+      - users_ids
     TournamentUser:
       type: object
       description: Сериализатор для модель many-to-many Соревнования-Пользователи
@@ -1578,6 +1608,25 @@ components:
           format: email
           title: Email address
           maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          title: Номер телефона
+          maxLength: 18
+        telegram:
+          type: string
+          nullable: true
+          maxLength: 50
+        organization:
+          type: string
+          nullable: true
+          title: Название организации
+          maxLength: 150
+        team:
+          type: string
+          nullable: true
+          title: Название команды
+          maxLength: 50
       required:
       - groups
       - id

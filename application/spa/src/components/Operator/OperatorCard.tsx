@@ -9,6 +9,7 @@ import {
   Modal,
   Form,
   Input,
+  Spin,
 } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import useApiClient from "../../hooks/useApiClient";
@@ -20,38 +21,72 @@ import { useOperatorStore } from "./store/useOperatorStore";
 const { Title, Text } = Typography;
 
 export const OperatorCard = () => {
-  const [tournamentInfo, setTournamentInfo] = useState<Tournament>();
-  const [participants, setParticipants] = useState<User[]>([]);
-  const [currentProblem, setCurrentProblem] = useState<ProblemUser | null>(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [score, setScore] = useState(0);
-  const [teamCommand, setTeamCommand] = useState("");
-
-  const { id } = useParams();
-
   const { nextProblem, lastProblem, setProblems, problems, currentIndex } =
     useOperatorStore((state) => state);
 
+  const [tournamentInfo, setTournamentInfo] = useState<Tournament>();
+  const [participants, setParticipants] = useState<User[]>([]);
+  const [currentProblem, setCurrentProblem] = useState<ProblemUser | null>(null);
+  const [currentParticipant, setCurrentParticipant] = useState<User | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [score, setScore] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [noDataMessage, setNoDataMessage] = useState("");
+
+  const { id } = useParams();
   const apiClient = useApiClient();
 
-  const fetchCurrentProblem = useCallback((problemId: number) => {
-    apiClient.UsersProblem;
-  }, []);
-
+  // Загружаем данные турнира при инициализации компонента
   useEffect(() => {
     if (id) {
+      setLoading(true);
       apiClient.Tournament.tournamentRetrieve(+id).then((res) => {
         setTournamentInfo(res.data);
         setParticipants(res.data.users);
         setProblems(res.data.problems);
-        fetchCurrentProblem(res.data.problems[0]);
+        setLoading(false);
+        if (res.data.users.length > 0) {
+          setCurrentParticipant(res.data.users[0]); // Устанавливаем первого участника по умолчанию
+        }
+      }).catch(error => {
+        console.error("Ошибка при загрузке турнира:", error);
+        setLoading(false);
       });
     }
   }, [id, setProblems]);
 
-  const currentParticipant = participants[currentIndex % participants.length];
+  // Функция для получения текущей проблемы
+  const fetchCurrentProblem = useCallback((problemId: number) => {
+    if (tournamentInfo && currentParticipant) {
+      apiClient.UsersProblem.usersProblemList({
+        is_checked: undefined,
+        ordering: undefined,
+        problem_id: problemId,
+        tournament_id: tournamentInfo.id,
+        user_id: currentParticipant.id
+      }).then(({ data }) => {
+        if (data.length === 1) {
+          setCurrentProblem(data[0]);
+          setNoDataMessage("");
+        } else {
+          setCurrentProblem(null);
+          setNoDataMessage("Информация о задаче отсутствует.");
+        }
+      }).catch(error => {
+        console.error("Ошибка при получении проблемы:", error);
+        setNoDataMessage("Ошибка при загрузке задачи.");
+      });
+    }
+  }, [currentParticipant, tournamentInfo]);
 
-  // Tabs for the current problem
+  // Установка текущей проблемы при изменении текущего участника
+  useEffect(() => {
+    if (currentParticipant && tournamentInfo && tournamentInfo.problems.length > 0) {
+      fetchCurrentProblem(tournamentInfo.problems[0]); // Передаем ID первой проблемы
+    }
+  }, [currentParticipant, tournamentInfo]);
+
+  // Определяем элементы для табов
   const tabsItems = currentProblem
     ? [
         {
@@ -91,8 +126,25 @@ export const OperatorCard = () => {
     setIsModalVisible(true);
   };
 
-  const handleOk = () => {
-    console.log("Score submitted:", score);
+  const handleOk = async () => {
+    try {
+      if (currentProblem) {
+        // Обновляем задачу с оценкой
+        await apiClient.UsersProblem.usersProblemPartialUpdate(currentProblem.id, { score });
+        // Устанавливаем цвет задачи в зеленый после успешной оценки
+        setProblems((prevProblems) => {
+          return prevProblems.map(problem => {
+            if (problem.id === currentProblem.id) {
+              return { ...problem, checked: true }; // Устанавливаем задачу как проверенную
+            }
+            return problem;
+          });
+        });
+        setNoDataMessage(""); // Сбрасываем сообщение
+      }
+    } catch (error) {
+      console.error("Ошибка при оценке задачи:", error);
+    }
     setIsModalVisible(false);
   };
 
@@ -100,42 +152,44 @@ export const OperatorCard = () => {
     setIsModalVisible(false);
   };
 
+  // Обработчик клика на участника
+  const handleParticipantClick = (participant: User) => {
+    setCurrentParticipant(participant);
+    setNoDataMessage(""); // Сбрасываем сообщение при выборе нового участника
+  };
+
   return (
     <Row gutter={20} style={{ height: "100%" }}>
-      {/* Left Part */}
       <Col span={16}>
         <Card style={{ height: "100%" }}>
-          <Title level={3} style={{ textAlign: "left", marginBottom: 10 }}>
+          <Title level={3} style={{ marginBottom: 10 }}>
             Проверка турнира: {tournamentInfo?.name || "Загрузка..."}
           </Title>
-          <Text
-            style={{ display: "block", textAlign: "left", marginBottom: 20 }}
-          >
+          <Text style={{ display: "block", marginBottom: 20 }}>
             Текущий участник:{" "}
-            <strong>
-              {currentParticipant?.username || "Неизвестный участник"}
-            </strong>
+            <strong>{currentParticipant?.username || "Неизвестный участник"}</strong>
           </Text>
-          <Card
-            style={{
-              height: "550px",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <Tabs defaultActiveKey="1" style={{ flex: 1 }} items={tabsItems} />
+          <Card style={{ height: "100%", display: "flex", flexDirection: "column", flexGrow: 1 }}>
+            {loading ? (
+              <Spin size="large" style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
+            ) : (
+              <>
+                {noDataMessage ? (
+                  <Text style={{ textAlign: 'center' }}>{noDataMessage}</Text>
+                ) : (
+                  <Tabs defaultActiveKey="1" style={{ flex: 1 }} items={tabsItems} />
+                )}
+              </>
+            )}
           </Card>
           <Row style={{ marginTop: 30 }} justify={"space-between"}>
             <Button icon={<LeftOutlined />} onClick={lastProblem} />
-            <Button type="default" onClick={showModal}>
-              Оценить задачу
-            </Button>
+            <Button type="default" onClick={showModal}>Оценить задачу</Button>
             <Button icon={<RightOutlined />} onClick={nextProblem} />
           </Row>
         </Card>
       </Col>
 
-      {/* Right Part */}
       <Col span={8}>
         <Card title="Список задач">
           <List
@@ -147,9 +201,8 @@ export const OperatorCard = () => {
 
               let backgroundColor = "#f5f5f5";
 
-              if (isCurrent)
-                backgroundColor = "#faad14"; // Highlight current problem
-              else if (isChecked) backgroundColor = "#52c41a"; // Highlight checked problems
+              if (isCurrent) backgroundColor = "#faad14"; // Подсветка текущей проблемы
+              else if (isChecked) backgroundColor = "#52c41a"; // Подсветка проверенных проблем
 
               return (
                 <List.Item
@@ -171,32 +224,24 @@ export const OperatorCard = () => {
           <List
             bordered
             dataSource={participants}
-            renderItem={(user) => {
-              const isCurrent = currentParticipant?.id === user.id;
-
-              return (
-                <List.Item
-                  style={{
-                    backgroundColor: isCurrent ? "#faad14" : "#f5f5f5",
-                    color: isCurrent ? "white" : "black",
-                    fontWeight: isCurrent ? "bold" : "normal",
-                  }}
-                >
-                  {user.username}
-                </List.Item>
-              );
-            }}
+            renderItem={(user) => (
+              <List.Item
+                onClick={() => handleParticipantClick(user)} // Обработчик клика
+                style={{
+                  cursor: "pointer", // Указатель курсора для интерактивного элемента
+                  backgroundColor: currentParticipant?.id === user.id ? "#faad14" : "#f5f5f5",
+                  color: currentParticipant?.id === user.id ? "white" : "black",
+                  fontWeight: currentParticipant?.id === user.id ? "bold" : "normal",
+                }}
+              >
+                {user.username}
+              </List.Item>
+            )}
           />
-        </Card>
-
-        {/* Team Command Input Field */}
-        {/* Team Command Display */}
-        <Card title="Команда для запуска" style={{ marginTop: 20 }}>
-          <Text>ros2 run my_package my_node</Text>
         </Card>
       </Col>
 
-      {/* Modal for Score Submission */}
+      {/* Модальное окно для оценки */}
       <Modal
         title="Оценка задачи"
         visible={isModalVisible}

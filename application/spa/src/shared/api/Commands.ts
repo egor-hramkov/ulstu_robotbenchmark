@@ -13,7 +13,7 @@ import { HttpClient, RequestParams } from "./http-client";
 
 export class Commands<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
     /**
-     * @description Исполняет первую команду в очереди и удаляет ее из очереди
+     * No description
      *
      * @tags commands
      * @name CommandsRetrieve

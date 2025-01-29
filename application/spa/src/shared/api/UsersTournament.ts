@@ -18,7 +18,7 @@ export class UsersTournament<SecurityDataType = unknown> extends HttpClient<Secu
      *
      * @tags users-tournament
      * @name UsersTournamentList
-     * @summary Детальная информация о всех соревнованиях пользователей
+     * @summary Получение списка всех соревнований у конкретного пользователя
      * @request GET:/api/users-tournament/
      * @secure
      */
@@ -42,7 +42,7 @@ export class UsersTournament<SecurityDataType = unknown> extends HttpClient<Secu
      *
      * @tags users-tournament
      * @name UsersTournamentCreate
-     * @summary Создание соревнования пользователю
+     * @summary Создание нового соревнования для конкретного пользователя
      * @request POST:/api/users-tournament/
      * @secure
      */
@@ -61,7 +61,7 @@ export class UsersTournament<SecurityDataType = unknown> extends HttpClient<Secu
      *
      * @tags users-tournament
      * @name UsersTournamentRetrieve
-     * @summary Детальная информация о соревнованиях пользователя
+     * @summary Детальная информация о соревнованиях конкретного пользователя
      * @request GET:/api/users-tournament/{id}/
      * @secure
      */
@@ -78,7 +78,7 @@ export class UsersTournament<SecurityDataType = unknown> extends HttpClient<Secu
      *
      * @tags users-tournament
      * @name UsersTournamentUpdate
-     * @summary Обновление данных о соревновании пользователя
+     * @summary Обновление информации о соревновании конкретного пользователя
      * @request PUT:/api/users-tournament/{id}/
      * @secure
      */
@@ -97,7 +97,7 @@ export class UsersTournament<SecurityDataType = unknown> extends HttpClient<Secu
      *
      * @tags users-tournament
      * @name UsersTournamentPartialUpdate
-     * @summary Обновление с необ. полями соревнования пользователю
+     * @summary Частичное обновление информации о соревновании конкретного пользователя
      * @request PATCH:/api/users-tournament/{id}/
      * @secure
      */
@@ -116,7 +116,7 @@ export class UsersTournament<SecurityDataType = unknown> extends HttpClient<Secu
      *
      * @tags users-tournament
      * @name UsersTournamentDestroy
-     * @summary Удаление соревнования пользователю
+     * @summary Удаление соревнования у конкретного пользователя
      * @request DELETE:/api/users-tournament/{id}/
      * @secure
      */

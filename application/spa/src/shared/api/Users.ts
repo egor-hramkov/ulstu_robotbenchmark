@@ -18,7 +18,7 @@ export class Users<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
      *
      * @tags users
      * @name UsersList
-     * @summary Получение списка пользователей
+     * @summary Получение списка всех пользователей
      * @request GET:/api/users/
      * @secure
      */
@@ -41,7 +41,7 @@ export class Users<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
      *
      * @tags users
      * @name UsersCreate
-     * @summary Создание пользователя
+     * @summary Создание нового пользователя
      * @request POST:/api/users/
      * @secure
      */
@@ -60,7 +60,7 @@ export class Users<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
      *
      * @tags users
      * @name UsersRetrieve
-     * @summary Детальная информация пользователе
+     * @summary Детальная информация о конкретном пользователе
      * @request GET:/api/users/{id}/
      * @secure
      */
@@ -77,7 +77,7 @@ export class Users<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
      *
      * @tags users
      * @name UsersUpdate
-     * @summary Обновление данных о пользователе
+     * @summary Обновление информации о конкретном пользователе
      * @request PUT:/api/users/{id}/
      * @secure
      */
@@ -96,7 +96,7 @@ export class Users<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
      *
      * @tags users
      * @name UsersPartialUpdate
-     * @summary Обновление с необязательными полями пользователей
+     * @summary Частичное обновление информации о конкретном пользователе
      * @request PATCH:/api/users/{id}/
      * @secure
      */
@@ -115,7 +115,7 @@ export class Users<SecurityDataType = unknown> extends HttpClient<SecurityDataTy
      *
      * @tags users
      * @name UsersDestroy
-     * @summary Удаление пользователя
+     * @summary Удаление конкретного пользователя
      * @request DELETE:/api/users/{id}/
      * @secure
      */

@@ -14,7 +14,7 @@ import { HttpClient, RequestParams } from "./http-client";
 
 export class ILeaderboard<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
     /**
-     * @description Return Общий Leaderboard
+     * @description Общая таблица лидеров
      *
      * @tags leaderboard
      * @name LeaderboardList
@@ -30,7 +30,7 @@ export class ILeaderboard<SecurityDataType = unknown> extends HttpClient<Securit
             ...params,
         });
     /**
-     * @description Return Leaderboard определённой задачи
+     * @description Таблица лидеров определённой задачи
      *
      * @tags leaderboard
      * @name LeaderboardProblemRetrieve
@@ -46,7 +46,7 @@ export class ILeaderboard<SecurityDataType = unknown> extends HttpClient<Securit
             ...params,
         });
     /**
-     * @description Return Leaderboard определённого турнира
+     * @description Таблица лидеров определённого турнира
      *
      * @tags leaderboard
      * @name LeaderboardTournamentRetrieve

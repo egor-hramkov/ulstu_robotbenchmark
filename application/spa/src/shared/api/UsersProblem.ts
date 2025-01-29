@@ -14,21 +14,23 @@ import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class UsersProblem<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
     /**
-     * @description Получение списка задач турнира по айди турнира и пользователя
+     * No description
      *
      * @tags users-problem
      * @name UsersProblemList
-     * @summary Детальная информация о всех задачах пользователей
+     * @summary Получение списка всех задач у конкретного пользователя
      * @request GET:/api/users-problem/
      * @secure
      */
     usersProblemList = (
         query?: {
             /** Проверенные задачи */
-            is_checked?: number;
+            is_checked?: boolean;
             /** Which field to use when ordering the results. */
             ordering?: string;
-            /** Определённый турнир */
+            /** Определённая задача */
+            problem_id?: number;
+            /** Определённое соревнование */
             tournament_id?: number;
             /** Определённый пользователь */
             user_id?: number;
@@ -48,7 +50,7 @@ export class UsersProblem<SecurityDataType = unknown> extends HttpClient<Securit
      *
      * @tags users-problem
      * @name UsersProblemCreate
-     * @summary Создание задачах пользователю
+     * @summary Создание новых задач конкретному пользователю
      * @request POST:/api/users-problem/
      * @secure
      */
@@ -67,7 +69,7 @@ export class UsersProblem<SecurityDataType = unknown> extends HttpClient<Securit
      *
      * @tags users-problem
      * @name UsersProblemRetrieve
-     * @summary Детальная информация о задачах пользователя
+     * @summary Детальная информация о задаче конкретного пользователя на турнире
      * @request GET:/api/users-problem/{id}/
      * @secure
      */
@@ -84,7 +86,7 @@ export class UsersProblem<SecurityDataType = unknown> extends HttpClient<Securit
      *
      * @tags users-problem
      * @name UsersProblemUpdate
-     * @summary Обновление данных о задачах пользователя
+     * @summary Обновление информации о задачах конкретного пользователя
      * @request PUT:/api/users-problem/{id}/
      * @secure
      */
@@ -103,7 +105,7 @@ export class UsersProblem<SecurityDataType = unknown> extends HttpClient<Securit
      *
      * @tags users-problem
      * @name UsersProblemPartialUpdate
-     * @summary Обновление с необ. полями задачах пользователю
+     * @summary Частичное обновление информации о задачах конкретного пользователя
      * @request PATCH:/api/users-problem/{id}/
      * @secure
      */
@@ -122,7 +124,7 @@ export class UsersProblem<SecurityDataType = unknown> extends HttpClient<Securit
      *
      * @tags users-problem
      * @name UsersProblemDestroy
-     * @summary Удаление задачах пользователю
+     * @summary Удаление задач у конкретного пользователя
      * @request DELETE:/api/users-problem/{id}/
      * @secure
      */
