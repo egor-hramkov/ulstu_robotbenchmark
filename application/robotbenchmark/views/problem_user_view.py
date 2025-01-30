@@ -29,12 +29,12 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
         webots_stream_port = random.randint(10000, 12000)
 
         p = ProblemUser.objects.create(
-            user=self.request.user,
+            user=serializer.validated_data['user'],
             problem=serializer.validated_data['problem'],
             tournament=serializer.validated_data['tournament'],
-            points=serializer.validated_data['points'],
-            launch_command=serializer.validated_data['launch_command'],
-            status=serializer.validated_data['status'],
+            points=serializer.validated_data.get('points', 0),
+            launch_command=serializer.validated_data.get('launch_command', ''),
+            status=serializer.validated_data.get('status', TaskStatus.CREATED),
             robot_panel_port=robot_panel_port,
             vs_port=vs_port,
             webots_stream_port=webots_stream_port
