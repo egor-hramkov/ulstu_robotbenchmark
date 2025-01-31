@@ -3,7 +3,7 @@ import { Layout, Menu, theme, Button, Typography } from "antd";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons"; // Импортируем иконки
 import "./App.css";
 import { Outlet, useNavigate } from "react-router-dom";
-import { menuPoints } from "./ui/header/nav";
+import { getMenuPoints } from "./ui/header/nav";
 import Sider from "antd/es/layout/Sider";
 import { useAuthStore } from "./store/useAuthStore";
 
@@ -29,7 +29,7 @@ const AppLayout: React.FC = () => {
         <Menu
           theme="dark"
           defaultSelectedKeys={["2"]}
-          items={menuPoints}
+          items={getMenuPoints(userInfo?.is_superuser)}
           mode="inline"
           onClick={(info) => navigate(info.key)}
           style={{ flex: 1, minWidth: 0 }}

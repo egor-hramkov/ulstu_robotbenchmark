@@ -9,3 +9,15 @@ body, #root {
   margin: 0;
   padding: 0;
 }
+
+.operator-card.ant-card-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.tabs-card.ant-card-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}

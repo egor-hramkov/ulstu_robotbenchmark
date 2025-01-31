@@ -118,14 +118,6 @@ export const OperatorTournament = () => {
                   <Col>
                     <Text>{user.team}</Text>
                   </Col>
-                  <Col>
-                    <Button
-                      type="primary" 
-                      onClick={() => user.id && handleUserVerification(user.id)}
-                    >
-                      Начать проверку
-                    </Button>
-                  </Col>
                 </Row>
               </List.Item>
             )}

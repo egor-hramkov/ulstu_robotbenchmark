@@ -7,34 +7,38 @@ import {
   Tabs,
   Typography,
   Modal,
-  Form,
-  Input,
+  InputNumber,
   Spin,
+  message,
 } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import useApiClient from "../../hooks/useApiClient";
 import { useParams } from "react-router-dom";
 import { Tournament, User, Problem, ProblemUser } from "../../shared/api";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { LeftOutlined, RightOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { useOperatorStore } from "./store/useOperatorStore";
 
 const { Title, Text } = Typography;
 
 export const OperatorCard = () => {
-  const { nextProblem, lastProblem, setProblems, problems, currentIndex } =
+  const { nextProblem, lastProblem, setProblems, problems, currentIndex, currentProblem, setCurrentProblem } =
     useOperatorStore((state) => state);
 
   const [tournamentInfo, setTournamentInfo] = useState<Tournament>();
   const [participants, setParticipants] = useState<User[]>([]);
-  const [currentProblem, setCurrentProblem] = useState<ProblemUser | null>(null);
   const [currentParticipant, setCurrentParticipant] = useState<User | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
   const [noDataMessage, setNoDataMessage] = useState("");
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const { id } = useParams();
   const apiClient = useApiClient();
+
+  const fetchUserTournamentProblemsList = async (userId: number, tournamentId: number) => {
+    apiClient.UsersProblem.usersProblemList({ user_id: userId, tournament_id: tournamentId }).then(({data}) => {setProblems(data); console.log(data)});
+  }
 
   // Загружаем данные турнира при инициализации компонента
   useEffect(() => {
@@ -42,12 +46,12 @@ export const OperatorCard = () => {
       setLoading(true);
       apiClient.Tournament.tournamentRetrieve(+id).then((res) => {
         setTournamentInfo(res.data);
-        setParticipants(res.data.users);
-        setProblems(res.data.problems);
-        setLoading(false);
         if (res.data.users.length > 0) {
-          setCurrentParticipant(res.data.users[0]); // Устанавливаем первого участника по умолчанию
+          setCurrentParticipant(res.data.users[0]);
+          fetchUserTournamentProblemsList(res.data.users[0].id, Number(id));
         }
+        setParticipants(res.data.users);
+        setLoading(false);
       }).catch(error => {
         console.error("Ошибка при загрузке турнира:", error);
         setLoading(false);
@@ -55,36 +59,40 @@ export const OperatorCard = () => {
     }
   }, [id, setProblems]);
 
-  // Функция для получения текущей проблемы
-  const fetchCurrentProblem = useCallback((problemId: number) => {
-    if (tournamentInfo && currentParticipant) {
-      apiClient.UsersProblem.usersProblemList({
-        is_checked: undefined,
-        ordering: undefined,
-        problem_id: problemId,
-        tournament_id: tournamentInfo.id,
-        user_id: currentParticipant.id
-      }).then(({ data }) => {
-        if (data.length === 1) {
-          setCurrentProblem(data[0]);
-          setNoDataMessage("");
-        } else {
-          setCurrentProblem(null);
-          setNoDataMessage("Информация о задаче отсутствует.");
-        }
-      }).catch(error => {
-        console.error("Ошибка при получении проблемы:", error);
-        setNoDataMessage("Ошибка при загрузке задачи.");
-      });
-    }
-  }, [currentParticipant, tournamentInfo]);
+  // Обработчик клика на участника
+  const handleParticipantClick = (participant: User) => {
+    setCurrentParticipant(participant);
+    fetchUserTournamentProblemsList(participant.id, Number(id)); 
+    setCurrentProblem(problems[0]);
+    setNoDataMessage(""); // Сбрасываем сообщение при выборе нового участника
+  };
 
-  // Установка текущей проблемы при изменении текущего участника
-  useEffect(() => {
-    if (currentParticipant && tournamentInfo && tournamentInfo.problems.length > 0) {
-      fetchCurrentProblem(tournamentInfo.problems[0]); // Передаем ID первой проблемы
+  // Обработчик оценки задачи
+  const handleOk = async () => {
+    try {
+      if (currentProblem) {
+        // Обновляем задачу с оценкой
+        await apiClient.UsersProblem.usersProblemPartialUpdate(currentProblem.id, { points: score }).then(({data}) => {
+          setCurrentProblem(data);
+        });
+        message.success("Задача успешно оценена!");
+
+      }
+    } catch (error) {
+      console.error("Ошибка при оценке задачи:", error);
+      message.error("Ошибка при оценке задачи.");
     }
-  }, [currentParticipant, tournamentInfo]);
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const launchUserProblem = (userProblemId?: number) => {
+    if (userProblemId)
+    apiClient.LaunchUserProblem.launchUserProblemRetrieve(userProblemId);
+  } 
 
   // Определяем элементы для табов
   const tabsItems = currentProblem
@@ -98,6 +106,7 @@ export const OperatorCard = () => {
               style={{ height: "100%", width: "100%", border: "none" }}
             />
           ),
+          style: { height: "100%" },
         },
         {
           key: "2",
@@ -108,6 +117,7 @@ export const OperatorCard = () => {
               style={{ height: "100%", width: "100%", border: "none" }}
             />
           ),
+          style: { height: "100%" },
         },
         {
           key: "3",
@@ -118,50 +128,15 @@ export const OperatorCard = () => {
               style={{ height: "100%", width: "100%", border: "none" }}
             />
           ),
+          style: { height: "100%" },
         },
       ]
     : [];
 
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleOk = async () => {
-    try {
-      if (currentProblem) {
-        // Обновляем задачу с оценкой
-        await apiClient.UsersProblem.usersProblemPartialUpdate(currentProblem.id, { score });
-        // Устанавливаем цвет задачи в зеленый после успешной оценки
-        setProblems((prevProblems) => {
-          return prevProblems.map(problem => {
-            if (problem.id === currentProblem.id) {
-              return { ...problem, checked: true }; // Устанавливаем задачу как проверенную
-            }
-            return problem;
-          });
-        });
-        setNoDataMessage(""); // Сбрасываем сообщение
-      }
-    } catch (error) {
-      console.error("Ошибка при оценке задачи:", error);
-    }
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
-
-  // Обработчик клика на участника
-  const handleParticipantClick = (participant: User) => {
-    setCurrentParticipant(participant);
-    setNoDataMessage(""); // Сбрасываем сообщение при выборе нового участника
-  };
-
   return (
     <Row gutter={20} style={{ height: "100%" }}>
-      <Col span={16}>
-        <Card style={{ height: "100%" }}>
+      <Col span={isCollapsed ? 24 : 16} style={{ height: "100%" }}>
+        <div style={{ height: "100%", display: "flex", flexDirection: "column" }} className="operator-card">
           <Title level={3} style={{ marginBottom: 10 }}>
             Проверка турнира: {tournamentInfo?.name || "Загрузка..."}
           </Title>
@@ -169,7 +144,7 @@ export const OperatorCard = () => {
             Текущий участник:{" "}
             <strong>{currentParticipant?.username || "Неизвестный участник"}</strong>
           </Text>
-          <Card style={{ height: "100%", display: "flex", flexDirection: "column", flexGrow: 1 }}>
+          
             {loading ? (
               <Spin size="large" style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
             ) : (
@@ -177,69 +152,89 @@ export const OperatorCard = () => {
                 {noDataMessage ? (
                   <Text style={{ textAlign: 'center' }}>{noDataMessage}</Text>
                 ) : (
-                  <Tabs defaultActiveKey="1" style={{ flex: 1 }} items={tabsItems} />
+                  <Tabs defaultActiveKey="1" items={tabsItems} style={{ height: "100%" }} />
                 )}
               </>
             )}
-          </Card>
+          
           <Row style={{ marginTop: 30 }} justify={"space-between"}>
             <Button icon={<LeftOutlined />} onClick={lastProblem} />
-            <Button type="default" onClick={showModal}>Оценить задачу</Button>
+            <Button type="default" onClick={() => setIsModalVisible(true)}>Оценить задачу</Button>
+            <Button disabled={!currentProblem?.id} type="primary" onClick={() => launchUserProblem(currentProblem?.id)}>Запустить решение</Button>
             <Button icon={<RightOutlined />} onClick={nextProblem} />
           </Row>
-        </Card>
+        </div>
       </Col>
 
-      <Col span={8}>
-        <Card title="Список задач">
-          <List
-            bordered
-            dataSource={problems}
-            renderItem={(problem, index) => {
-              const isCurrent = currentIndex === index;
-              const isChecked = problem.checked;
+      {!isCollapsed && (
+        <Col span={8}>
+          <Card title="Список задач">
+            <List
+              bordered
+              dataSource={problems}
+              renderItem={(problem, index) => {
+                const isCurrent = currentIndex === index;
+                const hasPoints = problem.points && problem.points > 0;
 
-              let backgroundColor = "#f5f5f5";
+                let backgroundColor = "#f5f5f5";
 
-              if (isCurrent) backgroundColor = "#faad14"; // Подсветка текущей проблемы
-              else if (isChecked) backgroundColor = "#52c41a"; // Подсветка проверенных проблем
+                if (isCurrent) backgroundColor = "#faad14"; // Подсветка текущей проблемы
+                else if (hasPoints) backgroundColor = "#52c41a"; // Подсветка проверенных проблем или проблем с баллами
 
-              return (
-                <List.Item
-                  key={index}
-                  style={{
-                    backgroundColor,
-                    color: isCurrent ? "white" : "black",
-                    transition: "background-color 0.3s ease",
-                  }}
-                >
-                  {problem.issueName}
-                </List.Item>
-              );
-            }}
-          />
-        </Card>
+                return (
+                  <List.Item
+                    key={index}
+                    style={{
+                      backgroundColor,
+                      color: isCurrent ? "white" : "black",
+                      transition: "background-color 0.3s ease",
+                    }}
+                  >
+                    {problem.problem}
+                  </List.Item>
+                );
+              }}
+            />
+          </Card>
+          <Card title="Список участников" style={{ marginTop: 20 }}>
+            <List
+              bordered
+              dataSource={participants}
+              renderItem={(participant) => {
+                const isCurrent = currentParticipant?.id === participant.id;
+                const allProblemsChecked = problems.every((problem) => problem.points && problem.points > 0);
 
-        <Card title="Список участников" style={{ marginTop: 20 }}>
-          <List
-            bordered
-            dataSource={participants}
-            renderItem={(user) => (
-              <List.Item
-                onClick={() => handleParticipantClick(user)} // Обработчик клика
-                style={{
-                  cursor: "pointer", // Указатель курсора для интерактивного элемента
-                  backgroundColor: currentParticipant?.id === user.id ? "#faad14" : "#f5f5f5",
-                  color: currentParticipant?.id === user.id ? "white" : "black",
-                  fontWeight: currentParticipant?.id === user.id ? "bold" : "normal",
-                }}
-              >
-                {user.username}
-              </List.Item>
-            )}
-          />
-        </Card>
-      </Col>
+                let backgroundColor = "#f5f5f5";
+
+                if (isCurrent) backgroundColor = "#faad14"; // Подсветка текущего участника
+                else if (allProblemsChecked) backgroundColor = "#52c41a"; // Подсветка участника, у которого все задачи проверены
+
+                return (
+                  <List.Item
+                    key={participant.id}
+                    style={{
+                      backgroundColor,
+                      color: isCurrent ? "white" : "black",
+                      transition: "background-color 0.3s ease",
+                    }}
+                    onClick={() => handleParticipantClick(participant)}
+                  >
+                    {participant.username}
+                  </List.Item>
+                );
+              }}
+            />
+          </Card>
+        </Col>
+      )}
+
+      <Button
+        type="primary"
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        style={{ position: "absolute", top: 20, right: 20 }}
+      >
+        {isCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+      </Button>
 
       {/* Модальное окно для оценки */}
       <Modal
@@ -248,15 +243,13 @@ export const OperatorCard = () => {
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        <Form layout="vertical">
-          <Form.Item label="Количество баллов">
-            <Input
-              type="number"
-              value={score}
-              onChange={(e) => setScore(Number(e.target.value))}
-            />
-          </Form.Item>
-        </Form>
+        <InputNumber
+          min={0}
+          max={100}
+          value={score}
+          onChange={(value) => {if (value) setScore(value)}}
+          style={{ width: "100%" }}
+        />
       </Modal>
     </Row>
   );

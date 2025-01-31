@@ -1,13 +1,13 @@
 import { Tabs, TabPaneProps, Spin, Modal, Button, Input, message } from "antd";
 import "./ProblemDetail.css"; // Basic CSS for additional styling if needed
 import { useEffect, useState } from "react";
-import { Problem, ProblemUser, apiClientClass } from "../../shared/api";
-import { ApiConfig } from "../../shared/api/http-client";
+import { ProblemUser } from "../../shared/api";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useParams } from "react-router-dom";
 import { useProblemsStore } from "../../store/useProblemsStore";
 import useApiClient from "../../hooks/useApiClient";
 import { ExportOutlined } from '@ant-design/icons';
+import { ProblemEndingCountdown } from "./ProblemEndingCountdown";
 
 export interface Tab extends Omit<TabPaneProps, 'tab'> {
   key: string;
@@ -21,27 +21,18 @@ export const ProblemDetail = () => {
   const [launchCommand, setLaunchCommand] = useState("");
   const token = useAuthStore((state) => state.token);
   const { vs_code, robot_panel_port, webots_stream_port } = useProblemsStore();
-  const params = useParams();
+  const { problemId, tournamentId } = useParams();
 
   const apiClient = useApiClient();
 
   useEffect(() => {
-    if (params.id) {
-      apiClient.UsersProblem.usersProblemRetrieve(Number(params.id)).then((res) => {
+    if (problemId) {
+      apiClient.UsersProblem.usersProblemRetrieve(Number(problemId)).then((res) => {
         console.log(res.data);
         setProblem(res.data);
       });
     }
-  }, [params.id]);
-
-  const handleFinishTournament = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleConfirmFinish = () => {
-    setIsModalVisible(false);
-    setIsCommandModalVisible(true);
-  };
+  }, [problemId]);
 
   const handleLaunch = () => {
     if (!launchCommand.trim()) {
@@ -111,7 +102,10 @@ export const ProblemDetail = () => {
   return (
     <div className="problem-detail-container">
       <div style={{ marginBottom: 16, display: "flex", justifyContent: "space-between" }}>
-        <h2>Детали задачи</h2>
+        <h2>Задача: {problem?.problem}</h2>
+        <div>
+      <ProblemEndingCountdown tournamentId={Number(tournamentId)} />
+    </div>
       </div>
       {problem ? (
         <Tabs style={{ height: "100vh" }} items={items} />

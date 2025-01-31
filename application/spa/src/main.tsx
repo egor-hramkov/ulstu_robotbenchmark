@@ -40,7 +40,7 @@ const router = createBrowserRouter([
         element: <ProblemsList />,
       },
       {
-        path: "/problems/:id",
+        path: "/problems/:problemId/:tournamentId",
         element: <ProblemDetail />,
       },
       {

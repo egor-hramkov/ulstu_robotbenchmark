@@ -1,3 +1,4 @@
+import { ProblemUser } from "@/shared/api";
 import { create } from "zustand";
 
 interface Problems {
@@ -7,12 +8,14 @@ interface Problems {
 }
 
 interface ProblemsStore {
-    problems: Problems[];
+    problems: ProblemUser[];
     currentIndex: number; // To track the current task index
+    currentProblem?: ProblemUser;
     nextProblem: () => void; // Move to the next problem
     lastProblem: () => void; // Move to the previous problem
+    setCurrentProblem: (problem: ProblemUser) => void;
     checkCurrentProblem: () => void; // Mark current problem as checked
-    setProblems: (problems: number[]) => void; // Initialize problems
+    setProblems: (problems: ProblemUser[]) => void; // Initialize problems
 }
 
 export const useOperatorStore = create<ProblemsStore>((set, get) => ({
@@ -20,33 +23,23 @@ export const useOperatorStore = create<ProblemsStore>((set, get) => ({
     currentIndex: 0,
 
     setProblems: (problems) => {
-        const sortedProblems: Problems[] = problems.map((item) => ({
-            issueName: `Задача #${item}`,
-            current: false,
-            checked: false,
-        }));
-        set({ problems: sortedProblems, currentIndex: 0 }); // Set problems and reset current index
+        set({ problems: problems, currentIndex: 0 }); // Set problems and reset current index
     },
 
     nextProblem: () => {
         set((state) => {
             const nextIndex = (state.currentIndex + 1) % state.problems.length; // Loop to first
-            const updatedProblems = state.problems.map((problem, index) => ({
-                ...problem,
-                current: index === nextIndex,
-            }));
-            return { problems: updatedProblems, currentIndex: nextIndex };
+            const nextProblem = state.problems[nextIndex];
+            console.log(nextProblem);
+            return { currentProblem: nextProblem, currentIndex: nextIndex };
         });
     },
 
     lastProblem: () => {
         set((state) => {
             const prevIndex = (state.currentIndex - 1 + state.problems.length) % state.problems.length; // Loop to last
-            const updatedProblems = state.problems.map((problem, index) => ({
-                ...problem,
-                current: index === prevIndex,
-            }));
-            return { problems: updatedProblems, currentIndex: prevIndex };
+            const prevProblem = state.problems[prevIndex];
+            return { currentProblem: prevProblem, currentIndex: prevIndex };
         });
     },
 
@@ -54,9 +47,13 @@ export const useOperatorStore = create<ProblemsStore>((set, get) => ({
         set((state) => {
             const updatedProblems = state.problems.map((problem, index) => ({
                 ...problem,
-                checked: index === state.currentIndex ? !problem.checked : problem.checked, // Toggle checked for current
+                checked: index === state.currentIndex ? !problem.status : problem.checked, // Toggle checked for current
             }));
             return { problems: updatedProblems };
         });
     },
+
+    setCurrentProblem: (problem: ProblemUser) => {
+        set({currentProblem: problem});
+    }
 }));

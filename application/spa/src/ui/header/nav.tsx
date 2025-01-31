@@ -1,40 +1,43 @@
-import { TrophyOutlined, UserOutlined } from "@ant-design/icons";
+import { TrophyOutlined, UserOutlined, ControlOutlined, OrderedListOutlined, BarChartOutlined } from "@ant-design/icons";
 import { MenuProps } from "antd";
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-import {
-  ControlOutlined, // Иконка для модерации
-  OrderedListOutlined, // Иконка для задач
-  BarChartOutlined, // Иконка для турнирной таблицы
-} from '@ant-design/icons';
-
-const adminPoints: MenuItem[] = [{
-  key: '/users',
-  label: 'Пользователи',
-  icon: <UserOutlined />,
-}];
-
-export const menuPoints: MenuItem[] = [
+const adminPoints: MenuItem[] = [
   {
-    key: "/leaderboard",
-    label: "Турнирная таблица",
-    icon: <BarChartOutlined />, // Иконка для турнирной таблицы
+    key: '/users',
+    label: 'Пользователи',
+    icon: <UserOutlined />,
   },
   {
     key: "/problems",
     label: "Задачи",
-    icon: <OrderedListOutlined />, // Иконка для задач
-  },
-  {
-    key: "/tournaments",
-    label: "Турниры",
-    icon: <TrophyOutlined />, // Иконка для турниров
+    icon: <OrderedListOutlined />,
   },
   {
     key: "/operator",
     label: 'Модерация',
-    icon: <ControlOutlined />, // Иконка для модерации
+    icon: <ControlOutlined />,
   },
-  ...adminPoints,
 ];
+
+export const getMenuPoints = (isAdmin: boolean | undefined): MenuItem[] => {
+  const menuPoints: MenuItem[] = [
+    {
+      key: "/leaderboard",
+      label: "Турнирная таблица",
+      icon: <BarChartOutlined />,
+    },
+    {
+      key: "/tournaments",
+      label: "Турниры",
+      icon: <TrophyOutlined />,
+    },
+  ];
+
+  if (isAdmin) {
+    menuPoints.push(...adminPoints);
+  }
+
+  return menuPoints;
+};

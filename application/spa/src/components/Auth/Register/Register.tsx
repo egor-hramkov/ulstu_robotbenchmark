@@ -175,6 +175,9 @@ export const Register = () => {
             <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
               Зарегестрироваться
             </Button>
+            <Button type="default" onClick={() => navigate(-1)} style={{ width: "100%", marginTop: 10 }}>
+              Назад
+            </Button>
           </Form.Item>
         </Form>
       </Card>

@@ -1,4 +1,5 @@
 import { Block } from "./Block";
+import { LaunchUserProblem } from "./LaunchUserProblem";
 import { ILeaderboard } from "./Leaderboard";
 import { Problems } from "./Problems";
 import { Token } from "./Token";
@@ -19,6 +20,7 @@ export class apiClientClass {
     this.UsersTournament = new UsersTournament(config);
     this.Leaderboard = new ILeaderboard(config);
     this.Block = new Block(config);
+    this.LaunchUserProblem = new LaunchUserProblem(config);
   }
 
   /** Настройки системы. */
@@ -42,6 +44,8 @@ export class apiClientClass {
   public Leaderboard: ILeaderboard;
 
   public Block: Block;
+
+  public LaunchUserProblem: LaunchUserProblem;
 }
 
 export * from "./data-contracts";

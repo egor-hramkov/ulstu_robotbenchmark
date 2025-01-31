@@ -5,6 +5,7 @@ import { Card, Col, FloatButton, Row } from "antd";
 import CreateTournamentModal from "./TournamentCreateModal";
 import { PlusOutlined } from "@ant-design/icons";
 import useApiClient from "../../hooks/useApiClient";
+import { useAuthStore } from "../../store/useAuthStore";
 
 export const TournamentList = () => {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
@@ -12,6 +13,8 @@ export const TournamentList = () => {
 
   const apiClient = useApiClient();
   const navigate = useNavigate();
+
+  const { userInfo } = useAuthStore();
 
   const fetchTournaments = useCallback(() => {
     apiClient.Tournament.tournamentList()
@@ -62,14 +65,14 @@ export const TournamentList = () => {
       ) : (
         <p>Нет открытых турниров</p>
       )}
-      <FloatButton
+      {userInfo?.is_superuser && (      <FloatButton
         shape="square"
         tooltip={<>Создать турнир</>}
         type="primary"
         style={{ right: 42 }}
         onClick={() => setVisible(true)}
         icon={<PlusOutlined />}
-      />
+      />)}
     </div>
   );
 };
