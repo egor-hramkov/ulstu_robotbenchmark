@@ -12,7 +12,7 @@
 import { PatchedProblem, Problem } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
-export class Problem<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class IProblem<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
     /**
      * No description
      *

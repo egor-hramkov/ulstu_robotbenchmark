@@ -1,6 +1,6 @@
 import { Button, Card, Form, Input, Layout } from "antd";
 import { useCallback } from "react";
-import { apiClientClass } from "../../../shared/api";
+import { apiClientClass, User } from "../../../shared/api";
 import { ApiConfig } from "../../../shared/api/http-client";
 import { useNavigate } from "react-router-dom";
 import InputMask from "react-input-mask";
@@ -29,8 +29,8 @@ export const Register = () => {
 
   const navigate = useNavigate();
 
-  const userCreate = useCallback((data: Register) => {
-    data.phone = data.phone.slice(0, -1);
+  const userCreate = useCallback((data: User) => {
+    data.phone = data.phone && data.phone.slice(0, -1);
     apiClient.Users.usersCreate({ ...data, is_superuser: false }).then(() => navigate("/login"));
   }, []);
 

@@ -47,7 +47,6 @@ export const useOperatorStore = create<ProblemsStore>((set, get) => ({
         set((state) => {
             const updatedProblems = state.problems.map((problem, index) => ({
                 ...problem,
-                checked: index === state.currentIndex ? !problem.status : problem.checked, // Toggle checked for current
             }));
             return { problems: updatedProblems };
         });
