@@ -43,6 +43,9 @@ def make_sync():
     if not os.path.exists(host_media_path):
         os.makedirs(host_media_path)
 
+    if not os.path.exists(all_projects):
+        os.makedirs(all_projects)
+
     for dir_name in os.listdir(all_projects):
         dir_path = os.path.join(all_projects, dir_name)
 

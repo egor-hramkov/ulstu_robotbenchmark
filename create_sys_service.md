@@ -16,8 +16,7 @@ After=network.target
 ExecStart=/usr/bin/python3 /путь/к/скрипту/consumer_service.py
 WorkingDirectory=/путь/к/скрипту
 Restart=always
-User=имя_пользователя
-Group=группа_пользователя
+User=ulstu
 
 [Install]
 WantedBy=multi-user.target
