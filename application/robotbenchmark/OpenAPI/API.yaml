@@ -654,6 +654,36 @@ paths:
               schema:
                 $ref: '#/components/schemas/Tournament'
           description: ''
+  /api/upload-wbt/:
+    post:
+      operationId: upload_wbt_create
+      description: Замена wbt файла у определённого турнира
+      tags:
+      - upload-wbt
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WBTFileUploadRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WBTFileUploadRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WBTFileUploadRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+                description: Unspecified response body
+          description: ''
   /api/users/:
     get:
       operationId: users_list
@@ -1632,6 +1662,19 @@ components:
       - id
       - password
       - username
+    WBTFileUploadRequest:
+      type: object
+      properties:
+        tournament_id:
+          type: integer
+          description: Идентификатор турнира, к которому относится файл.
+        file:
+          type: string
+          format: binary
+          description: Файл с расширением .wbt, который нужно загрузить.
+      required:
+      - file
+      - tournament_id
     WorldPathEnum:
       enum:
       - webots_ros2_suv

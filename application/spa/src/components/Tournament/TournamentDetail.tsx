@@ -129,7 +129,7 @@ export const TournamentDetail = () => {
                     align="center"
                     style={{ width: "100%" }}
                   >
-                    {findIssue(item) ? (
+                    {/* {findIssue(item) ? (
                       <>
                         Задача #{item}
                         <Button
@@ -142,19 +142,19 @@ export const TournamentDetail = () => {
                           Продолжить выполнение задачи
                         </Button>
                       </>
-                    ) : (
+                    ) : ( */}
                       <>
                         Задача #{item}
                         <Button
                           type="primary"
                           disabled={tournament.is_blocked}
-                          onClick={() => startUserProblem(userId, item)}
+                          onClick={() => startUserProblem(userId!, item)}
                           icon={<PlayCircleFilled />}
                         >
                           Запустить задачу
                         </Button>
                       </>
-                    )}
+                  
                   </Flex>
                 </List.Item>
               )}

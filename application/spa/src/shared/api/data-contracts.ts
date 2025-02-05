@@ -12,6 +12,9 @@
 export interface CustomTokenObtainPair {
     username: string;
     password: string;
+    access?: string;
+    refresh?: string;
+    user_id?: number;
 }
 
 /** Сериализатор для лидерборда */
@@ -349,6 +352,16 @@ export interface User {
      * @maxLength 50
      */
     team?: string | null;
+}
+
+export interface WBTFileUploadRequest {
+    /** Идентификатор турнира, к которому относится файл. */
+    tournament_id: number;
+    /**
+     * Файл с расширением .wbt, который нужно загрузить.
+     * @format binary
+     */
+    file: File;
 }
 
 /**
