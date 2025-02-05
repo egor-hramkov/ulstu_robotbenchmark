@@ -122,6 +122,7 @@ export const Register = () => {
               }, 
             ]}
           >
+            {/* @ts-expect-error Server Component */}
             <InputMask mask="+7 (999) 999 99-99" maskChar="_">
               {(inputProps: any) => <Input {...inputProps} />}
             </InputMask>

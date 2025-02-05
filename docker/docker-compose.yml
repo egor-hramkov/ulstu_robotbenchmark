@@ -20,8 +20,7 @@ services:
 
   spa:
     build:
-      context: ../
-      dockerfile: ./docker/spa/Dockerfile
+      context: ../application/spa
     ports:
       - "80:80"
 

@@ -5,13 +5,13 @@ FROM node:20-alpine as build
 WORKDIR /usr/src/app
 
 # Step 3: Copy package.json and yarn.lock to the working directory
-COPY ../../application/spa/package.json .
-COPY ../../application/spa/yarn.lock .
+COPY package.json .
+COPY yarn.lock .
 
 # Step 5: Install dependencies
 RUN yarn install
 
-COPY ../../application/spa/. .
+COPY . .
 
 # Step 6: Build the React application
 RUN yarn build
@@ -26,4 +26,3 @@ COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 
 WORKDIR /usr/share/nginx/html
 
-COPY --from=build /app/dist .
