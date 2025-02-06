@@ -16,7 +16,7 @@ DISPLAY=:1
 
 #
 
-all: copy-working-folders run copy-working-files start-code-server
+all: run copy-working-files disable-ros2-dds start-code-server
 colors:
 	$(eval NC=\033[1;0m)
 	$(eval RED=\033[1;31m)
@@ -70,6 +70,14 @@ copy-working-files:
 	docker exec -i ${IMAGE}-${FLAVOR} ln -s /ulstu/repositories/webots_ros2_suv /ulstu/ros2_ws/src/webots_ros2_suv && \
 	docker exec -i ${IMAGE}-${FLAVOR} ln -s /ulstu/repositories/robot_interfaces /ulstu/ros2_ws/src/robot_interfaces ; \
 
+disable-ros2-dds:
+	@RANDOM_ID=$$(shuf -i 1-255 -n 1); \
+	BASHRC=/ulstu/.bashrc; \
+	if docker exec ${IMAGE}-${FLAVOR} sh -c "grep -q 'export ROS_DOMAIN_ID=' $$BASHRC"; then \
+		docker exec ${IMAGE}-${FLAVOR} sh -c "sed -i 's/export ROS_DOMAIN_ID=.*/export ROS_DOMAIN_ID=$$RANDOM_ID/' $$BASHRC"; \
+	else \
+		docker exec ${IMAGE}-${FLAVOR} sh -c "echo 'export ROS_DOMAIN_ID=$$RANDOM_ID' >> $$BASHRC"; \
+	fi
 
 copy-working-folders:
 	if [ -d ${DIR_FOR_COPY_PROJECT}/projects/${FLAVOR}/]; then \
