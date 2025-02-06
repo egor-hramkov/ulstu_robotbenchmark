@@ -7,7 +7,7 @@ const useApiClient = () => {
   }));
 
   const apiClient = new apiClientClass({
-    baseUrl: "http://localhost:8000",
+    baseUrl: "http://virtual.robocross.ru:8000/api",
     baseApiParams: {
       headers: {
         Authorization: `Bearer ${token}`,
