@@ -16,7 +16,7 @@ DISPLAY=:1
 
 #
 
-all: run copy-working-files disable-ros2-dds start-code-server
+all: copy-working-folders run copy-working-files disable-ros2-dds start-code-server
 colors:
 	$(eval NC=\033[1;0m)
 	$(eval RED=\033[1;31m)
