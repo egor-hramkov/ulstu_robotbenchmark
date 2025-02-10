@@ -15,7 +15,7 @@ export const Login = () => {
   const { login } = useAuthStore();
 
   const configMcc: ApiConfig = {
-    baseUrl: "http://localhost:8000",
+    baseUrl: "https://virtual.robocross.ru",
   };
 
   const apiClient = new apiClientClass(configMcc);

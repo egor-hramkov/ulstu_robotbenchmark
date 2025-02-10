@@ -21,7 +21,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     const userId = sessionStorage.getItem("userId");
 
     const configMcc: ApiConfig = {
-      baseUrl: "http://localhost:8000",
+      baseUrl: "https://virtual.robocross.ru",
       baseApiParams: {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -57,7 +57,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ token: accessToken, userId, isAuthenticated: true, isLoading: true });
 
     const configMcc: ApiConfig = {
-      baseUrl: "http://localhost:8000",
+      baseUrl: "https://virtual.robocross.ru",
       baseApiParams: {
         headers: {
           Authorization: `Bearer ${accessToken}`,

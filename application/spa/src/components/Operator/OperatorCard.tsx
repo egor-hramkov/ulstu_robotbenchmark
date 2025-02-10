@@ -102,7 +102,7 @@ export const OperatorCard = () => {
           label: "VS Code",
           children: (
             <iframe
-              src={`http://localhost:${currentProblem.vs_port}`}
+              src={`https://virtual.robocross.ru:${currentProblem.vs_port}`}
               style={{ height: "100%", width: "100%", border: "none" }}
             />
           ),
@@ -113,7 +113,7 @@ export const OperatorCard = () => {
           label: "Webots",
           children: (
             <iframe
-              src={`http://localhost:${currentProblem.webots_stream_port}/index.html`}
+              src={`https://virtual.robocross.ru:${currentProblem.webots_stream_port}/index.html`}
               style={{ height: "100%", width: "100%", border: "none" }}
             />
           ),
@@ -124,7 +124,7 @@ export const OperatorCard = () => {
           label: "Редактор карты",
           children: (
             <iframe
-              src={`http://localhost:${currentProblem.robot_panel_port}`}
+              src={`https://virtual.robocross.ru:${currentProblem.robot_panel_port}`}
               style={{ height: "100%", width: "100%", border: "none" }}
             />
           ),

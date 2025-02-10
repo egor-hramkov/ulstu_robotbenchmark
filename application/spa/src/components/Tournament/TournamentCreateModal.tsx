@@ -14,7 +14,7 @@ const CreateTournamentModal = ({ visible, onCreate, onCancel }) => {
   const token = useAuthStore((state) => state.token);
 
   const configMcc: ApiConfig = {
-    baseUrl: "http://localhost:8000",
+    baseUrl: "https://virtual.robocross.ru",
     baseApiParams: {
       headers: {
         Authorization: `Bearer ${token}`,

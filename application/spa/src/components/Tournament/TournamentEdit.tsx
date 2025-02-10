@@ -14,7 +14,7 @@ export const TournamentEdit = ({ visible, onEdit, onCancel, data }) => {
   const token = useAuthStore((state) => state.token);
 
   const configMcc: ApiConfig = {
-    baseUrl: "http://localhost:8000",
+    baseUrl: "https://virtual.robocross.ru",
     baseApiParams: {
       headers: {
         Authorization: `Bearer ${token}`,
