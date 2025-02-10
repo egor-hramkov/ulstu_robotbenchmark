@@ -22,7 +22,7 @@ interface Register {
 
 export const Register = () => {
   const configMcc: ApiConfig = {
-    baseUrl: "https://virtual.robocross.ru",
+    baseUrl: "http://virtual.robocross.ru:8000",
   };
 
   const apiClient = new apiClientClass(configMcc);

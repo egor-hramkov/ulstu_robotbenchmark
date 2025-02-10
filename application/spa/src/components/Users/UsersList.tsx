@@ -17,7 +17,7 @@ export const UsersList = () => {
   const { token } = useAuthStore();
 
   const configMcc: ApiConfig = {
-    baseUrl: "https://virtual.robocross.ru",
+    baseUrl: "http://virtual.robocross.ru:8000",
     baseApiParams: {
       headers: {
         Authorization: `Bearer ${token}`,
