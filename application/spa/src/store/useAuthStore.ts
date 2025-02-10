@@ -21,7 +21,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     const userId = sessionStorage.getItem("userId");
 
     const configMcc: ApiConfig = {
-      baseUrl: import.meta.env.VITE_BASE_URL,
+      baseUrl: import.meta.env.VITE_BASE_URL ?? 'https://virutal.robocross.ru:444',
       baseApiParams: {
         headers: {
           Authorization: `Bearer ${accessToken}`,
