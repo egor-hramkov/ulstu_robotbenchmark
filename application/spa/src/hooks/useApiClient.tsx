@@ -7,7 +7,7 @@ const useApiClient = () => {
   }));
 
   const apiClient = new apiClientClass({
-    baseUrl: import.meta.env.VITE_BASE_URL,
+    baseUrl: import.meta.env.VITE_BASE_URL ?? "https://virtual.robocross.ru",
     baseApiParams: {
       headers: {
         Authorization: `Bearer ${token}`,
