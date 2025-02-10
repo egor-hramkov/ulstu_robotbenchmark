@@ -59,8 +59,8 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
-CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8047', 'http://213.189.205.215:8047']
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'http://127.0.0.1:8047', '213.189.205.215']
+CSRF_TRUSTED_ORIGINS = ['http://*', 'https://*']
+ALLOWED_HOSTS = ['*']
 ROOT_URLCONF = 'application.urls'
 
 TEMPLATES = [
