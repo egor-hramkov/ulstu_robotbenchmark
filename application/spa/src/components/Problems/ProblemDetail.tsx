@@ -56,12 +56,12 @@ export const ProblemDetail = () => {
       key: "1",
       label: (
         <span>
-          VS Code <Button onClick={() => openInNewWindow(`http://virtual.robocross.ru:8000:${problem?.vs_port}`)} size="small" icon={<ExportOutlined />} />
+          VS Code <Button onClick={() => openInNewWindow(`https://virutal.robocross.ru:${problem?.vs_port}`)} size="small" icon={<ExportOutlined />} />
         </span>
       ),
       children: (
         <iframe
-          src={`http://virtual.robocross.ru:8000:${problem?.vs_port}`}
+          src={`https://virutal.robocross.ru:${problem?.vs_port}`}
           style={{ height: "100%", width: "100%" }}
         />
       ),
@@ -71,12 +71,12 @@ export const ProblemDetail = () => {
       key: "2",
       label: (
         <span>
-          Webots <Button onClick={() => openInNewWindow(`http://virtual.robocross.ru:8000:${problem?.webots_stream_port}/index.html`)} size="small" icon={<ExportOutlined />} />
+          Webots <Button onClick={() => openInNewWindow(`https://virutal.robocross.ru:${problem?.webots_stream_port}/index.html`)} size="small" icon={<ExportOutlined />} />
         </span>
       ),
       children: (
         <iframe
-          src={`http://virtual.robocross.ru:8000:${problem?.webots_stream_port}/index.html`}
+          src={`https://virtual.robocross.ru:${problem?.webots_stream_port}/index.html`}
           style={{ height: "100%", width: "100%" }}
         />
       ),
@@ -91,7 +91,7 @@ export const ProblemDetail = () => {
       ),
       children: (
         <iframe
-          src={`http://virtual.robocross.ru:8000:${problem?.robot_panel_port}`}
+          src={`https://virtual.robocross.ru:${problem?.robot_panel_port}`}
           style={{ height: "100%", width: "100%" }}
         />
       ),
