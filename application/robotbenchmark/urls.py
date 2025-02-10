@@ -18,6 +18,7 @@ from .views.tournament_user_view import TournamentUserViewSet
 from .views.problem_user_view import ProblemUserViewSet, UserProblemLauncher
 from .views.problem_view import ProblemViewSet
 from .views.wbt_files_view import UploadWBTFileView
+from .views.user_register_view import UserRegisterViewSet
 from .views.user_view import UserViewSet
 
 router = routers.DefaultRouter()
@@ -30,6 +31,8 @@ router.register('tournament', TournamentViewSet)
 
 urlpatterns = [
     path('', include(router.urls)), 
+
+    path('register/', UserRegisterViewSet.as_view(), name='register'), 
 
     path('leaderboard/', LeaderboardView.as_view()), 
     path('leaderboard/tournament/<int:tournament_id>/', LeaderboardByTournamentView.as_view()), 
