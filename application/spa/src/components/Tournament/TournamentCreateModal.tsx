@@ -1,9 +1,7 @@
 import { Modal, Form, Input, DatePicker, Select } from "antd";
 import { useCallback, useEffect, useState } from "react";
-import { apiClientClass } from "../../shared/api";
-import { ApiConfig } from "../../shared/api/http-client";
-import { useAuthStore } from "../../store/useAuthStore";
 import { DefaultOptionType } from "antd/es/select";
+import useApiClient from "../../hooks/useApiClient";
 
 const CreateTournamentModal = ({ visible, onCreate, onCancel }) => {
   const [options, setOptions] = useState<DefaultOptionType[] | undefined>([]);
@@ -11,18 +9,8 @@ const CreateTournamentModal = ({ visible, onCreate, onCancel }) => {
     DefaultOptionType[] | undefined
   >([]);
   const [form] = Form.useForm();
-  const token = useAuthStore((state) => state.token);
 
-  const configMcc: ApiConfig = {
-    baseUrl: "http://virtual.robocross.ru:8000",
-    baseApiParams: {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  };
-
-  const apiClient = new apiClientClass(configMcc);
+  const apiClient = useApiClient();
 
   const fetchUsers = useCallback(
     (username?: string) => {

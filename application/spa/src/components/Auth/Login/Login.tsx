@@ -1,10 +1,9 @@
 import { Button, Card, Form, Input, Layout } from "antd";
 import { useCallback } from "react";
 import { useAuthStore } from "../../../store/useAuthStore";
-import { apiClientClass } from "../../../shared/api";
-import { ApiConfig } from "../../../shared/api/http-client";
 import "./Login.scss";
 import { useNavigate } from "react-router-dom";
+import useApiClient from "../../../hooks/useApiClient";
 
 interface Login {
   username: string;
@@ -14,11 +13,7 @@ interface Login {
 export const Login = () => {
   const { login } = useAuthStore();
 
-  const configMcc: ApiConfig = {
-    baseUrl: "http://virtual.robocross.ru:8000",
-  };
-
-  const apiClient = new apiClientClass(configMcc);
+  const apiClient = useApiClient();
 
   const navigate = useNavigate();
 
