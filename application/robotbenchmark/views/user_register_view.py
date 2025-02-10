@@ -4,11 +4,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from ..serializers.user_register_serializer import UserRegisterSerializer
+from ..swagger_schemas.user_register_view_schema import user_register_view_schema
 
 
 UserModel = get_user_model()
 
 
+@user_register_view_schema
 class UserRegisterViewSet(APIView):
     authentication_classes = []
     permission_classes = [AllowAny]
