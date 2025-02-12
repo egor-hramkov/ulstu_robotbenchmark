@@ -44,6 +44,8 @@ export const TournamentList = () => {
       if (userTournamentId) {
         apiClient.UsersTournament.usersTournamentRetrieve(userTournamentId).then(() => navigate(`/tournaments/${routingTournamentId}`))
       }
+    } else if (userInfo?.is_superuser) {
+      navigate(`/tournaments/${routingTournamentId}`)
     }
   }
 
