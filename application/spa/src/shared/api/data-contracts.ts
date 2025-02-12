@@ -17,6 +17,47 @@ export interface CustomTokenObtainPair {
     user_id?: number;
 }
 
+export interface RegisterRequest {
+    id: number;
+    groups: string;
+    /** @maxLength 128 */
+    password: string;
+    /**
+     * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+     * @maxLength 150
+     * @pattern ^[\w.@+-]+$
+     */
+    username: string;
+    /** @maxLength 150 */
+    first_name?: string;
+    /** @maxLength 150 */
+    last_name?: string;
+    /**
+     * Email address
+     * @format email
+     * @maxLength 254
+     */
+    email?: string;
+    /**
+     * Номер телефона
+     * @maxLength 18
+     */
+    phone?: string | null;
+    /** @maxLength 50 */
+    telegram?: string | null;
+    /**
+     * Название организации
+     * @maxLength 150
+     */
+    organization?: string | null;
+    /**
+     * Название команды
+     * @maxLength 50
+     */
+    team?: string | null;
+}
+
+
 /** Сериализатор для лидерборда */
 export interface Leaderboard {
     first_name?: string;
