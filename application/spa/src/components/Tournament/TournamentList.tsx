@@ -38,6 +38,15 @@ export const TournamentList = () => {
     });
   };
 
+  const checkUserTournament = async (userId: number | undefined, tournamentId: number, routingTournamentId: number) => {
+    if (userId) {
+      const userTournamentId = await apiClient.UsersTournament.usersTournamentList().then(({data}) => data.find((value) => value.tournament === tournamentId && value.user === userId)?.id);
+      if (userTournamentId) {
+        apiClient.UsersTournament.usersTournamentRetrieve(userTournamentId).then(() => navigate(`/tournaments/${routingTournamentId}`))
+      }
+    }
+  }
+
   return (
     <div>
       <h1>Открытые турниры</h1>
@@ -54,7 +63,7 @@ export const TournamentList = () => {
                 title={tournament.name}
                 bordered={true}
                 hoverable
-                onClick={() => navigate(`/tournaments/${tournament.id}`)}
+                onClick={() => checkUserTournament(userInfo?.id, tournament.id, tournament.id)}
               >
                 <p>Описание: {tournament.description}</p>
                 <p>Нажмите для просмотра деталей</p>

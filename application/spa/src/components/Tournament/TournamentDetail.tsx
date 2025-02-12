@@ -73,7 +73,7 @@ export const TournamentDetail = () => {
       );
       apiClient.UsersProblem.usersProblemList({
         tournament_id: Number(params.id),
-      }).then(({ data }) => {setIssuesInWork(data);console.log(data)});
+      }).then(({ data }) => setIssuesInWork(data));
     }
   }, [params.id]);
 
@@ -129,7 +129,7 @@ export const TournamentDetail = () => {
                     align="center"
                     style={{ width: "100%" }}
                   >
-                    {/* {findIssue(item) ? (
+                    {findIssue(item) ? (
                       <>
                         Задача #{item}
                         <Button
@@ -142,7 +142,7 @@ export const TournamentDetail = () => {
                           Продолжить выполнение задачи
                         </Button>
                       </>
-                    ) : ( */}
+                    ) : (
                       <>
                         Задача #{item}
                         <Button
@@ -154,7 +154,7 @@ export const TournamentDetail = () => {
                           Запустить задачу
                         </Button>
                       </>
-                  
+                    )}
                   </Flex>
                 </List.Item>
               )}
