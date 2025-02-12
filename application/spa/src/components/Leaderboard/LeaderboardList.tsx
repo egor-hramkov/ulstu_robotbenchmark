@@ -20,7 +20,7 @@ export const LeaderboardList = () => {
       .catch((error) => {
         console.error("Error fetching leaderboard data:", error);
       });
-  }, [apiClient]);
+  }, []);
 
   // Определяем колонки для таблицы
   const columns = [
