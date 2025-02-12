@@ -57,7 +57,7 @@ export const ProblemDetail = () => {
       key: "1",
       label: (
         <span>
-          VS Code <Button onClick={() => openInNewWindow(`https://virutal.robocross.ru:${problem?.vs_port}`)} size="small" icon={<ExportOutlined />} />
+          VS Code <Button onClick={() => openInNewWindow(`http://virtual.robocross.ru:${problem?.vs_port}`)} size="small" icon={<ExportOutlined />} />
         </span>
       ),
       children: (
@@ -72,7 +72,7 @@ export const ProblemDetail = () => {
       key: "2",
       label: (
         <span>
-          Webots <Button onClick={() => openInNewWindow(`https://virutal.robocross.ru:${problem?.webots_stream_port}/index.html`)} size="small" icon={<ExportOutlined />} />
+          Webots <Button onClick={() => openInNewWindow(`http://virtual.robocross.ru:${problem?.webots_stream_port}/index.html`)} size="small" icon={<ExportOutlined />} />
         </span>
       ),
       children: (
