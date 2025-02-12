@@ -10,7 +10,7 @@ export const ProblemEndingCountdown = ({tournamentId}: Props) => {
     const [timerColor, setTimerColor] = useState('green');
 
     useEffect(() => {
-        const socket = new WebSocket(`ws://virtual.robocross.ru:444/ws/tournament-check-end/${tournamentId}/`);
+        const socket = new WebSocket(`wss://virtual.robocross.ru:444/ws/tournament-check-end/${tournamentId}/`);
     
         socket.onmessage = (event) => {
           const data = JSON.parse(event.data);
