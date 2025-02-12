@@ -13,8 +13,6 @@ const Text = Typography;
 
 export const TournamentDetail = () => {
   const params = useParams();
-  const { userId } = useAuthStore();
-  const setLevelData = useProblemsStore((state) => state.setData);
   const [tournament, setTournament] = useState<Tournament>();
   const [issuesInWork, setIssuesInWork] = useState<ProblemUser[]>();
   const [showTournamentEdit, setShowTournamentEdit] = useState<
@@ -27,29 +25,6 @@ export const TournamentDetail = () => {
   const navigate = useNavigate();
   const apiClient = useApiClient();
 
-  const startUserProblem = useCallback((userId: number, problemId: number) => {
-    apiClient.UsersProblem.usersProblemCreate({
-      user: userId,
-      problem: problemId,
-      tournament: Number(params.id!),
-      points: 10,
-      id: 0,
-      robot_panel_port: 0,
-      vs_port: 0,
-      webots_stream_port: 0,
-      launch_command: '24124',
-      status: StatusEnum.CREATED,
-    }).then(({ data }) => {
-      setLevelData(
-        data.vs_port,
-        data.webots_stream_port,
-        data.problem,
-        data.robot_panel_port
-      );
-      navigate(`/problems/${data.id}/${params.id}`);
-    });
-  }, []);
-
   const continueUserProblem = useCallback((problem: number) => {
     apiClient.UsersProblem.usersProblemRetrieve(problem).then(({ data }) => {
       navigate(`/problems/${data.problem}/${params.id}`);
@@ -59,9 +34,8 @@ export const TournamentDetail = () => {
   const findIssue = (id: number) => {
     if (issuesInWork) {
       const issue = issuesInWork.find((issue) => issue.problem === id);
-      return issue ? issue.id : null;
-    }
-    return null;
+      return issue?.status
+    } else return null
   };
 
   useEffect(() => {
@@ -129,7 +103,7 @@ export const TournamentDetail = () => {
                     align="center"
                     style={{ width: "100%" }}
                   >
-                    {findIssue(item) ? (
+                    {findIssue(item) !== null && findIssue(item) === StatusEnum.IN_PROGRESS  ? (
                       <>
                         Задача #{item}
                         <Button
@@ -142,19 +116,30 @@ export const TournamentDetail = () => {
                           Продолжить выполнение задачи
                         </Button>
                       </>
-                    ) : (
+                    ) : findIssue(item) === StatusEnum.CREATED ? (
                       <>
                         Задача #{item}
                         <Button
                           type="primary"
                           disabled={tournament.is_blocked}
-                          onClick={() => startUserProblem(userId!, item)}
+                          onClick={() => continueUserProblem(item)}
                           icon={<PlayCircleFilled />}
                         >
                           Запустить задачу
                         </Button>
                       </>
-                    )}
+                    ) : findIssue(item) === StatusEnum.CHECKED || StatusEnum.COMPLETED || StatusEnum.QUARANTINE || StatusEnum.REWORK ? 
+                      <>
+                        Задача #{item}
+                        <Button
+                          type="default"
+                          disabled={true}
+                          icon={<BugOutlined />}
+                        >
+                          Задача на проверке, либо выполнена
+                        </Button>
+                      </> : <></>
+                  }
                   </Flex>
                 </List.Item>
               )}
