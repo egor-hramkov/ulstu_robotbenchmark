@@ -62,7 +62,7 @@ export const ProblemDetail = () => {
       ),
       children: (
         <iframe
-          src={`https://virutal.robocross.ru:${problem?.vs_port}`}
+          src={`http://virtual.robocross.ru:${problem?.vs_port}`}
           style={{ height: "100%", width: "100%" }}
         />
       ),
@@ -77,7 +77,7 @@ export const ProblemDetail = () => {
       ),
       children: (
         <iframe
-          src={`https://virtual.robocross.ru:${problem?.webots_stream_port}/index.html`}
+          src={`http://virtual.robocross.ru:${problem?.webots_stream_port}/index.html`}
           style={{ height: "100%", width: "100%" }}
         />
       ),
@@ -92,7 +92,7 @@ export const ProblemDetail = () => {
       ),
       children: (
         <iframe
-          src={`https://virtual.robocross.ru:${problem?.robot_panel_port}`}
+          src={`http://virtual.robocross.ru:${problem?.robot_panel_port}`}
           style={{ height: "100%", width: "100%" }}
         />
       ),
