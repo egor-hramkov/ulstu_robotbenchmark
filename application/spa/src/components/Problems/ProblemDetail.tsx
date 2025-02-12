@@ -24,12 +24,13 @@ export const ProblemDetail = () => {
   const { problemId, tournamentId } = useParams();
 
   const apiClient = useApiClient();
+  const { userInfo } = useAuthStore();
 
   useEffect(() => {
     if (problemId) {
-      apiClient.UsersProblem.usersProblemRetrieve(Number(problemId)).then((res) => {
+      apiClient.UsersProblem.usersProblemList({problem_id: Number(problemId), tournament_id: Number(tournamentId), user_id: userInfo?.id}).then((res) => {
         console.log(res.data);
-        setProblem(res.data);
+        setProblem(res.data[0]);
       });
     }
   }, [problemId]);
