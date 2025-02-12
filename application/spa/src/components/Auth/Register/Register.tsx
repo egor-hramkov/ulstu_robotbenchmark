@@ -32,8 +32,8 @@ export const Register = () => {
   }, []);
 
   return (
-    <Layout style={{ height: "100vh", overflow: "auto" }} className="layout">
-      <Card className="register-card">
+    <Layout style={{ height: "100%"}}>
+      <Card className="register-card" style={{ width: "100%", maxWidth: "400px", overflow: "auto" }}>
         <Form 
           onFinish={userCreate} 
           layout="vertical" 
