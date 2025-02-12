@@ -34,7 +34,7 @@ export const TournamentDetail = () => {
   const findIssue = (id: number) => {
     if (issuesInWork) {
       const issue = issuesInWork.find((issue) => issue.problem === id);
-      return issue?.status
+      return { issueStatus: issue?.status, userProblemId: issue?.id };
     } else return null
   };
 
@@ -103,32 +103,32 @@ export const TournamentDetail = () => {
                     align="center"
                     style={{ width: "100%" }}
                   >
-                    {findIssue(item) !== null && findIssue(item) === StatusEnum.IN_PROGRESS  ? (
+                    {findIssue(item) !== null && findIssue(item)?.issueStatus === StatusEnum.IN_PROGRESS  ? (
                       <>
                         Задача #{item}
                         <Button
                           type="default"
                           disabled={tournament.is_blocked}
-                          onClick={() => continueUserProblem(item)}
+                          onClick={() => continueUserProblem(findIssue(item)?.userProblemId!)}
                           icon={<PlayCircleFilled />}
                           className="continue-btn"
                         >
                           Продолжить выполнение задачи
                         </Button>
                       </>
-                    ) : findIssue(item) === StatusEnum.CREATED ? (
+                    ) : findIssue(item)?.issueStatus === StatusEnum.CREATED ? (
                       <>
                         Задача #{item}
                         <Button
                           type="primary"
                           disabled={tournament.is_blocked}
-                          onClick={() => continueUserProblem(item)}
+                          onClick={() => continueUserProblem(findIssue(item)?.userProblemId!)}
                           icon={<PlayCircleFilled />}
                         >
                           Запустить задачу
                         </Button>
                       </>
-                    ) : findIssue(item) === StatusEnum.CHECKED || StatusEnum.COMPLETED || StatusEnum.QUARANTINE || StatusEnum.REWORK ? 
+                    ) : findIssue(item)?.issueStatus === StatusEnum.CHECKED || StatusEnum.COMPLETED || StatusEnum.QUARANTINE || StatusEnum.REWORK ? 
                       <>
                         Задача #{item}
                         <Button
