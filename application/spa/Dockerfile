@@ -19,7 +19,7 @@ RUN yarn build
 # Step 7: Serve the app using a lightweight web server (e.g., serve)
 FROM nginx:alpine
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+#COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Step 8: Copy the build files from the previous stage
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html

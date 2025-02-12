@@ -1,9 +1,8 @@
 import { Modal, Form, Input, DatePicker, Select } from "antd";
 import { useCallback, useEffect, useState } from "react";
-import { apiClientClass } from "../../shared/api";
-import { ApiConfig } from "../../shared/api/http-client";
 import { useAuthStore } from "../../store/useAuthStore";
 import { DefaultOptionType } from "antd/es/select";
+import useApiClient from "../../hooks/useApiClient";
 
 export const TournamentEdit = ({ visible, onEdit, onCancel, data }) => {
   const [options, setOptions] = useState<DefaultOptionType[] | undefined>([]);
@@ -13,16 +12,7 @@ export const TournamentEdit = ({ visible, onEdit, onCancel, data }) => {
   const [form] = Form.useForm();
   const token = useAuthStore((state) => state.token);
 
-  const configMcc: ApiConfig = {
-    baseUrl: "http://localhost:8000",
-    baseApiParams: {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  };
-
-  const apiClient = new apiClientClass(configMcc);
+  const apiClient = useApiClient();
 
   const fetchUsers = useCallback(
     (username?: string) => {
