@@ -10,7 +10,7 @@
  */
 
 import { RegisterRequest } from "./data-contracts";
-import { HttpClient, RequestParams } from "./http-client";
+import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class Register<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
     /**
@@ -24,9 +24,10 @@ export class Register<SecurityDataType = unknown> extends HttpClient<SecurityDat
     registerCreate = (data: RegisterRequest,params: RequestParams = {}) =>
         this.request<void, any>({
             path: `/api/register/`,
-            body: data,
             method: "POST",
-            secure: true,
+            body: data,
+            type: ContentType.Json,
+            format: "json",
             ...params,
         });
 }
