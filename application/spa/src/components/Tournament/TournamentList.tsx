@@ -39,13 +39,13 @@ export const TournamentList = () => {
   };
 
   const checkUserTournament = async (userId: number | undefined, tournamentId: number, routingTournamentId: number) => {
-    if (userId) {
+    if (userInfo?.is_superuser) {
+      navigate(`/tournaments/${routingTournamentId}`)
+    } else if (userId) {
       const userTournamentId = await apiClient.UsersTournament.usersTournamentList().then(({data}) => data.find((value) => value.tournament === tournamentId && value.user === userId)?.id);
       if (userTournamentId) {
         apiClient.UsersTournament.usersTournamentRetrieve(userTournamentId).then(() => navigate(`/tournaments/${routingTournamentId}`))
       }
-    } else if (userInfo?.is_superuser) {
-      navigate(`/tournaments/${routingTournamentId}`)
     }
   }
 
