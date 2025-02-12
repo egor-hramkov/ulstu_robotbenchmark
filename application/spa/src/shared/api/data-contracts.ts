@@ -47,20 +47,7 @@ export interface PatchedProblem {
     title?: string;
     /** @maxLength 1000 */
     description?: string | null;
-    /**
-     * * `webots_ros2_suv` - webots_ros2_suv
-     * * `webots_ros2_tesla` - webots_ros2_tesla
-     * * `webots_ros2_control` - webots_ros2_control
-     * * `webots_ros2_driver` - webots_ros2_driver
-     * * `webots_ros2_epuck` - webots_ros2_epuck
-     * * `webots_ros2_importer` - webots_ros2_importer
-     * * `webots_ros2_mavic` - webots_ros2_mavic
-     * * `webots_ros2_msgs` - webots_ros2_msgs
-     * * `webots_ros2_tests` - webots_ros2_tests
-     * * `webots_ros2_tiago` - webots_ros2_tiago
-     * * `webots_ros2_turtlebot` - webots_ros2_turtlebot
-     * * `webots_ros2_universal_robot` - webots_ros2_universal_robot
-     */
+    /** * `webots_ros2_suv` - webots_ros2_suv */
     world_path?: WorldPathEnum;
     /** @format uri */
     image?: string | null;
@@ -179,20 +166,7 @@ export interface Problem {
     title: string;
     /** @maxLength 1000 */
     description?: string | null;
-    /**
-     * * `webots_ros2_suv` - webots_ros2_suv
-     * * `webots_ros2_tesla` - webots_ros2_tesla
-     * * `webots_ros2_control` - webots_ros2_control
-     * * `webots_ros2_driver` - webots_ros2_driver
-     * * `webots_ros2_epuck` - webots_ros2_epuck
-     * * `webots_ros2_importer` - webots_ros2_importer
-     * * `webots_ros2_mavic` - webots_ros2_mavic
-     * * `webots_ros2_msgs` - webots_ros2_msgs
-     * * `webots_ros2_tests` - webots_ros2_tests
-     * * `webots_ros2_tiago` - webots_ros2_tiago
-     * * `webots_ros2_turtlebot` - webots_ros2_turtlebot
-     * * `webots_ros2_universal_robot` - webots_ros2_universal_robot
-     */
+    /** * `webots_ros2_suv` - webots_ros2_suv */
     world_path: WorldPathEnum;
     /** @format uri */
     image?: string | null;
@@ -237,20 +211,7 @@ export interface ProblemWithImageURL {
     title: string;
     /** @maxLength 1000 */
     description?: string | null;
-    /**
-     * * `webots_ros2_suv` - webots_ros2_suv
-     * * `webots_ros2_tesla` - webots_ros2_tesla
-     * * `webots_ros2_control` - webots_ros2_control
-     * * `webots_ros2_driver` - webots_ros2_driver
-     * * `webots_ros2_epuck` - webots_ros2_epuck
-     * * `webots_ros2_importer` - webots_ros2_importer
-     * * `webots_ros2_mavic` - webots_ros2_mavic
-     * * `webots_ros2_msgs` - webots_ros2_msgs
-     * * `webots_ros2_tests` - webots_ros2_tests
-     * * `webots_ros2_tiago` - webots_ros2_tiago
-     * * `webots_ros2_turtlebot` - webots_ros2_turtlebot
-     * * `webots_ros2_universal_robot` - webots_ros2_universal_robot
-     */
+    /** * `webots_ros2_suv` - webots_ros2_suv */
     world_path: WorldPathEnum;
     /** @format double */
     difficulty: number;
@@ -364,31 +325,7 @@ export interface WBTFileUploadRequest {
     file: File;
 }
 
-/**
- * * `webots_ros2_suv` - webots_ros2_suv
- * * `webots_ros2_tesla` - webots_ros2_tesla
- * * `webots_ros2_control` - webots_ros2_control
- * * `webots_ros2_driver` - webots_ros2_driver
- * * `webots_ros2_epuck` - webots_ros2_epuck
- * * `webots_ros2_importer` - webots_ros2_importer
- * * `webots_ros2_mavic` - webots_ros2_mavic
- * * `webots_ros2_msgs` - webots_ros2_msgs
- * * `webots_ros2_tests` - webots_ros2_tests
- * * `webots_ros2_tiago` - webots_ros2_tiago
- * * `webots_ros2_turtlebot` - webots_ros2_turtlebot
- * * `webots_ros2_universal_robot` - webots_ros2_universal_robot
- */
+/** * `webots_ros2_suv` - webots_ros2_suv */
 export enum WorldPathEnum {
     WebotsRos2Suv = "webots_ros2_suv",
-    WebotsRos2Tesla = "webots_ros2_tesla",
-    WebotsRos2Control = "webots_ros2_control",
-    WebotsRos2Driver = "webots_ros2_driver",
-    WebotsRos2Epuck = "webots_ros2_epuck",
-    WebotsRos2Importer = "webots_ros2_importer",
-    WebotsRos2Mavic = "webots_ros2_mavic",
-    WebotsRos2Msgs = "webots_ros2_msgs",
-    WebotsRos2Tests = "webots_ros2_tests",
-    WebotsRos2Tiago = "webots_ros2_tiago",
-    WebotsRos2Turtlebot = "webots_ros2_turtlebot",
-    WebotsRos2UniversalRobot = "webots_ros2_universal_robot",
 }

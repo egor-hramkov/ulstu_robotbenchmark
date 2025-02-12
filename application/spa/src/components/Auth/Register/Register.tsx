@@ -28,7 +28,7 @@ export const Register = () => {
 
   const userCreate = useCallback((data: User) => {
     data.phone = data.phone && data.phone.slice(0, -1);
-    apiClient.Users.usersCreate({ ...data, is_superuser: false }).then(() => navigate("/login"));
+    apiClient.Register.registerCreate({ ...data }).then(() => navigate("/login"));
   }, []);
 
   return (

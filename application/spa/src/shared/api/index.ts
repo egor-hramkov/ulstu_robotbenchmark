@@ -2,6 +2,7 @@ import { Block } from "./Block";
 import { LaunchUserProblem } from "./LaunchUserProblem";
 import { ILeaderboard } from "./Leaderboard";
 import { Problems } from "./Problems";
+import { Register } from "./Register";
 import { Token } from "./Token";
 import { ITournament } from "./Tournament";
 import { Users } from "./Users";
@@ -21,6 +22,7 @@ export class apiClientClass {
     this.Leaderboard = new ILeaderboard(config);
     this.Block = new Block(config);
     this.LaunchUserProblem = new LaunchUserProblem(config);
+    this.Register = new Register(config);
   }
 
   /** Настройки системы. */
@@ -46,6 +48,8 @@ export class apiClientClass {
   public Block: Block;
 
   public LaunchUserProblem: LaunchUserProblem;
+
+  public Register: Register;
 }
 
 export * from "./data-contracts";
