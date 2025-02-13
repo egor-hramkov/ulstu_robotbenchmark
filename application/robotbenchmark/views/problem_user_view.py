@@ -1,23 +1,20 @@
 import random
 from datetime import datetime
-
-from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.filters import OrderingFilter
-from rest_framework.permissions import IsAuthenticated
+from ..permissions import IsAdminOrOwner
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from robotbenchmark.models import ProblemUser, CommandQueue, TaskStatus
 from robotbenchmark.serializers.problem_user_serializer import ProblemUserSerializer
 from ..swagger_schemas.problem_user_view_schema import problem_user_view_schema
-from rest_framework.exceptions import NotFound
 
 
 @problem_user_view_schema
 class ProblemUserViewSet(viewsets.ModelViewSet):
     serializer_class = ProblemUserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrOwner]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     queryset = ProblemUser.objects.all()
 
@@ -52,21 +49,25 @@ class ProblemUserViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
 
+        # Если пользователь не является администратор, фильтруем только его данные
+        if not request.user.is_staff:
+            queryset = queryset.filter(user=request.user)
+
         problem_id = request.query_params.get('problem_id')
         tournament_id = request.query_params.get('tournament_id')
         user_id = request.query_params.get('user_id')
         is_checked = request.query_params.get('is_checked')
 
+        if problem_id:
+            queryset = queryset.filter(problem=problem_id)
+        if tournament_id:
+            queryset = queryset.filter(tournament=tournament_id)
         if is_checked:
             queryset = queryset.filter(status=TaskStatus.CHECKED)
 
-        if problem_id or tournament_id or user_id:
-            if problem_id:
-                queryset = queryset.filter(problem=problem_id)
-            if tournament_id:
-                queryset = queryset.filter(tournament=tournament_id)
-            if user_id:
-                queryset = queryset.filter(user=user_id)
+        # Фильтрация по пользователю работает только для администратора
+        if user_id and request.user.is_staff:
+            queryset = queryset.filter(user=user_id)
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
