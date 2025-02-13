@@ -1,7 +1,6 @@
 from drf_spectacular.utils import extend_schema, OpenApiResponse
-from rest_framework import status
+from rest_framework import status, serializers
 from ..serializers.user_register_serializer import UserRegisterSerializer
-import serializers
 
 
 class UserRegisterResponseSerializer(serializers.Serializer):
