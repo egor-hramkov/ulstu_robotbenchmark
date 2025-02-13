@@ -1,31 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
-import { apiClientClass } from "../../shared/api";
-import { ApiConfig } from "../../shared/api/http-client";
-import { useAuthStore } from "../../store/useAuthStore";
 import { User } from "../../shared/api/data-contracts";
 import { Button, FloatButton, Space, Table, Tooltip } from "antd";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import TournamentList from "../Tournament/TournamentList";
 import { UsersCreate } from "./UsersCreate";
-import { UsersEdit } from "./UsersEdit";
+import useApiClient from "../../hooks/useApiClient";
 
 export const UsersList = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [editData, setEditData] = useState<User>();
   const [showUserCreate, setShowUserCreate] = useState<boolean>(false);
   const [showUserEdit, setShowUserEdit] = useState<number | boolean>(false);
-  const { token } = useAuthStore();
 
-  const configMcc: ApiConfig = {
-    baseUrl: "http://localhost:8000",
-    baseApiParams: {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  };
-
-  const apiClient = new apiClientClass(configMcc);
+  const apiClient = useApiClient();
 
   const fetchUsers = useCallback(() => {
     apiClient.Users.usersList().then(({ data }) => setUsers(data));

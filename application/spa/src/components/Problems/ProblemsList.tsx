@@ -6,23 +6,14 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import ProblemCreateModal from "./ProblemCreateModal";
 import { PlusOutlined } from "@ant-design/icons";
+import useApiClient from "../../hooks/useApiClient";
 
 export const ProblemsList = () => {
   const [problems, setProblems] = useState<Problem[]>([]);
   const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
-  const token = useAuthStore((state) => state.token);
 
-  const configMcc: ApiConfig = {
-    baseUrl: "http://localhost:8000",
-    baseApiParams: {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  };
-
-  const apiClient = new apiClientClass(configMcc);
+  const apiClient = useApiClient();
 
   const fetchProblems = useCallback(() => {
     apiClient.Problems.problemList()

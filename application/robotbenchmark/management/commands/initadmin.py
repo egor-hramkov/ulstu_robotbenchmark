@@ -9,8 +9,8 @@ class Command(BaseCommand):
     help = 'Database superuser initialization'
 
     def handle(self, *args, **options):
-        if not UserModel.objects.filter(username='admin').exists():
-            admin = UserModel.objects.create_superuser(username='admin', password='admin')
+        if not UserModel.objects.filter(username='ulstu-admin').exists():
+            admin = UserModel.objects.create_superuser(username='ulstu-admin', password='ulstupass1@')
             admin.is_active = True
             admin.is_admin = True
             admin.save()

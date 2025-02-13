@@ -5,6 +5,7 @@ import { ApiConfig } from "../../../shared/api/http-client";
 import { useNavigate } from "react-router-dom";
 import InputMask from "react-input-mask";
 import "./Register.scss";
+import useApiClient from "../../../hooks/useApiClient";
 
 const MESSAGE = 'Пожалуйста, заполните обязательное поле';
 
@@ -21,17 +22,13 @@ interface Register {
 }
 
 export const Register = () => {
-  const configMcc: ApiConfig = {
-    baseUrl: "http://localhost:8000",
-  };
-
-  const apiClient = new apiClientClass(configMcc);
+  const apiClient = useApiClient();
 
   const navigate = useNavigate();
 
   const userCreate = useCallback((data: User) => {
     data.phone = data.phone && data.phone.slice(0, -1);
-    apiClient.Users.usersCreate({ ...data, is_superuser: false }).then(() => navigate("/login"));
+    apiClient.Register.registerCreate({ ...data }).then(() => navigate("/login"));
   }, []);
 
   return (

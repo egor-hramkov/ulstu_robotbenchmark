@@ -291,6 +291,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/Problem'
           description: ''
+  /api/register/:
+    post:
+      operationId: register_create
+      tags:
+      - register
+      security:
+      - {}
+      responses:
+        '200':
+          description: No response body
   /api/schema/:
     get:
       operationId: schema_retrieve
@@ -1678,31 +1688,8 @@ components:
     WorldPathEnum:
       enum:
       - webots_ros2_suv
-      - webots_ros2_tesla
-      - webots_ros2_control
-      - webots_ros2_driver
-      - webots_ros2_epuck
-      - webots_ros2_importer
-      - webots_ros2_mavic
-      - webots_ros2_msgs
-      - webots_ros2_tests
-      - webots_ros2_tiago
-      - webots_ros2_turtlebot
-      - webots_ros2_universal_robot
       type: string
-      description: |-
-        * `webots_ros2_suv` - webots_ros2_suv
-        * `webots_ros2_tesla` - webots_ros2_tesla
-        * `webots_ros2_control` - webots_ros2_control
-        * `webots_ros2_driver` - webots_ros2_driver
-        * `webots_ros2_epuck` - webots_ros2_epuck
-        * `webots_ros2_importer` - webots_ros2_importer
-        * `webots_ros2_mavic` - webots_ros2_mavic
-        * `webots_ros2_msgs` - webots_ros2_msgs
-        * `webots_ros2_tests` - webots_ros2_tests
-        * `webots_ros2_tiago` - webots_ros2_tiago
-        * `webots_ros2_turtlebot` - webots_ros2_turtlebot
-        * `webots_ros2_universal_robot` - webots_ros2_universal_robot
+      description: '* `webots_ros2_suv` - webots_ros2_suv'
   securitySchemes:
     jwtAuth:
       type: http
