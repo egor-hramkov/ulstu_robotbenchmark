@@ -1,7 +1,6 @@
 from rest_framework import permissions
 from rest_framework.generics import GenericAPIView
 from rest_framework.request import Request
-
 from django.db import models
 
 
@@ -44,3 +43,15 @@ class IsAdminOrOperator(permissions.BasePermission):
     def has_permission(self, request, view):
         # Проверяем, является ли пользователь администратором или имеет роль "Operator"
         return request.user.is_staff or request.user.groups.filter(name='Оператор').exists()
+
+
+class IsAdminOrOwner(permissions.BasePermission):
+    """
+    Разрешение для доступа администратору - ко всем данным, а пользователю - только к своим
+    """
+
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_authenticated)
+
+    def has_object_permission(self, request, view, obj):
+        return bool(request.user.is_staff or obj.user == request.user)
