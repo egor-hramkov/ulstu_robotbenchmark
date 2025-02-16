@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { Button, Card, FloatButton, List } from "antd";
-import { Problem, apiClientClass } from "../../shared/api";
-import { ApiConfig } from "../../shared/api/http-client";
-import { useAuthStore } from "../../store/useAuthStore";
+import { Card, FloatButton, List } from "antd";
+import { Problem } from "../../shared/api";
 import { useNavigate } from "react-router-dom";
 import ProblemCreateModal from "./ProblemCreateModal";
 import { PlusOutlined } from "@ant-design/icons";
@@ -11,7 +9,6 @@ import useApiClient from "../../hooks/useApiClient";
 export const ProblemsList = () => {
   const [problems, setProblems] = useState<Problem[]>([]);
   const [visible, setVisible] = useState(false);
-  const navigate = useNavigate();
 
   const apiClient = useApiClient();
 
@@ -67,7 +64,6 @@ export const ProblemsList = () => {
             <Card
               title={problem.title}
               hoverable
-              onClick={() => navigate(`/problems/${problem.id}`)}
             >
               <Card.Meta
                 description={problem.description || "No description provided."}

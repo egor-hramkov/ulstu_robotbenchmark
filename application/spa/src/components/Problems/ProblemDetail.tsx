@@ -1,12 +1,11 @@
 import { Tabs, TabPaneProps, Spin, Modal, Button, Input, message } from "antd";
 import "./ProblemDetail.css"; // Basic CSS for additional styling if needed
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ProblemUser } from "../../shared/api";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useParams } from "react-router-dom";
-import { useProblemsStore } from "../../store/useProblemsStore";
 import useApiClient from "../../hooks/useApiClient";
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined, ReloadOutlined } from '@ant-design/icons';
 import { ProblemEndingCountdown } from "./ProblemEndingCountdown";
 
 export interface Tab extends Omit<TabPaneProps, 'tab'> {
@@ -16,11 +15,11 @@ export interface Tab extends Omit<TabPaneProps, 'tab'> {
 
 export const ProblemDetail = () => {
   const [problem, setProblem] = useState<ProblemUser>();
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const webotsFrameRef = useRef<HTMLIFrameElement>(null);
+  const vscodeFrameRef = useRef<HTMLIFrameElement>(null);
+  const mapFrameRef = useRef<HTMLIFrameElement>(null);
   const [isCommandModalVisible, setIsCommandModalVisible] = useState(false);
   const [launchCommand, setLaunchCommand] = useState("");
-  const token = useAuthStore((state) => state.token);
-  const { vs_code, robot_panel_port, webots_stream_port } = useProblemsStore();
   const { problemId, tournamentId } = useParams();
 
   const apiClient = useApiClient();
@@ -56,12 +55,17 @@ export const ProblemDetail = () => {
     {
       key: "1",
       label: (
-        <span>
-          VS Code <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${problem?.vs_port}`)} size="small" icon={<ExportOutlined />} />
-        </span>
+        <div style={{display: 'flex', gap: '5px', alignItems: 'center'}}>
+          <>
+            VS Code
+          </>
+          <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${problem?.vs_port}`)} size="small" icon={<ExportOutlined />} />
+          <Button onClick={() => vscodeFrameRef.current?.contentWindow?.location.reload()} size="small" icon={<ReloadOutlined />} />
+        </div>
       ),
       children: (
         <iframe
+          ref={vscodeFrameRef}
           src={`https://virtual.robocross.ru:${problem?.vs_port}`}
           style={{ height: "100%", width: "100%" }}
         />
@@ -71,12 +75,17 @@ export const ProblemDetail = () => {
     {
       key: "2",
       label: (
-        <span>
-          Webots <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${problem?.webots_stream_port}/index.html`)} size="small" icon={<ExportOutlined />} />
-        </span>
+        <div style={{display: 'flex', gap: '5px', alignItems: 'center'}}>
+          <>
+            Webots 
+          </>
+          <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${problem?.webots_stream_port}/index.html`)} size="small" icon={<ExportOutlined />} />
+          <Button onClick={() => webotsFrameRef.current?.contentWindow?.location.reload()} size="small" icon={<ReloadOutlined />} />
+        </div>
       ),
       children: (
         <iframe
+          ref={webotsFrameRef}
           src={`https://virtual.robocross.ru:${problem?.webots_stream_port}/index.html`}
           style={{ height: "100%", width: "100%" }}
         />
@@ -86,12 +95,17 @@ export const ProblemDetail = () => {
     {
       key: "3",
       label: (
-        <span>
-          Редактор карты <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:8000:${problem?.robot_panel_port}`)} size="small" icon={<ExportOutlined />} />
-        </span>
+        <div style={{display: 'flex', gap: '5px', alignItems: 'center'}}>
+            <>
+              Редактор карты
+            </>
+            <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${problem?.robot_panel_port}`)} size="small" icon={<ExportOutlined />} />
+            <Button onClick={() => mapFrameRef.current?.contentWindow?.location.reload()} size="small" icon={<ReloadOutlined />} />
+        </div>
       ),
       children: (
         <iframe
+          ref={mapFrameRef}
           src={`https://virtual.robocross.ru:${problem?.robot_panel_port}`}
           style={{ height: "100%", width: "100%" }}
         />
