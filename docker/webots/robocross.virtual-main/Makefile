@@ -68,7 +68,10 @@ test-nvidia: colors
 
 copy-working-files:
 	docker exec -i ${IMAGE}-${FLAVOR} ln -s /ulstu/repositories/webots_ros2_suv /ulstu/ros2_ws/src/webots_ros2_suv && \
-	docker exec -i ${IMAGE}-${FLAVOR} ln -s /ulstu/repositories/robot_interfaces /ulstu/ros2_ws/src/robot_interfaces ; \
+	docker exec -i ${IMAGE}-${FLAVOR} ln -s /ulstu/repositories/robot_interfaces /ulstu/ros2_ws/src/robot_interfaces && \
+	docker exec -i ${IMAGE}-${FLAVOR} sh -c "sudo chown -R ulstu /ulstu/repositories" && \
+	docker exec -i ${IMAGE}-${FLAVOR} sh -c "chgrp -R ulstu /ulstu/repositories" && \
+	docker cp ${DOCKER_DIR}/index.html ${IMAGE}-${FLAVOR}:/usr/local/webots/resources/web/streaming_viewer/index.html ; \
 
 disable-ros2-dds:
 	@RANDOM_ID=$$(shuf -i 1-255 -n 1); \
@@ -93,8 +96,7 @@ td:
 	echo ${PROJECT_DIR}
 
 start-code-server:
-	docker exec -d -i ulstu-${FLAVOR} bash -c 'pgrep code-server || code-server /ulstu/ros2_ws' && \
-	xdg-open 'localhost:31415?folder=/ulstu/ros2_ws'
+	docker exec -d -i ulstu-${FLAVOR} bash -c 'pgrep code-server || code-server --bind-addr 0.0.0.0:31415 --auth none --disable-telemetry  --log debug --proxy-domain virtual.robocross.ru' ; \
 
 stop-code-server:
 	docker exec -i ulstu-${FLAVOR} pkill -f code-server

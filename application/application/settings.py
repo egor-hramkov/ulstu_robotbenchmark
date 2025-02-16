@@ -19,6 +19,16 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+CSRF_TRUSTED_ORIGINS = ['https://virtual.robocross.ru:444', 'http://localhost:8000']
+ALLOWED_HOSTS = [
+    'virtual.robocross.ru',
+],
+CORS_ORIGIN_WHITELIST = [
+        'http://virtual.robocross.ru:8000','http://localhost:8000', 'https://virtual.robocross.ru:444'
+]
+CORS_ORIGIN_ALLOW_ALL = True
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 

@@ -1,3 +1,26 @@
+# Команды для управления фронтовым контейнером
+## Перестроить все без кеша 2 команды:
+```bash
+docker compose build --no-cache
+docker compose up -d webserver
+```
+## Перезгрузка nginx после обновления конфигов
+для перезапуска nginx зайдите в папку 
+`~/repositories/ulstu_robotbenchmark/application/spa` и выполните команду 
+
+```bash
+docker-compose restart
+```
+или
+```bash
+docker-compose exec webserver nginx -s reload
+```
+
+Для полной перезагрузки веб-сервера (например, если изменили Dockerfile или docker-compose.yml), выполните команду
+```bash
+docker compose up -d
+```
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
