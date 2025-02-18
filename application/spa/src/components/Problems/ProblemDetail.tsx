@@ -38,7 +38,7 @@ export const ProblemDetail = () => {
       message.error("Введите команду запуска!");
       return;
     }
-    apiClient.UsersProblem.usersProblemPartialUpdate(Number(problemId), {launch_command: launchCommand}).then(() => {
+    apiClient.UsersProblem.usersProblemPartialUpdate(Number(problem?.id), {launch_command: launchCommand}).then(() => {
       setIsCommandModalVisible(false);
       setLaunchCommand(""); // Очистить поле после завершения
     })
@@ -134,6 +134,7 @@ export const ProblemDetail = () => {
         onCancel={() => setIsCommandModalVisible(false)}
         okText="Сохранить"
         cancelText="Отмена"
+        style={{marginTop: 20}}
       >
         <Input
           placeholder="Введите команду запуска..."
