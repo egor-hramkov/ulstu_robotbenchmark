@@ -15,7 +15,7 @@ import { useCallback, useEffect, useState } from "react";
 import useApiClient from "../../hooks/useApiClient";
 import { useParams } from "react-router-dom";
 import { Tournament, User, Problem, ProblemUser } from "../../shared/api";
-import { LeftOutlined, RightOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { LeftOutlined, RightOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ExportOutlined } from "@ant-design/icons";
 import { useOperatorStore } from "./store/useOperatorStore";
 
 const { Title, Text } = Typography;
@@ -94,15 +94,26 @@ export const OperatorCard = () => {
     apiClient.LaunchUserProblem.launchUserProblemRetrieve(userProblemId);
   } 
 
+  const openInNewWindow = (url: string) => {
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   // Определяем элементы для табов
   const tabsItems = currentProblem
     ? [
         {
           key: "1",
-          label: "VS Code",
+          label: (
+            <div style={{display: 'flex', gap: '5px', alignItems: 'center'}}>
+              <>
+                VS Code
+              </>
+              <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${currentProblem.vs_port}`)} size="small" icon={<ExportOutlined />} />
+            </div>
+          ),
           children: (
             <iframe
-              src={`https://virutal.robocross.ru:444:${currentProblem.vs_port}`}
+              src={`https://virtual.robocross.ru:${currentProblem.vs_port}`}
               style={{ height: "100%", width: "100%", border: "none" }}
             />
           ),
@@ -110,10 +121,17 @@ export const OperatorCard = () => {
         },
         {
           key: "2",
-          label: "Webots",
+          label: (
+            <div style={{display: 'flex', gap: '5px', alignItems: 'center'}}>
+              <>
+                Webots 
+              </>
+              <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${currentProblem.webots_stream_port}/index.html`)} size="small" icon={<ExportOutlined />} />
+            </div>
+          ),
           children: (
             <iframe
-              src={`https://virutal.robocross.ru:444:${currentProblem.webots_stream_port}/index.html`}
+              src={`https://virtual.robocross.ru:${currentProblem.webots_stream_port}/index.html`}
               style={{ height: "100%", width: "100%", border: "none" }}
             />
           ),
@@ -121,10 +139,17 @@ export const OperatorCard = () => {
         },
         {
           key: "3",
-          label: "Редактор карты",
+          label: (
+            <div style={{display: 'flex', gap: '5px', alignItems: 'center'}}>
+                <>
+                  Редактор карты
+                </>
+                <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${currentProblem.robot_panel_port}`)} size="small" icon={<ExportOutlined />} />
+            </div>
+          ),
           children: (
             <iframe
-              src={`https://virutal.robocross.ru:444:${currentProblem.robot_panel_port}`}
+              src={`https://virtual.robocross.ru:${currentProblem.robot_panel_port}`}
               style={{ height: "100%", width: "100%", border: "none" }}
             />
           ),
