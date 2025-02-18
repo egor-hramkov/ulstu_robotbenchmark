@@ -28,7 +28,6 @@ export const ProblemDetail = () => {
   useEffect(() => {
     if (problemId) {
       apiClient.UsersProblem.usersProblemList({problem_id: Number(problemId), tournament_id: Number(tournamentId), user_id: userInfo?.id}).then((res) => {
-        console.log(res.data);
         setProblem(res.data[0]);
       });
     }
@@ -39,11 +38,10 @@ export const ProblemDetail = () => {
       message.error("Введите команду запуска!");
       return;
     }
-
-    // Здесь можно сделать запрос на сервер с командой запуска
-    message.success("Соревнование завершено и решение запущено!");
-    setIsCommandModalVisible(false);
-    setLaunchCommand(""); // Очистить поле после завершения
+    apiClient.UsersProblem.usersProblemPartialUpdate(Number(problemId), {launch_command: launchCommand}).then(() => {
+      setIsCommandModalVisible(false);
+      setLaunchCommand(""); // Очистить поле после завершения
+    })
   };
 
   // Function to open a new window with the specified URL
@@ -127,14 +125,14 @@ export const ProblemDetail = () => {
       ) : (
         <Spin size={"default"} />
       )}
-
+      <Button type="default" onClick={() => setIsCommandModalVisible(true)}>Добавить команду запуска решения</Button>
       {/* Command Input Modal */}
       <Modal
         title="Введите команду запуска"
         visible={isCommandModalVisible}
         onOk={handleLaunch}
         onCancel={() => setIsCommandModalVisible(false)}
-        okText="Запустить"
+        okText="Сохранить"
         cancelText="Отмена"
       >
         <Input
