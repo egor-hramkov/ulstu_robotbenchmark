@@ -262,7 +262,8 @@ export const OperatorCard = () => {
                   <List.Item
                     key={index}
                   >
-                    {`${problem[0]} - ${<a href={`https://virtual.robocross.ru:444` + problem[1]} target="_blank">Ссылка</a>}`}
+                    {`${problem[0]} -`}
+                      <a href={`https://virtual.robocross.ru:444` + problem[1]} target="_blank">{" "}ссылка</a>
                   </List.Item>
                 );
               }}
