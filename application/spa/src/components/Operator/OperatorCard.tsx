@@ -11,11 +11,11 @@ import {
   Spin,
   message,
 } from "antd";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import useApiClient from "../../hooks/useApiClient";
 import { useParams } from "react-router-dom";
 import { Tournament, User, Problem, ProblemUser } from "../../shared/api";
-import { LeftOutlined, RightOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ExportOutlined } from "@ant-design/icons";
+import { LeftOutlined, RightOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ExportOutlined, ReloadOutlined } from "@ant-design/icons";
 import { useOperatorStore } from "./store/useOperatorStore";
 
 const { Title, Text } = Typography;
@@ -30,6 +30,9 @@ export const OperatorCard = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
+  const webotsFrameRef = useRef<HTMLIFrameElement>(null);
+  const vscodeFrameRef = useRef<HTMLIFrameElement>(null);
+  const mapFrameRef = useRef<HTMLIFrameElement>(null);
   const [noDataMessage, setNoDataMessage] = useState("");
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -98,6 +101,13 @@ export const OperatorCard = () => {
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
+  const reloadWithRandomQuery = (frameRef) => {
+    const randomQuery = `?${Math.floor(Math.random() * 10000)}`;
+    if (frameRef.current) {
+      frameRef.current.src = frameRef.current.src.split('?')[0] + randomQuery;
+    }
+  };
+
   // Определяем элементы для табов
   const tabsItems = currentProblem
     ? [
@@ -109,11 +119,13 @@ export const OperatorCard = () => {
                 VS Code
               </>
               <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${currentProblem.vs_port}`)} size="small" icon={<ExportOutlined />} />
+              <Button onClick={() => reloadWithRandomQuery(vscodeFrameRef)} size="small" icon={<ReloadOutlined />} />
             </div>
           ),
           children: (
             <iframe
               src={`https://virtual.robocross.ru:${currentProblem.vs_port}`}
+              ref={vscodeFrameRef}
               style={{ height: "100%", width: "100%", border: "none" }}
             />
           ),
@@ -127,10 +139,12 @@ export const OperatorCard = () => {
                 Webots 
               </>
               <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${currentProblem.webots_stream_port}/index.html`)} size="small" icon={<ExportOutlined />} />
+              <Button onClick={() => reloadWithRandomQuery(webotsFrameRef)} size="small" icon={<ReloadOutlined />} />
             </div>
           ),
           children: (
             <iframe
+              ref={webotsFrameRef}
               src={`https://virtual.robocross.ru:${currentProblem.webots_stream_port}/index.html`}
               style={{ height: "100%", width: "100%", border: "none" }}
             />
@@ -145,10 +159,12 @@ export const OperatorCard = () => {
                   Редактор карты
                 </>
                 <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${currentProblem.robot_panel_port}`)} size="small" icon={<ExportOutlined />} />
+                <Button onClick={() => reloadWithRandomQuery(mapFrameRef)} size="small" icon={<ReloadOutlined />} />
             </div>
           ),
           children: (
             <iframe
+              ref={mapFrameRef}
               src={`https://virtual.robocross.ru:${currentProblem.robot_panel_port}`}
               style={{ height: "100%", width: "100%", border: "none" }}
             />
