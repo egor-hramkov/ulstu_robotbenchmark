@@ -49,6 +49,13 @@ export const ProblemDetail = () => {
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
+  const reloadWithRandomQuery = (frameRef) => {
+    const randomQuery = `?${Math.floor(Math.random() * 10000)}`;
+    if (frameRef.current) {
+      frameRef.current.src = frameRef.current.src.split('?')[0] + randomQuery;
+    }
+  };
+
   const items: Tab[] = [
     {
       key: "1",
@@ -58,7 +65,7 @@ export const ProblemDetail = () => {
             VS Code
           </>
           <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${problem?.vs_port}`)} size="small" icon={<ExportOutlined />} />
-          <Button onClick={() => vscodeFrameRef.current?.contentWindow?.location.reload()} size="small" icon={<ReloadOutlined />} />
+          <Button onClick={() => reloadWithRandomQuery(vscodeFrameRef)} size="small" icon={<ReloadOutlined />} />
         </div>
       ),
       children: (
@@ -78,7 +85,7 @@ export const ProblemDetail = () => {
             Webots 
           </>
           <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${problem?.webots_stream_port}/index.html`)} size="small" icon={<ExportOutlined />} />
-          <Button onClick={() => webotsFrameRef.current?.contentWindow?.location.reload()} size="small" icon={<ReloadOutlined />} />
+          <Button onClick={() => reloadWithRandomQuery(webotsFrameRef)} size="small" icon={<ReloadOutlined />} />
         </div>
       ),
       children: (
@@ -98,7 +105,7 @@ export const ProblemDetail = () => {
               Редактор карты
             </>
             <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${problem?.robot_panel_port}`)} size="small" icon={<ExportOutlined />} />
-            <Button onClick={() => mapFrameRef.current?.contentWindow?.location.reload()} size="small" icon={<ReloadOutlined />} />
+            <Button onClick={() => reloadWithRandomQuery(mapFrameRef)} size="small" icon={<ReloadOutlined />} />
         </div>
       ),
       children: (
