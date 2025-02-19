@@ -169,7 +169,13 @@ export const OperatorCard = () => {
             Текущий участник:{" "}
             <strong>{currentParticipant?.username || "Неизвестный участник"}</strong>
           </Text>
-          
+          <Text style={{ display: "block", marginBottom: 10}}>
+            Команда для запуска:{" "}
+            <strong>{currentProblem?.launch_command}</strong>
+          </Text>
+          <Text style={{ display: "block", marginBottom: 10}}>
+            <strong>{currentProblem?.records}</strong>
+          </Text>
             {loading ? (
               <Spin size="large" style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
             ) : (

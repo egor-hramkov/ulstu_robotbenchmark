@@ -223,6 +223,7 @@ export interface ProblemUser {
      * @min -2147483648
      * @max 2147483647
      */
+    records: string;
     points?: number;
     robot_panel_port: number;
     vs_port: number;
