@@ -191,22 +191,6 @@ export const OperatorCard = () => {
             <Button disabled={!currentProblem?.id} type="primary" onClick={() => launchUserProblem(currentProblem?.id)}>Запустить решение</Button>
             <Button icon={<RightOutlined />} onClick={nextProblem} />
           </Row>
-          
-          <Card title="Записи проездов">
-          <List
-              bordered
-              dataSource={currentProblem && Object.entries(currentProblem?.records)}
-              renderItem={(problem, index) => {
-                return (
-                  <List.Item
-                    key={index}
-                  >
-                    {`${problem[0]} - ${<a href={`https://virtual.robocross.ru:444` + problem[1]}></a>}`}
-                  </List.Item>
-                );
-              }}
-            />
-          </Card>
         </div>
       </Col>
 
@@ -264,6 +248,21 @@ export const OperatorCard = () => {
                     onClick={() => handleParticipantClick(participant)}
                   >
                     {participant.username}
+                  </List.Item>
+                );
+              }}
+            />
+          </Card>
+          <Card title="Записи проездов" style={{ marginTop: 20 }}>
+          <List
+              bordered
+              dataSource={currentProblem && Object.entries(currentProblem?.records)}
+              renderItem={(problem, index) => {
+                return (
+                  <List.Item
+                    key={index}
+                  >
+                    {`${problem[0]} - ${<a href={`https://virtual.robocross.ru:444` + problem[1]} target="_blank">Ссылка</a>}`}
                   </List.Item>
                 );
               }}
