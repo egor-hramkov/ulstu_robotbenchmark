@@ -106,6 +106,7 @@ export const ProblemDetail = () => {
             </>
             <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${problem?.robot_panel_port}`)} size="small" icon={<ExportOutlined />} />
             <Button onClick={() => reloadWithRandomQuery(mapFrameRef)} size="small" icon={<ReloadOutlined />} />
+            <Button style={{marginLeft: 10}} type="default" onClick={() => setIsCommandModalVisible(true)}>Добавить команду запуска решения</Button>
         </div>
       ),
       children: (
@@ -132,7 +133,6 @@ export const ProblemDetail = () => {
       ) : (
         <Spin size={"default"} />
       )}
-      <Button type="default" onClick={() => setIsCommandModalVisible(true)}>Добавить команду запуска решения</Button>
       {/* Command Input Modal */}
       <Modal
         title="Введите команду запуска"
