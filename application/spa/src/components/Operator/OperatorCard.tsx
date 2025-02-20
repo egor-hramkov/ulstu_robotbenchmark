@@ -40,7 +40,7 @@ export const OperatorCard = () => {
   const apiClient = useApiClient();
 
   const fetchUserTournamentProblemsList = async (userId: number, tournamentId: number) => {
-    apiClient.UsersProblem.usersProblemList({ user_id: userId, tournament_id: tournamentId }).then(({data}) => {setProblems(data); console.log(data)});
+   return apiClient.UsersProblem.usersProblemList({ user_id: userId, tournament_id: tournamentId });
   }
 
   // Загружаем данные турнира при инициализации компонента
@@ -51,7 +51,7 @@ export const OperatorCard = () => {
         setTournamentInfo(res.data);
         if (res.data.users.length > 0) {
           setCurrentParticipant(res.data.users[0]);
-          fetchUserTournamentProblemsList(res.data.users[0].id, Number(id));
+          fetchUserTournamentProblemsList(res.data.users[0].id, Number(id)).then(({data}) => setProblems(data));
         }
         setParticipants(res.data.users);
         setLoading(false);
@@ -60,15 +60,14 @@ export const OperatorCard = () => {
         setLoading(false);
       });
     }
-  }, [id, setProblems]);
+  }, [id]);
 
   // Обработчик клика на участника
-  const handleParticipantClick = (participant: User) => {
+  const handleParticipantClick = useCallback((participant: User) => {
     setCurrentParticipant(participant);
-    fetchUserTournamentProblemsList(participant.id, Number(id)); 
-    setCurrentProblem(problems[0]);
+    fetchUserTournamentProblemsList(participant.id, Number(id)).then(({data}) => setCurrentProblem(data[0])); 
     setNoDataMessage(""); // Сбрасываем сообщение при выборе нового участника
-  };
+  }, [setCurrentParticipant, setProblems, problems, id]);
 
   // Обработчик оценки задачи
   const handleOk = async () => {
