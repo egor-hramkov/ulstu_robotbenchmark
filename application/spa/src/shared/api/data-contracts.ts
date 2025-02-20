@@ -216,6 +216,10 @@ export interface Problem {
     author: number;
 }
 
+interface ProblemUserRecords {
+    [key: string]: string;
+}
+
 /** Сериализатор для модели Соревнование-Пользователь (многие ко многим) */
 export interface ProblemUser {
     id: number;
@@ -223,6 +227,7 @@ export interface ProblemUser {
      * @min -2147483648
      * @max 2147483647
      */
+    records: ProblemUserRecords;
     points?: number;
     robot_panel_port: number;
     vs_port: number;
