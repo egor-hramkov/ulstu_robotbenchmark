@@ -2,52 +2,57 @@ from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiPara
 from rest_framework import status
 from ..serializers.problem_user_serializer import ProblemUserSerializer
 
-
 problem_user_view_schema = extend_schema_view(
     create=extend_schema(
-        summary="Создание новых задач конкретному пользователю", 
+        summary="Создание новых задач конкретному пользователю",
         responses={
-            status.HTTP_200_OK: ProblemUserSerializer, 
+            status.HTTP_200_OK: ProblemUserSerializer,
         }
-    ), 
+    ),
     retrieve=extend_schema(
-        summary="Детальная информация о задаче конкретного пользователя на турнире", 
+        summary="Детальная информация о задаче конкретного пользователя на турнире",
         responses={
-            status.HTTP_200_OK: ProblemUserSerializer, 
+            status.HTTP_200_OK: ProblemUserSerializer,
         }
-    ), 
+    ),
     update=extend_schema(
-        summary="Обновление информации о задачах конкретного пользователя", 
+        summary="Обновление информации о задачах конкретного пользователя",
         responses={
-            status.HTTP_200_OK: ProblemUserSerializer, 
+            status.HTTP_200_OK: ProblemUserSerializer,
         }
-    ), 
+    ),
     partial_update=extend_schema(
-        summary="Частичное обновление информации о задачах конкретного пользователя", 
+        summary="Частичное обновление информации о задачах конкретного пользователя",
         responses={
-            status.HTTP_200_OK: ProblemUserSerializer, 
+            status.HTTP_200_OK: ProblemUserSerializer,
         }
-    ), 
+    ),
     destroy=extend_schema(
-        summary="Удаление задач у конкретного пользователя", 
+        summary="Удаление задач у конкретного пользователя",
         responses={
-            status.HTTP_200_OK: ProblemUserSerializer, 
+            status.HTTP_200_OK: ProblemUserSerializer,
         }
-    ), 
+    ),
     list=extend_schema(
-        summary="Получение списка задач (фильтрация по пользователю)", 
+        summary="Получение списка задач (фильтрация по пользователю)",
         description=(
             "Обычный пользователь получает **только свои задачи**.<br>"
             "Администратор получает **все задачи** всех пользователей, а также может **фильтровать** их по user_id.<br>"
-        ), 
+        ),
         parameters=[
-            OpenApiParameter(name='problem_id', required=False, description='Определённая задача', type=int), 
-            OpenApiParameter(name='tournament_id', required=False, description='Определённое соревнование', type=int), 
-            OpenApiParameter(name='user_id', required=False, description='Определённый пользователь (только для администратора)', type=int), 
-            OpenApiParameter(name='is_checked', required=False, description='Проверенные задачи', type=bool), 
-        ], 
+            OpenApiParameter(name='problem_id', required=False, description='Определённая задача', type=int),
+            OpenApiParameter(name='tournament_id', required=False, description='Определённое соревнование', type=int),
+            OpenApiParameter(name='user_id', required=False,
+                             description='Определённый пользователь (только для администратора)', type=int),
+            OpenApiParameter(name='is_checked', required=False, description='Проверенные задачи', type=bool),
+        ],
         responses={
-            status.HTTP_200_OK: ProblemUserSerializer, 
+            status.HTTP_200_OK: ProblemUserSerializer,
         }
-    ), 
+    ),
+)
+
+check_access_schema = extend_schema(
+    summary="Проверяет доступ к задаче по токену и порту",
+    responses={200: None, 400: {"description": "Token or port missing"}, 401: {"description": "Token Problem"}, 403: {"description": "Forbidden: Invalid port"}},
 )

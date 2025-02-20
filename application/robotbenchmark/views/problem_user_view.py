@@ -1,14 +1,20 @@
 import random
 from datetime import datetime
+
+import jwt
+from django.conf import settings
+from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.filters import OrderingFilter
+from rest_framework.permissions import IsAuthenticated
+
 from ..permissions import IsAdminOrOwner
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from robotbenchmark.models import ProblemUser, CommandQueue, TaskStatus
 from robotbenchmark.serializers.problem_user_serializer import ProblemUserSerializer
-from ..swagger_schemas.problem_user_view_schema import problem_user_view_schema
+from ..swagger_schemas.problem_user_view_schema import problem_user_view_schema, check_access_schema
 
 
 @problem_user_view_schema
@@ -92,3 +98,43 @@ class UserProblemLauncher(APIView):
             command=command
         )
         return Response(status=200)
+
+
+class CheckProblemUserAccess(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @check_access_schema
+    def get(self, request, format=None):
+        """Проверяет доступ к задаче по порту и токену"""
+        token = request.headers.get('Authorization', None)
+        if not token:
+            return Response({"detail": "Token missing"}, status=400)
+        try:
+            decoded_token = jwt.decode(token.split()[1], settings.SIMPLE_JWT['SIGNING_KEY'], algorithms=[settings.SIMPLE_JWT['ALGORITHM']])
+            user_id = decoded_token.get('user_id')
+            is_superuser = decoded_token.get('is_superuser', False)
+            if is_superuser:
+                return Response({"detail": "Access granted for superuser"}, status=200)
+            nginx_port = request.META.get('HTTP_X_SERVER_PORT', None)
+
+            if not nginx_port:
+                return Response({"detail": "Port missing in request"}, status=400)
+
+            try:
+                pu = ProblemUser.objects.get(
+                    Q(user_id=user_id) & (
+                            Q(robot_panel_port=nginx_port) |
+                            Q(vs_port=nginx_port) |
+                            Q(webots_stream_port=nginx_port)
+                    )
+                )
+                if pu.status == TaskStatus.QUARANTINE:
+                    return Response({"detail": "TASK IS FREEZE"}, status=403)
+                return Response({"detail": "Access granted"}, status=200)
+            except ProblemUser.DoesNotExist:
+                return Response({"detail": "Forbidden: Invalid port"}, status=403)
+
+        except jwt.ExpiredSignatureError:
+            return Response({"detail": "Token has expired"}, status=401)
+        except jwt.InvalidTokenError:
+            return Response({"detail": "Invalid token"}, status=401)
