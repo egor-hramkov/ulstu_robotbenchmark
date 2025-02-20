@@ -106,7 +106,6 @@ export const ProblemDetail = () => {
             </>
             <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${problem?.robot_panel_port}`)} size="small" icon={<ExportOutlined />} />
             <Button onClick={() => reloadWithRandomQuery(mapFrameRef)} size="small" icon={<ReloadOutlined />} />
-            <Button style={{marginLeft: 10}} type="default" onClick={() => setIsCommandModalVisible(true)}>Добавить команду запуска решения</Button>
         </div>
       ),
       children: (
@@ -124,8 +123,11 @@ export const ProblemDetail = () => {
     <div className="problem-detail-container">
       <div style={{ marginBottom: 16, display: "flex", justifyContent: "space-between" }}>
         <h2>Задача: {problem?.problem}</h2>
-        <div>
-      <ProblemEndingCountdown tournamentId={Number(tournamentId)} />
+      <div>
+      <div style={{display: 'flex', flexDirection: 'column', gap: 20, alignItems: 'flex-end'}}>
+        <ProblemEndingCountdown tournamentId={Number(tournamentId)} />
+        <Button style={{marginLeft: 10}} type="default" onClick={() => setIsCommandModalVisible(true)}>Добавить команду запуска решения</Button>
+      </div>
     </div>
       </div>
       {problem ? (
