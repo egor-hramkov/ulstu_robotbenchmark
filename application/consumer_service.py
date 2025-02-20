@@ -16,6 +16,70 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def _check_container_exists(container_name) -> bool:
+    """
+    Проверяет, существует ли контейнер с указанным именем.
+    Возвращает True, если существует; иначе False.
+    """
+    try:
+        docker_ps_output = os.popen("docker ps -a --format '{{.Names}}'").read()
+        containers = docker_ps_output.strip().split("\n")
+        return container_name in containers
+    except Exception as e:
+        logger.error(e)
+        return False
+
+
+def _check_file_exists_in_container(container_name, file_path) -> bool:
+    """
+    Проверяет, существует ли файл или директория внутри контейнера Docker.
+    :param container_name: имя контейнера
+    :param file_path: путь к файлу или папке в контейнере
+    :return: True, если существует, иначе False
+    """
+    try:
+        command = f"docker exec {container_name} test -e {file_path}"
+        exit_code = os.system(command)
+        return exit_code == 0
+
+    except Exception as e:
+        logger.error(e)
+        return False
+
+
+def _rewrite_webots_json(directory_path):
+    """
+    Проходит по всем папкам внутри указанной директории, ищет файл webots_animation.json,
+    преобразует его в соответствии с заданным форматом и сохраняет изменения.
+
+    :param directory_path: Путь к корневой директории
+    """
+    for root, dirs, files in os.walk(directory_path):
+        if "webots_animation.json" in files:
+            file_path = os.path.join(root, "webots_animation.json")
+
+            try:
+                result_json = {
+                    "basicTimeStep": 60,
+                    "labelsIds": "",
+                    "frames": []
+                }
+                with open(file_path, "r") as file:
+                    for line in file:
+                        line = line.strip()
+                        if line[-1] == ',':
+                            line = line[:-1]
+                        frame = json.loads(line)
+                        result_json["frames"].append(frame)
+
+                with open(file_path, 'w') as f:
+                    json.dump(result_json, f, indent=4)
+
+            except Exception as e:
+                logger.error(e)
+
+
+
 def make_wbt_file_update(data_dict: dict):
     parts = [part.strip() for part in data_dict['command'].split(';')]
     dirs_part = parts[0].split('DIRS - ')[1].strip()
@@ -47,10 +111,12 @@ def make_sync():
         os.makedirs(all_projects)
 
     for dir_name in os.listdir(all_projects):
-        dir_path = os.path.join(all_projects, dir_name)
+        container_name = f"ulstu-{dir_name}"
+        if not (_check_container_exists(container_name) and _check_file_exists_in_container(container_name,'/ulstu/records')):
+            continue
 
+        dir_path = os.path.join(all_projects, dir_name)
         if os.path.isdir(dir_path):
-            container_name = f"ulstu-{dir_name}"
             target_path = os.path.join(host_media_path, dir_name)
 
             if not os.path.exists(target_path):
@@ -59,9 +125,11 @@ def make_sync():
             command = f"docker cp {container_name}:/ulstu/records {target_path}"
             logger.info(command)
             os.system(command)
+            records_path = os.path.join(target_path, 'records')
+            _rewrite_webots_json(records_path)
 
 
-print("Служба запущена!")
+logger.info("Служба запущена!")
 os.chdir("../docker/webots/robocross.virtual-main")
 while True:
     try:
@@ -82,7 +150,7 @@ while True:
                 make_wbt_file_update(data_dict)
 
             elif data_dict['command_type'] == 'sync':
-                logger.info("ПРИЛЕТЕЛ СИНК")
+                logger.info("MAKE SYNC")
                 make_sync()
     finally:
         time.sleep(5)
