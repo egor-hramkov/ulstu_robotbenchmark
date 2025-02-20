@@ -20,6 +20,22 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
+
+#SESSION_COOKIE_NAME = "sessionid"
+#SESSION_COOKIE_SAMESITE = None  # Разрешаем передачу на другие порты
+#SESSION_COOKIE_SECURE = True    # Требуется для работы на HTTPS
+#SESSION_COOKIE_HTTPONLY = True  # Защита от XSS
+#SESSION_COOKIE_DOMAIN = ".virtual.robocross.ru"  # Включает все поддомены и порты
+
+#CSRF_COOKIE_SAMESITE = None
+#CSRF_COOKIE_SECURE = True
+#CSRF_COOKIE_HTTPONLY = True
+#CSRF_COOKIE_DOMAIN = ".virtual.robocross.ru"
+
+
+
 CSRF_TRUSTED_ORIGINS = ['https://virtual.robocross.ru:444', 'http://localhost:8000']
 ALLOWED_HOSTS = [
     'virtual.robocross.ru',

@@ -19,7 +19,11 @@ http {
                       '$status $body_bytes_sent "$http_referer" '
                       '"$http_user_agent" "$http_x_forwarded_for"';
 
-    access_log  /var/log/nginx/access.log  main;
+#    access_log  /var/log/nginx/access.log  main;
+    access_log  /var/log/nginx/access.log;
+    map $http_authorization $auth_header {
+         default $http_authorization;
+    }
 
     sendfile        on;
     #tcp_nopush     on;

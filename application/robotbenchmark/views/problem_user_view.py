@@ -1,4 +1,6 @@
 import random
+import logging
+import json
 from datetime import datetime
 
 import jwt
@@ -101,18 +103,25 @@ class UserProblemLauncher(APIView):
 
 
 class CheckProblemUserAccess(APIView):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     @check_access_schema
     def get(self, request, format=None):
+        logger = logging.getLogger(__name__)
+
+        print("=== HEADERS RECEIVED IN DJANGO ===")
+        print(json.dumps(dict(request.headers), indent=4))
+
         """Проверяет доступ к задаче по порту и токену"""
         token = request.headers.get('Authorization', None)
+        print(f'token: {token}')
         if not token:
             return Response({"detail": "Token missing"}, status=400)
         try:
             decoded_token = jwt.decode(token.split()[1], settings.SIMPLE_JWT['SIGNING_KEY'], algorithms=[settings.SIMPLE_JWT['ALGORITHM']])
             user_id = decoded_token.get('user_id')
             is_superuser = decoded_token.get('is_superuser', False)
+            print(f'user_id: {user_id} is_superuser: {is_superuser}')
             if is_superuser:
                 return Response({"detail": "Access granted for superuser"}, status=200)
             nginx_port = request.META.get('HTTP_X_SERVER_PORT', None)
