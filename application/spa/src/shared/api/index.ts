@@ -8,6 +8,7 @@ import { ITournament } from "./Tournament";
 import { Users } from "./Users";
 import { UsersProblem } from "./UsersProblem";
 import { UsersTournament } from "./UsersTournament";
+import { VsCodeRestart } from "./VsCodeRestart";
 import { ApiConfig } from "./http-client";
 
 /** API MCC. */
@@ -23,6 +24,7 @@ export class apiClientClass {
     this.Block = new Block(config);
     this.LaunchUserProblem = new LaunchUserProblem(config);
     this.Register = new Register(config);
+    this.Restart = new VsCodeRestart(config);
   }
 
   /** Настройки системы. */
@@ -50,6 +52,8 @@ export class apiClientClass {
   public LaunchUserProblem: LaunchUserProblem;
 
   public Register: Register;
+
+  public Restart: VsCodeRestart;
 }
 
 export * from "./data-contracts";

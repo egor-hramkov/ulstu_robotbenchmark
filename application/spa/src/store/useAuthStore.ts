@@ -54,6 +54,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     sessionStorage.setItem("accessToken", accessToken);
     sessionStorage.setItem("refreshToken", refreshToken);
     sessionStorage.setItem("userId", `${userId}`);
+    document.cookie = `sessionid=${accessToken}; domain=.virtual.robocross.ru; path=/; Secure; SameSite=None`;
+    
     set({ token: accessToken, userId, isAuthenticated: true, isLoading: true });
 
     const configMcc: ApiConfig = {

@@ -14,11 +14,11 @@ import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class UsersProblem<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
     /**
-     * No description
+     * @description Обычный пользователь получает **только свои задачи**.<br>Администратор получает **все задачи** всех пользователей, а также может **фильтровать** их по user_id.<br>
      *
      * @tags users-problem
      * @name UsersProblemList
-     * @summary Получение списка всех задач у конкретного пользователя
+     * @summary Получение списка задач (фильтрация по пользователю)
      * @request GET:/api/users-problem/
      * @secure
      */
@@ -32,7 +32,7 @@ export class UsersProblem<SecurityDataType = unknown> extends HttpClient<Securit
             problem_id?: number;
             /** Определённое соревнование */
             tournament_id?: number;
-            /** Определённый пользователь */
+            /** Определённый пользователь (только для администратора) */
             user_id?: number;
         },
         params: RequestParams = {},

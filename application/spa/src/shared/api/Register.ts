@@ -9,7 +9,7 @@
  * ---------------------------------------------------------------
  */
 
-import { RegisterRequest } from "./data-contracts";
+import { UserRegister, UserRegisterResponse } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class Register<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -18,14 +18,16 @@ export class Register<SecurityDataType = unknown> extends HttpClient<SecurityDat
      *
      * @tags register
      * @name RegisterCreate
+     * @summary Регистрация нового пользователя
      * @request POST:/api/register/
      * @secure
      */
-    registerCreate = (data: RegisterRequest,params: RequestParams = {}) =>
-        this.request<void, any>({
+    registerCreate = (data: UserRegister, params: RequestParams = {}) =>
+        this.request<UserRegisterResponse, UserRegister>({
             path: `/api/register/`,
             method: "POST",
             body: data,
+            secure: true,
             type: ContentType.Json,
             format: "json",
             ...params,

@@ -20,6 +20,36 @@ paths:
       responses:
         '200':
           description: No response body
+  /api/check-pu-access/:
+    get:
+      operationId: check_pu_access_retrieve
+      summary: Проверяет доступ к задаче по токену и порту
+      tags:
+      - check-pu-access
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+        '400':
+          content:
+            application/json:
+              schema:
+                description: Token or port missing
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                description: Token Problem
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                description: 'Forbidden: Invalid port'
+          description: ''
   /api/commands/:
     get:
       operationId: commands_retrieve
@@ -294,13 +324,36 @@ paths:
   /api/register/:
     post:
       operationId: register_create
+      summary: Регистрация нового пользователя
       tags:
       - register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+        required: true
       security:
       - {}
       responses:
-        '200':
-          description: No response body
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRegisterResponse'
+          description: Успешная регистрация пользователя
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRegister'
+          description: Ошибка валидации
   /api/schema/:
     get:
       operationId: schema_retrieve
@@ -745,7 +798,10 @@ paths:
   /api/users-problem/:
     get:
       operationId: users_problem_list
-      summary: Получение списка всех задач у конкретного пользователя
+      description: Обычный пользователь получает **только свои задачи**.<br>Администратор
+        получает **все задачи** всех пользователей, а также может **фильтровать**
+        их по user_id.<br>
+      summary: Получение списка задач (фильтрация по пользователю)
       parameters:
       - in: query
         name: is_checked
@@ -772,7 +828,7 @@ paths:
         name: user_id
         schema:
           type: integer
-        description: Определённый пользователь
+        description: Определённый пользователь (только для администратора)
       tags:
       - users-problem
       security:
@@ -1186,6 +1242,34 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
           description: ''
+  /api/vs-code-restart/{problem_user_id}/:
+    get:
+      operationId: vs_code_restart_retrieve
+      description: Принимает идентификатор задачи-пользователя в виде `problem_user_id`,
+        затем формирует команду для перезапуска контейнера и запуска VS Code.
+      summary: Перезапустить контейнер и запустить VS Code
+      parameters:
+      - in: path
+        name: problem_user_id
+        schema:
+          type: integer
+        description: ID пользователя из таблицы `ProblemUser`, по которому выполняются
+          действия.
+        required: true
+      tags:
+      - vs-code-restart
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+        '404':
+          content:
+            application/json:
+              schema:
+                description: Запись не найдена
+          description: ''
 components:
   schemas:
     CustomTokenObtainPair:
@@ -1277,6 +1361,9 @@ components:
       properties:
         id:
           type: integer
+          readOnly: true
+        records:
+          type: string
           readOnly: true
         points:
           type: integer
@@ -1452,6 +1539,9 @@ components:
         id:
           type: integer
           readOnly: true
+        records:
+          type: string
+          readOnly: true
         points:
           type: integer
           maximum: 2147483647
@@ -1479,6 +1569,7 @@ components:
       required:
       - id
       - problem
+      - records
       - robot_panel_port
       - tournament
       - user
@@ -1672,6 +1763,62 @@ components:
       - id
       - password
       - username
+    UserRegister:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        phone:
+          type: string
+          nullable: true
+          title: Номер телефона
+          maxLength: 18
+        telegram:
+          type: string
+          nullable: true
+          maxLength: 50
+        organization:
+          type: string
+          nullable: true
+          title: Название организации
+          maxLength: 150
+        team:
+          type: string
+          nullable: true
+          title: Название команды
+          maxLength: 50
+      required:
+      - password
+      - username
+    UserRegisterResponse:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        message:
+          type: string
+      required:
+      - message
+      - user_id
     WBTFileUploadRequest:
       type: object
       properties:

@@ -96,6 +96,12 @@ export const OperatorCard = () => {
     apiClient.LaunchUserProblem.launchUserProblemRetrieve(userProblemId);
   } 
 
+  const restartUserProblem = (userProblemId?: number) => {
+    if (userProblemId) {
+      apiClient.Restart.vsCodeRestartRetrieve(userProblemId);
+    }
+  }
+
   const openInNewWindow = (url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
   };
@@ -204,6 +210,7 @@ export const OperatorCard = () => {
             <Button icon={<LeftOutlined />} onClick={lastProblem} />
             <Button type="default" onClick={() => setIsModalVisible(true)}>Оценить задачу</Button>
             <Button disabled={!currentProblem?.id} type="primary" onClick={() => launchUserProblem(currentProblem?.id)}>Запустить решение</Button>
+            <Button disabled={!currentProblem?.id} type="default" onClick={() => restartUserProblem(currentProblem?.id)}>Перезапустить решение</Button>
             <Button icon={<RightOutlined />} onClick={nextProblem} />
           </Row>
         </div>

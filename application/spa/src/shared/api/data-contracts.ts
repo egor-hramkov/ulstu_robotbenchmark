@@ -17,47 +17,6 @@ export interface CustomTokenObtainPair {
     user_id?: number;
 }
 
-export interface RegisterRequest {
-    id: number;
-    groups: string;
-    /** @maxLength 128 */
-    password: string;
-    /**
-     * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
-     * @maxLength 150
-     * @pattern ^[\w.@+-]+$
-     */
-    username: string;
-    /** @maxLength 150 */
-    first_name?: string;
-    /** @maxLength 150 */
-    last_name?: string;
-    /**
-     * Email address
-     * @format email
-     * @maxLength 254
-     */
-    email?: string;
-    /**
-     * Номер телефона
-     * @maxLength 18
-     */
-    phone?: string | null;
-    /** @maxLength 50 */
-    telegram?: string | null;
-    /**
-     * Название организации
-     * @maxLength 150
-     */
-    organization?: string | null;
-    /**
-     * Название команды
-     * @maxLength 50
-     */
-    team?: string | null;
-}
-
-
 /** Сериализатор для лидерборда */
 export interface Leaderboard {
     first_name?: string;
@@ -100,6 +59,7 @@ export interface PatchedProblem {
 /** Сериализатор для модели Соревнование-Пользователь (многие ко многим) */
 export interface PatchedProblemUser {
     id?: number;
+    records?: string;
     /**
      * @min -2147483648
      * @max 2147483647
@@ -216,18 +176,14 @@ export interface Problem {
     author: number;
 }
 
-interface ProblemUserRecords {
-    [key: string]: string;
-}
-
 /** Сериализатор для модели Соревнование-Пользователь (многие ко многим) */
 export interface ProblemUser {
     id: number;
+    records: string;
     /**
      * @min -2147483648
      * @max 2147483647
      */
-    records: ProblemUserRecords;
     points?: number;
     robot_panel_port: number;
     vs_port: number;
@@ -359,6 +315,49 @@ export interface User {
      * @maxLength 50
      */
     team?: string | null;
+}
+
+export interface UserRegister {
+    /**
+     * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+     * @maxLength 150
+     * @pattern ^[\w.@+-]+$
+     */
+    username: string;
+    /** @maxLength 128 */
+    password: string;
+    /** @maxLength 150 */
+    first_name?: string;
+    /** @maxLength 150 */
+    last_name?: string;
+    /**
+     * Email address
+     * @format email
+     * @maxLength 254
+     */
+    email?: string;
+    /**
+     * Номер телефона
+     * @maxLength 18
+     */
+    phone?: string | null;
+    /** @maxLength 50 */
+    telegram?: string | null;
+    /**
+     * Название организации
+     * @maxLength 150
+     */
+    organization?: string | null;
+    /**
+     * Название команды
+     * @maxLength 50
+     */
+    team?: string | null;
+}
+
+export interface UserRegisterResponse {
+    user_id: number;
+    message: string;
 }
 
 export interface WBTFileUploadRequest {
