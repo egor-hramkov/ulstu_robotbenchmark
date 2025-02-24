@@ -56,6 +56,12 @@ export const ProblemDetail = () => {
     }
   };
 
+  const restartUserProblem = (userProblemId?: number) => {
+    if (userProblemId) {
+      apiClient.Restart.vsCodeRestartRetrieve(userProblemId);
+    }
+  }
+
   const items: Tab[] = [
     {
       key: "1",
@@ -126,7 +132,10 @@ export const ProblemDetail = () => {
       <div>
       <div style={{display: 'flex', flexDirection: 'column', gap: 20, alignItems: 'flex-end'}}>
         <ProblemEndingCountdown tournamentId={Number(tournamentId)} />
-        <Button style={{marginLeft: 10}} type="default" onClick={() => setIsCommandModalVisible(true)}>Добавить команду запуска решения</Button>
+        <div style={{display: 'flex', gap: 10, flexDirection: 'column', marginLeft: 10}}>
+          <Button type="default" onClick={() => setIsCommandModalVisible(true)}>Добавить команду запуска решения</Button>
+          <Button type="default" onClick={() => restartUserProblem(problem?.id)}>Перезапустить контейнер VS Code</Button>
+        </div>
       </div>
     </div>
       </div>
