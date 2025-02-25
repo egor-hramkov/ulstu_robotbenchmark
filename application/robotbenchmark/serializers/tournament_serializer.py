@@ -16,7 +16,7 @@ class TournamentSerializer(serializers.ModelSerializer):
 
     # Позволяет клиенту передать список идентификаторов пользователей 
     # для создания или обновления записи соревнования по логике ниже
-    users_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+    users_ids = serializers.ListField(child=serializers.IntegerField(), write_only=True, required=False)
 
     def create(self, validated_data):
         users_ids = validated_data.pop('users_ids', [])
