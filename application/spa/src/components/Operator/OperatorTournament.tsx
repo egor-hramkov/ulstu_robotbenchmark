@@ -106,16 +106,16 @@ export const OperatorTournament = () => {
             renderItem={(user) => (
               <List.Item>
                 <Row style={{ width: "100%", alignItems: "center" }} justify="space-between">
-                  <Col>
+                  <Col style={{ flex: 1 }}>
                     <Text>{user.username}</Text>
                   </Col>
-                  <Col>
+                  <Col style={{ flex: 1 }}>
                     {user.first_name} {user.last_name}
                   </Col>
-                  <Col>
+                  <Col style={{ flex: 1 }}>
                     <Text>{user.organization}</Text>
                   </Col>
-                  <Col>
+                  <Col style={{ flex: 1 }}>
                     <Text>{user.team}</Text>
                   </Col>
                 </Row>
