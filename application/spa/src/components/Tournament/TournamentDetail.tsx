@@ -152,18 +152,18 @@ export const TournamentDetail = () => {
               bordered
               dataSource={tournament.users}
               renderItem={(user) => (
-              <List.Item>
+                <List.Item>
                 <Row style={{ width: "100%", alignItems: "center" }} justify="space-between">
-                  <Col>
+                  <Col style={{ flex: 1 }}>
                     <Text>{user.username}</Text>
                   </Col>
-                  <Col>
-                    {user.first_name} {user.last_name}
+                  <Col style={{ flex: 1 }}>
+                    <Text>{user.first_name} {user.last_name}</Text>
                   </Col>
-                  <Col>
+                  <Col style={{ flex: 1 }}>
                     <Text>{user.organization}</Text>
                   </Col>
-                  <Col>
+                  <Col style={{ flex: 1 }}>
                     <Text>{user.team}</Text>
                   </Col>
                 </Row>

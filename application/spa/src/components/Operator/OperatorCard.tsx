@@ -269,7 +269,10 @@ export const OperatorCard = () => {
                     }}
                     onClick={() => handleParticipantClick(participant)}
                   >
-                    {participant.username}
+                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                      <div>{participant.username}</div>
+                      <div>{participant.team}</div>
+                    </div>
                   </List.Item>
                 );
               }}
