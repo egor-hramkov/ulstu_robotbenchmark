@@ -33,6 +33,7 @@ export const ProblemDetail = () => {
         user_id: userInfo?.id,
       }).then((res) => {
         setProblem(res.data[0]);
+        setLaunchCommand(res.data[0].launch_command ?? "");
       });
     }
   }, [problemId]);
@@ -46,7 +47,6 @@ export const ProblemDetail = () => {
       launch_command: launchCommand,
     }).then(() => {
       setIsCommandModalVisible(false);
-      setLaunchCommand(""); // Очистить поле после завершения
     });
   };
 
@@ -173,7 +173,7 @@ export const ProblemDetail = () => {
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <h2>Задача: {problem?.problem}</h2>
           <p>
-            Команда для запуска <strong>{problem?.launch_command}</strong>
+            Команда для запуска <strong>{launchCommand}</strong>
           </p>
         </div>
         <div>

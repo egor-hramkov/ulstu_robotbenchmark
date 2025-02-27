@@ -78,6 +78,7 @@ const AppLayout: React.FC = () => {
               background: colorBgContainer,
               padding: 24,
               borderRadius: borderRadiusLG,
+              height: "100%",
             }}
           >
             <Outlet />
