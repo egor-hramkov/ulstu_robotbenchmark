@@ -181,7 +181,7 @@ export const OperatorCard = () => {
 
   return (
     <Row gutter={20} style={{ height: "100%" }}>
-      <Col span={isCollapsed ? 24 : 16} style={{ height: "100%" }}>
+      <Col span={isCollapsed ? 24 : 16}>
         <div style={{ height: "100%", display: "flex", flexDirection: "column" }} className="operator-card">
           <Title level={3} style={{ marginBottom: 10 }}>
             Проверка турнира: {tournamentInfo?.name || "Загрузка..."}

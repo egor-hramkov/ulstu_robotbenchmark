@@ -25,7 +25,14 @@ const AppLayout: React.FC = () => {
 
   return (
     <Layout style={{ height: "100vh" }}>
-      <Sider style={{ overflow: "hidden", display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+      <Sider
+        style={{
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
         <Menu
           theme="dark"
           defaultSelectedKeys={["2"]}
@@ -42,9 +49,9 @@ const AppLayout: React.FC = () => {
             display: "flex",
             flexDirection: "column",
             gap: "15px",
-            alignItems: 'center',
-            backgroundColor: '#f5f5f5',
-            borderRadius: 8
+            alignItems: "center",
+            backgroundColor: "#f5f5f5",
+            borderRadius: 8,
           }} // Отступы для карточки
         >
           <UserOutlined

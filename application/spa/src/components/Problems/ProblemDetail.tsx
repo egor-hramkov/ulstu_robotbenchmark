@@ -5,10 +5,10 @@ import { ProblemUser } from "../../shared/api";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useParams } from "react-router-dom";
 import useApiClient from "../../hooks/useApiClient";
-import { ExportOutlined, ReloadOutlined } from '@ant-design/icons';
+import { ExportOutlined, ReloadOutlined } from "@ant-design/icons";
 import { ProblemEndingCountdown } from "./ProblemEndingCountdown";
 
-export interface Tab extends Omit<TabPaneProps, 'tab'> {
+export interface Tab extends Omit<TabPaneProps, "tab"> {
   key: string;
   label: React.ReactNode;
 }
@@ -27,7 +27,11 @@ export const ProblemDetail = () => {
 
   useEffect(() => {
     if (problemId) {
-      apiClient.UsersProblem.usersProblemList({problem_id: Number(problemId), tournament_id: Number(tournamentId), user_id: userInfo?.id}).then((res) => {
+      apiClient.UsersProblem.usersProblemList({
+        problem_id: Number(problemId),
+        tournament_id: Number(tournamentId),
+        user_id: userInfo?.id,
+      }).then((res) => {
         setProblem(res.data[0]);
       });
     }
@@ -38,10 +42,12 @@ export const ProblemDetail = () => {
       message.error("Введите команду запуска!");
       return;
     }
-    apiClient.UsersProblem.usersProblemPartialUpdate(Number(problem?.id), {launch_command: launchCommand}).then(() => {
+    apiClient.UsersProblem.usersProblemPartialUpdate(Number(problem?.id), {
+      launch_command: launchCommand,
+    }).then(() => {
       setIsCommandModalVisible(false);
       setLaunchCommand(""); // Очистить поле после завершения
-    })
+    });
   };
 
   // Function to open a new window with the specified URL
@@ -52,7 +58,7 @@ export const ProblemDetail = () => {
   const reloadWithRandomQuery = (frameRef) => {
     const randomQuery = `?${Math.floor(Math.random() * 10000)}`;
     if (frameRef.current) {
-      frameRef.current.src = frameRef.current.src.split('?')[0] + randomQuery;
+      frameRef.current.src = frameRef.current.src.split("?")[0] + randomQuery;
     }
   };
 
@@ -60,18 +66,28 @@ export const ProblemDetail = () => {
     if (userProblemId) {
       apiClient.Restart.vsCodeRestartRetrieve(userProblemId);
     }
-  }
+  };
 
   const items: Tab[] = [
     {
       key: "1",
       label: (
-        <div style={{display: 'flex', gap: '5px', alignItems: 'center'}}>
-          <>
-            VS Code
-          </>
-          <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${problem?.vs_port}`)} size="small" icon={<ExportOutlined />} />
-          <Button onClick={() => reloadWithRandomQuery(vscodeFrameRef)} size="small" icon={<ReloadOutlined />} />
+        <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
+          <>VS Code</>
+          <Button
+            onClick={() =>
+              openInNewWindow(
+                `https://virtual.robocross.ru:${problem?.vs_port}`
+              )
+            }
+            size="small"
+            icon={<ExportOutlined />}
+          />
+          <Button
+            onClick={() => reloadWithRandomQuery(vscodeFrameRef)}
+            size="small"
+            icon={<ReloadOutlined />}
+          />
         </div>
       ),
       children: (
@@ -86,12 +102,22 @@ export const ProblemDetail = () => {
     {
       key: "2",
       label: (
-        <div style={{display: 'flex', gap: '5px', alignItems: 'center'}}>
-          <>
-            Webots 
-          </>
-          <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${problem?.webots_stream_port}/index.html`)} size="small" icon={<ExportOutlined />} />
-          <Button onClick={() => reloadWithRandomQuery(webotsFrameRef)} size="small" icon={<ReloadOutlined />} />
+        <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
+          <>Webots</>
+          <Button
+            onClick={() =>
+              openInNewWindow(
+                `https://virtual.robocross.ru:${problem?.webots_stream_port}/index.html`
+              )
+            }
+            size="small"
+            icon={<ExportOutlined />}
+          />
+          <Button
+            onClick={() => reloadWithRandomQuery(webotsFrameRef)}
+            size="small"
+            icon={<ReloadOutlined />}
+          />
         </div>
       ),
       children: (
@@ -106,12 +132,22 @@ export const ProblemDetail = () => {
     {
       key: "3",
       label: (
-        <div style={{display: 'flex', gap: '5px', alignItems: 'center'}}>
-            <>
-              Редактор карты
-            </>
-            <Button onClick={() => openInNewWindow(`https://virtual.robocross.ru:${problem?.robot_panel_port}`)} size="small" icon={<ExportOutlined />} />
-            <Button onClick={() => reloadWithRandomQuery(mapFrameRef)} size="small" icon={<ReloadOutlined />} />
+        <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
+          <>Редактор карты</>
+          <Button
+            onClick={() =>
+              openInNewWindow(
+                `https://virtual.robocross.ru:${problem?.robot_panel_port}`
+              )
+            }
+            size="small"
+            icon={<ExportOutlined />}
+          />
+          <Button
+            onClick={() => reloadWithRandomQuery(mapFrameRef)}
+            size="small"
+            icon={<ReloadOutlined />}
+          />
         </div>
       ),
       children: (
@@ -127,17 +163,52 @@ export const ProblemDetail = () => {
 
   return (
     <div className="problem-detail-container">
-      <div style={{ marginBottom: 16, display: "flex", justifyContent: "space-between" }}>
-        <h2>Задача: {problem?.problem}</h2>
-      <div>
-      <div style={{display: 'flex', flexDirection: 'column', gap: 20, alignItems: 'flex-end'}}>
-        <ProblemEndingCountdown tournamentId={Number(tournamentId)} />
-        <div style={{display: 'flex', gap: 10, flexDirection: 'column', marginLeft: 10}}>
-          <Button type="default" onClick={() => setIsCommandModalVisible(true)}>Добавить команду запуска решения</Button>
-          <Button type="default" onClick={() => restartUserProblem(problem?.id)}>Перезапустить контейнер VS Code</Button>
+      <div
+        style={{
+          marginBottom: 16,
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <h2>Задача: {problem?.problem}</h2>
+          <p>
+            Команда для запуска <strong>{problem?.launch_command}</strong>
+          </p>
         </div>
-      </div>
-    </div>
+        <div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 20,
+              alignItems: "flex-end",
+            }}
+          >
+            <ProblemEndingCountdown tournamentId={Number(tournamentId)} />
+            <div
+              style={{
+                display: "flex",
+                gap: 10,
+                flexDirection: "column",
+                marginLeft: 10,
+              }}
+            >
+              <Button
+                type="default"
+                onClick={() => setIsCommandModalVisible(true)}
+              >
+                Добавить команду запуска решения
+              </Button>
+              <Button
+                type="default"
+                onClick={() => restartUserProblem(problem?.id)}
+              >
+                Перезапустить контейнер VS Code
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
       {problem ? (
         <Tabs style={{ height: "100vh" }} items={items} />
@@ -152,7 +223,7 @@ export const ProblemDetail = () => {
         onCancel={() => setIsCommandModalVisible(false)}
         okText="Сохранить"
         cancelText="Отмена"
-        style={{marginTop: 20}}
+        style={{ marginTop: 20 }}
       >
         <Input
           placeholder="Введите команду запуска..."
