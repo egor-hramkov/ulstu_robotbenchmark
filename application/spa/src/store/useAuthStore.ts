@@ -55,6 +55,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     sessionStorage.setItem("refreshToken", refreshToken);
     sessionStorage.setItem("userId", `${userId}`);
     document.cookie = `sessionid=${accessToken}; domain=.virtual.robocross.ru; path=/; Secure; SameSite=None`;
+//    if (accessToken.length < 40 )
+      document.cookie = `userid=${userId}; domain=.virtual.robocross.ru; path=/; Secure; SameSite=None`;
     
     set({ token: accessToken, userId, isAuthenticated: true, isLoading: true });
 

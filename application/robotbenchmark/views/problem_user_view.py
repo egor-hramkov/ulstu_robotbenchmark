@@ -2,6 +2,7 @@ import random
 import logging
 import json
 from datetime import datetime
+from django.contrib.sessions.models import Session
 
 import jwt
 from django.conf import settings
@@ -14,10 +15,9 @@ from rest_framework.permissions import IsAuthenticated
 from ..permissions import IsAdminOrOwner
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from robotbenchmark.models import ProblemUser, CommandQueue, TaskStatus
+from robotbenchmark.models import ProblemUser, CustomUser, CommandQueue, TaskStatus
 from robotbenchmark.serializers.problem_user_serializer import ProblemUserSerializer
 from ..swagger_schemas.problem_user_view_schema import problem_user_view_schema, check_access_schema
-
 
 @problem_user_view_schema
 class ProblemUserViewSet(viewsets.ModelViewSet):
@@ -109,19 +109,26 @@ class CheckProblemUserAccess(APIView):
     def get(self, request, format=None):
         logger = logging.getLogger(__name__)
 
-        print("=== HEADERS RECEIVED IN DJANGO ===")
-        print(json.dumps(dict(request.headers), indent=4))
-
-        """Проверяет доступ к задаче по порту и токену"""
-        token = request.headers.get('Authorization', None)
-        print(f'token: {token}')
-        if not token:
-            return Response({"detail": "Token missing"}, status=400)
         try:
-            decoded_token = jwt.decode(token.split()[1], settings.SIMPLE_JWT['SIGNING_KEY'], algorithms=[settings.SIMPLE_JWT['ALGORITHM']])
-            user_id = decoded_token.get('user_id')
-            is_superuser = decoded_token.get('is_superuser', False)
+            token = request.COOKIES.get('sessionid')
+            print(f'token: {token}')
+            if token and len(token) > 40:
+                decoded_token = jwt.decode(token, settings.SIMPLE_JWT['SIGNING_KEY'], algorithms=[settings.SIMPLE_JWT['ALGORITHM']])
+                print('decoded token: {decoded_token}')
+                user_id = decoded_token.get('user_id')
+                is_superuser = decoded_token.get('is_superuser', False)
+            else:
+                # session = Session.objects.get(session_key=token)
+                # session_data = session.get_decoded()
+                # print(f'session data: {session_data}')
+                # user_id = session_data.get('user_id')
+                user_id = request.COOKIES.get('userid')
+                print(f'user_id: {user_id}')
+                user = CustomUser.objects.get(id=user_id)
+                #is_superuser = False
+                is_superuser = user.is_superuser
             print(f'user_id: {user_id} is_superuser: {is_superuser}')
+
             if is_superuser:
                 return Response({"detail": "Access granted for superuser"}, status=200)
             nginx_port = request.META.get('HTTP_X_SERVER_PORT', None)
@@ -137,7 +144,8 @@ class CheckProblemUserAccess(APIView):
                             Q(webots_stream_port=nginx_port)
                     )
                 )
-                if pu.status == TaskStatus.QUARANTINE:
+                print(f'pu status: {pu.tournament.is_blocked}')
+                if pu.tournament.is_blocked:
                     return Response({"detail": "TASK IS FREEZE"}, status=403)
                 return Response({"detail": "Access granted"}, status=200)
             except ProblemUser.DoesNotExist:
@@ -146,4 +154,5 @@ class CheckProblemUserAccess(APIView):
         except jwt.ExpiredSignatureError:
             return Response({"detail": "Token has expired"}, status=401)
         except jwt.InvalidTokenError:
+            print('invalid token')
             return Response({"detail": "Invalid token"}, status=401)
